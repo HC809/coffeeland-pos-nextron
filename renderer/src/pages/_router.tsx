@@ -30,7 +30,7 @@ const CustomRouter = ({ Component, pageProps }: Props) => {
 
   return (
     <>
-      {auth?.logged && invoicePoint.id === 0 && !openShift ? (
+      {auth?.logged && invoicePoint.id !== 0 && openShift ? (
         getLayout(<Component {...pageProps} />)
       ) : (
         <PrivateRoute>{getLayout(<Component {...pageProps} />)}</PrivateRoute>

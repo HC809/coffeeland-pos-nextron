@@ -1,18 +1,19 @@
-import Button from '@/components/ui/button';
-import { LongArrowIcon } from '@/components/icons/long-arrow-icon';
-import LoginUserForm from '@/components/auth/login-form';
-import SelectInvoicePointForm from '@/components/auth/select-invoice-point-form';
-import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
-import { selectAuth } from '../store/authSlice';
-import { logout } from '@/store/authSlice';
-import OpenCashFlowForm from '@/components/auth/open-cash-flow-form';
-import { removeTaxInfo, selectTaxInfo } from '@/store/taxInfoSlice';
-import { selectShiftInfo } from '@/store/shiftInfoSlice';
+import Button from "@/components/ui/button";
+import { LongArrowIcon } from "@/components/icons/long-arrow-icon";
+import LoginUserForm from "@/components/auth/login-form";
+import SelectInvoicePointForm from "@/components/auth/select-invoice-point-form";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
+import { selectAuth } from "../store/authSlice";
+import { logout } from "@/store/authSlice";
+import OpenCashFlowForm from "@/components/auth/open-cash-flow-form";
+import { removeTaxInfo, selectTaxInfo } from "@/store/taxInfoSlice";
+import { selectShiftInfo } from "@/store/shiftInfoSlice";
+import SearchProductsPage from "@/pages/products-search";
 
 function UnAuthorizedView() {
   return (
     <div className="relative flex min-h-full flex-col items-center justify-center overflow-hidden py-5 px-4 md:py-8">
-      <div className="relative mx-auto w-full max-w-[445px] overflow-hidden rounded-lg bg-light pb-2 dark:bg-dark-300 lg:max-w-[478px] lg:pb-1">
+      <div className="bg-light dark:bg-dark-300 relative mx-auto w-full max-w-[445px] overflow-hidden rounded-lg pb-2 lg:max-w-[478px] lg:pb-1">
         <LoginUserForm />
       </div>
     </div>
@@ -31,7 +32,7 @@ function SelectInvoicePointView() {
       >
         <LongArrowIcon className="h-4 w-4" /> Regresar
       </Button>
-      <div className="relative mx-auto w-full max-w-[445px] overflow-hidden rounded-lg bg-light pb-2 dark:bg-dark-300 lg:max-w-[478px] lg:pb-1">
+      <div className="bg-light dark:bg-dark-300 relative mx-auto w-full max-w-[445px] overflow-hidden rounded-lg pb-2 lg:max-w-[478px] lg:pb-1">
         <SelectInvoicePointForm />
       </div>
     </div>
@@ -50,7 +51,7 @@ function OpenCashFlowView() {
       >
         <LongArrowIcon className="h-4 w-4" /> Regresar
       </Button>
-      <div className="relative mx-auto w-full max-w-[445px] overflow-hidden rounded-lg bg-light pb-2 dark:bg-dark-300 lg:max-w-[478px] lg:pb-1">
+      <div className="bg-light dark:bg-dark-300 relative mx-auto w-full max-w-[445px] overflow-hidden rounded-lg pb-2 lg:max-w-[478px] lg:pb-1">
         <OpenCashFlowForm />
       </div>
     </div>
@@ -76,5 +77,5 @@ export default function PrivateRoute({
     return <OpenCashFlowView />;
   }
 
-  return <>{children}</>;
+  return <>{<SearchProductsPage />}</>;
 }
