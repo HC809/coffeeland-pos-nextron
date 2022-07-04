@@ -31,7 +31,7 @@ function AuthorizedMenu({ user }: { user: ILoggedUser }) {
         <Avatar
           size="32"
           round={true}
-          name={user.username || ""}
+          name={user.name || ""}
           textSizeRatio={2}
         />
       </Menu.Button>
@@ -57,7 +57,7 @@ function AuthorizedMenu({ user }: { user: ILoggedUser }) {
                 removeAuthUser();
               }}
             >
-              Logout
+              Finalizar Turno
             </button>
           </Menu.Item>
         </Menu.Items>

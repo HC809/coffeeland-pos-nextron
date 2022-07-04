@@ -18,6 +18,7 @@ const authSlice = createSlice({
   reducers: {
     login: (state, action: PayloadAction<IAuthResponse>) => {
       state.username = action.payload.username;
+      state.name = action.payload.name;
       state.token = action.payload.token;
       state.logged = true;
     },

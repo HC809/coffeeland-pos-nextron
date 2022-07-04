@@ -1,14 +1,22 @@
 module.exports = {
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.target = "electron-renderer";
-    }
+  // webpack: (config, { isServer }) => {
+  //   if (!isServer) {
+  //     config.target = "electron-renderer";
+  //   }
 
-    return config;
-  },
+  //   return config;
+  // },
   images: {
     //loader: "akamai",
     domains: ["localhost", "127.0.0.1:8000"],
     //path: "",
   },
+  ...(process.env.NODE_ENV === 'production' && {
+    typescript: {
+      ignoreBuildErrors: true,
+    },
+    eslint: {
+      ignoreDuringBuilds: true,
+    },
+  }),
 };

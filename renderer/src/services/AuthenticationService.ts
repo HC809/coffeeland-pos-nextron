@@ -5,6 +5,7 @@ import { ILoggedUser } from '../models/Authentication/Authentication.models';
 
 const initAuthState: ILoggedUser = {
   username: null,
+  name: null,
   token: null,
   logged: false,
 };

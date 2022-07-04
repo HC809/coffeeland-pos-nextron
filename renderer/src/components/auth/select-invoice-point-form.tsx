@@ -1,27 +1,27 @@
-import * as yup from 'yup';
-import { Controller, useForm } from 'react-hook-form';
-import Button from '@/components/ui/button';
-import { RegisterBgPattern } from '@/components/auth/register-bg-pattern';
-import Image from '@/components/ui/image';
-import { siteSettings } from '@/data/static/site-settings';
-import { useAppSelector, useAppDispatch } from '../../hooks/reduxHooks';
-import { selectAuth } from '../../store/authSlice';
-import { SpinnerIcon } from '../icons/spinner-icon';
-import { useEffect, useState } from 'react';
-import ApiService from '@/api/principalService';
-import { ApiGenericService } from '@/api/genericService';
-import { IReactSelectOption } from '@/models/shared/IReactSelectOption';
-import { IInvoicePoint } from '@/models/IInvoicePoint';
-import Select from 'react-select';
-import { yupResolver } from '@hookform/resolvers/yup';
-import toast from 'react-hot-toast';
-import { TiWarning } from 'react-icons/ti';
-import { setCategories } from '@/store/categoriesSlice';
-import { setProducts } from '@/store/productsSlice';
-import { setTaxInfo } from '@/store/taxInfoSlice';
-import { setCompanyInfo } from '@/store/generalInfoSlice';
-import { AxiosError } from 'axios';
-import { getAxiosErrorMessage } from '@/helpers/manageAxiosError';
+import * as yup from "yup";
+import { Controller, useForm } from "react-hook-form";
+import Button from "@/components/ui/button";
+import { RegisterBgPattern } from "@/components/auth/register-bg-pattern";
+import Image from "@/components/ui/image";
+import { siteSettings } from "@/data/static/site-settings";
+import { useAppSelector, useAppDispatch } from "../../hooks/reduxHooks";
+import { selectAuth } from "../../store/authSlice";
+import { SpinnerIcon } from "../icons/spinner-icon";
+import { useEffect, useState } from "react";
+import { ApiService } from "@/api/principalService";
+import { ApiGenericService } from "@/api/genericService";
+import { IReactSelectOption } from "@/models/shared/IReactSelectOption";
+import { IInvoicePoint } from "@/models/IInvoicePoint";
+import Select from "react-select";
+import { yupResolver } from "@hookform/resolvers/yup";
+import toast from "react-hot-toast";
+import { TiWarning } from "react-icons/ti";
+import { setCategories } from "@/store/categoriesSlice";
+import { setProducts } from "@/store/productsSlice";
+import { setTaxInfo } from "@/store/taxInfoSlice";
+import { setCompanyInfo } from "@/store/generalInfoSlice";
+import { AxiosError } from "axios";
+import { getAxiosErrorMessage } from "@/helpers/manageAxiosError";
 
 export interface IFormValues {
   invoicePointOption: IReactSelectOption;
@@ -32,8 +32,8 @@ const validationSchema: yup.SchemaOf<IFormValues> = yup.object().shape({
     label: yup.string().required(),
     value: yup
       .string()
-      .min(1, 'Seleccione una opción')
-      .required('Seleccione una opción'),
+      .min(1, "Seleccione una opción")
+      .required("Seleccione una opción"),
     extraData: yup.number().notRequired(),
   }),
 });
@@ -43,43 +43,48 @@ export default function SelectInvoicePointForm() {
 
   const dispatch = useAppDispatch();
 
-  const { username } = useAppSelector(selectAuth);
+  const { name } = useAppSelector(selectAuth);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingData, setLoadingData] = useState<boolean>(false);
   const [invoicePointDataSelect, setInvoicePointDataSelect] = useState<
     IReactSelectOption[]
   >([]);
+  const [displayRetryLink, setDisplayRetryLink] = useState<boolean>(false);
+
+  const getInvoicePointData = async () => {
+    setLoadingData(true);
+    try {
+      const api = new ApiGenericService<IInvoicePoint>();
+      const response = await api.getAll("invoice-points");
+
+      if (response?.success) {
+        setDisplayRetryLink(false);
+        const data = response?.data?.map((item) => {
+          return {
+            label: item.name,
+            value: item.id,
+          } as IReactSelectOption;
+        });
+
+        setInvoicePointDataSelect([...data]);
+      } else {
+        toast.error(
+          `Error al obtener los puntos de emisión: ${response.errorMessage}.`
+        );
+      }
+    } catch (error) {
+      const errorMessage = getAxiosErrorMessage(error as AxiosError);
+      toast.error(`Error al obtener los puntos de emisión: ${errorMessage}.`);
+      setDisplayRetryLink(true);
+    } finally {
+      setLoadingData(false);
+    }
+  };
 
   useEffect(() => {
     (async () => {
-      setLoadingData(true);
-      try {
-        const api = new ApiGenericService<IInvoicePoint>();
-        const response = await api.getAll('invoice-points');
-
-        if (response?.success) {
-          const data = response?.data?.map((item) => {
-            return {
-              label: item.name,
-              value: item.id,
-            } as IReactSelectOption;
-          });
-
-          setInvoicePointDataSelect([...data]);
-        } else {
-          toast.error(
-            `Error al obtener los puntos de emisión: ${response.errorMessage}.`
-          );
-        }
-      } catch (error) {
-        //const axiosError = getAxiosErrorMessage(error as AxiosError);
-        toast.error(
-          `Error al obtener los puntos de emisión: Error de conexión.`
-        );
-      } finally {
-        setLoadingData(false);
-      }
+      await getInvoicePointData();
     })();
 
     return () => {
@@ -94,7 +99,7 @@ export default function SelectInvoicePointForm() {
     setLoading(true);
 
     try {
-      const { data, success, message, errorMessage } =
+      const { data, success, errorMessage } =
         await ApiService.validateInvoicePoint(invoicePointOption.value);
 
       if (success) {
@@ -112,7 +117,7 @@ export default function SelectInvoicePointForm() {
             (t) => (
               <div
                 className={`${
-                  t.visible ? 'animate-enter' : 'animate-leave'
+                  t.visible ? "animate-enter" : "animate-leave"
                 } pointer-events-auto flex w-full max-w-md rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5`}
               >
                 <div className="w-0 flex-1 bg-amber-200 p-4">
@@ -184,13 +189,15 @@ export default function SelectInvoicePointForm() {
         toast.error(<b>{errorMessage}</b>);
       }
     } catch (error) {
+      const errorMessage = getAxiosErrorMessage(error as AxiosError);
+      toast.error(`Error al validar el punto de emisión: ${errorMessage}.`);
     } finally {
       setLoading(false);
     }
   };
 
   const initialValues: IFormValues = {
-    invoicePointOption: { value: '', label: '' },
+    invoicePointOption: { value: "", label: "" },
   };
 
   const {
@@ -202,7 +209,7 @@ export default function SelectInvoicePointForm() {
     defaultValues: initialValues,
   });
 
-  const invoicePointOption = 'invoicePointOption';
+  const invoicePointOption = "invoicePointOption";
 
   return (
     <>
@@ -214,7 +221,7 @@ export default function SelectInvoicePointForm() {
         </div>
       ) : (
         <div className="px-6 pt-10 pb-8 sm:px-8 lg:p-12 ">
-          <RegisterBgPattern className="absolute bottom-0 left-0 text-light dark:text-dark-300 dark:opacity-60 " />
+          <RegisterBgPattern className="text-light dark:text-dark-300 absolute bottom-0 left-0 dark:opacity-60 " />
           <div className="relative z-10 flex items-center">
             <div className="w-full shrink-0 text-left md:w-[380px]">
               <div className="pb-5 text-center">
@@ -225,10 +232,10 @@ export default function SelectInvoicePointForm() {
                   height="50px"
                   className="pb-1"
                 />
-                <h1 className="text-xs">{username}</h1>
+                <h1 className="text-xs">{name}</h1>
               </div>
               <div className="pt-5 pb-1 text-center ">
-                <h3 className="text-base font-medium tracking-[-0.3px] text-dark dark:text-light ">
+                <h3 className="text-dark dark:text-light text-base font-medium tracking-[-0.3px] ">
                   Seleccionar Punto de Emisión
                 </h3>
               </div>
@@ -262,9 +269,20 @@ export default function SelectInvoicePointForm() {
                   {loading ? (
                     <SpinnerIcon className="h-auto w-6 animate-spin" />
                   ) : (
-                    'Seleccionar'
+                    "Seleccionar"
                   )}
                 </Button>
+                {displayRetryLink && (
+                  <Button
+                    type="button"
+                    onClick={async () => await getInvoicePointData()}
+                    variant="text"
+                    disabled={loading}
+                    className="!mt-5 w-full text-sm tracking-[0.2px] lg:!mt-7"
+                  >
+                    Actualizar
+                  </Button>
+                )}
               </form>
             </div>
           </div>

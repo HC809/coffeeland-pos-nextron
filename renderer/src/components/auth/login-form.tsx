@@ -9,6 +9,13 @@ import Image from "@/components/ui/image";
 import { login } from "@/store/authSlice";
 import { useAppDispatch } from "../../hooks/reduxHooks";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect, useState } from "react";
+import { ApiNoTokenService } from "@/api/principalService";
+import { ILoggedUser } from "@/models/Authentication/Authentication.models";
+import toast from "react-hot-toast";
+import { setAuthUser } from "@/services/AuthenticationService";
+import { getAxiosErrorMessage } from "@/helpers/manageAxiosError";
+import { AxiosError } from "axios";
 
 export interface IFormValues {
   username: string;
@@ -16,7 +23,7 @@ export interface IFormValues {
 }
 
 const validationSchema: yup.SchemaOf<IFormValues> = yup.object().shape({
-  username: yup.string().email().required("Ingrese su usuario."),
+  username: yup.string().required("Ingrese su usuario."),
   password: yup.string().required("Ingrese su contraseña."),
 });
 
@@ -24,6 +31,14 @@ export default function LoginUserForm() {
   const { lightLogo } = siteSettings;
 
   const dispatch = useAppDispatch();
+
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    return () => {
+      setLoading(null as any);
+    };
+  }, []);
 
   const initialValues: IFormValues = {
     username: "",
@@ -40,17 +55,47 @@ export default function LoginUserForm() {
   });
 
   const onSubmit = async ({ username, password }: IFormValues) => {
-    const user = {
+    setLoading(true);
+
+    const credentials = {
       username: username,
-      token: password,
+      password: password,
     };
 
-    dispatch(login(user));
+    try {
+      const { data, success, errorMessage } = await ApiNoTokenService.login(
+        credentials
+      );
+
+      if (success) {
+        const { username, name, role, token } = data;
+        console.log(role);
+        if (role !== "POS" && role !== "ADMIN") {
+          toast.error(`No tiene permisos suficientes para ingresar.`);
+        } else {
+          const loggedUser: ILoggedUser = {
+            username,
+            name,
+            token,
+            logged: true,
+          };
+          await setAuthUser(loggedUser);
+          await dispatch(login(data));
+        }
+      } else {
+        toast.error(errorMessage);
+      }
+    } catch (error) {
+      const errorMessage = getAxiosErrorMessage(error as AxiosError);
+      toast.error(`Error al inciar sesión: ${errorMessage}.`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="px-6 pt-10 pb-8 sm:px-8 lg:p-12">
-      <RegisterBgPattern className="absolute bottom-0 left-0 text-light dark:text-dark-300 dark:opacity-60" />
+      <RegisterBgPattern className="text-light dark:text-dark-300 absolute bottom-0 left-0 dark:opacity-60" />
       <div className="relative z-10 flex items-center">
         <div className="w-full shrink-0 text-left md:w-[380px]">
           <div className="pb-5 text-center ">
@@ -63,7 +108,7 @@ export default function LoginUserForm() {
             />
           </div>
           <div className="pb-5 text-center ">
-            <h1 className="text-lg font-medium tracking-[-0.3px] text-dark dark:text-light lg:text-xl">
+            <h1 className="text-dark dark:text-light text-lg font-medium tracking-[-0.3px] lg:text-xl">
               Coffee Land POS
             </h1>
           </div>
@@ -75,7 +120,6 @@ export default function LoginUserForm() {
               <Input
                 label="Usuario"
                 inputClassName="bg-light dark:bg-dark-300"
-                type="email"
                 {...register("username")}
                 error={errors.username?.message}
               />
@@ -88,6 +132,8 @@ export default function LoginUserForm() {
 
               <Button
                 type="submit"
+                isLoading={loading}
+                disabled={loading}
                 className="!mt-5 w-full text-sm tracking-[0.2px] lg:!mt-7"
               >
                 Iniciar Sesión
