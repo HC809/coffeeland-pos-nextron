@@ -21,6 +21,13 @@ interface NewOrderTaxInfo {
   range: string;
 }
 
+interface NewOrderPaymentInfo {
+  cashAmount: number;
+  cardAmount: number;
+  changeAmount: number;
+  date: Date;
+}
+
 interface NewOrderState {
   newOrderInfo: IOrder;
   newOrderAmounts: IOrderAmounts;
@@ -43,6 +50,9 @@ const initialState: NewOrderState = {
     started: false,
     finished: false,
     date: null,
+    cashAmount: 0,
+    cardAmount: 0,
+    changeAmount: 0,
   },
   newOrderAmounts: {
     subtotal: 0,
@@ -79,6 +89,12 @@ const newOrderSlice = createSlice({
       state.newOrderInfo.invoiceNumber = action.payload.invoiceNumber;
       state.newOrderInfo.limitDate = action.payload.limitDate;
       state.newOrderInfo.range = action.payload.range;
+    },
+    setNewOrderPaymentInfo: (state, action: PayloadAction<NewOrderPaymentInfo>) => {
+      state.newOrderInfo.cashAmount = action.payload.cashAmount;
+      state.newOrderInfo.cardAmount = action.payload.cardAmount;
+      state.newOrderInfo.changeAmount = action.payload.changeAmount;
+      state.newOrderInfo.date = action.payload.date;
     },
     cancelNewOrder: (state) => {
       state.newOrderInfo = initialState.newOrderInfo;
@@ -151,6 +167,7 @@ export const selectNewOrderDetailForInvoice = (state: RootState) =>
 export const {
   setNewOrderType,
   setNewOrderTaxInfo,
+  setNewOrderPaymentInfo,
   cancelNewOrder,
   addProductToNewOrder,
   removeProductFromNewOrder,

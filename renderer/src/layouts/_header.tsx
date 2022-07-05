@@ -70,13 +70,7 @@ function AuthorizedMenu({ user }: { user: ILoggedUser }) {
             <button
               type="button"
               className="transition-fill-colors hover:bg-light-400 dark:hover:bg-dark-600 w-full px-5 py-2.5 text-left"
-              onClick={async () => {
-                await dispatch(cancelNewOrder());
-                await dispatch(setCloseShift());
-                await dispatch(removeTaxInfo());
-                await dispatch(logout());
-                removeAuthUser();
-              }}
+              onClick={async () => openModal("PRINTER_CONFIG_VIEW")}
             >
               Configuración Impresora
             </button>

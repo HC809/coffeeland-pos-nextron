@@ -15,6 +15,9 @@ export interface IOrder {
   customerName: string;
   rtn: string | null;
   date: Date | null;
+  cashAmount: number;
+  cardAmount: number;
+  changeAmount: number;
 }
 
 export interface IOrderAmounts {

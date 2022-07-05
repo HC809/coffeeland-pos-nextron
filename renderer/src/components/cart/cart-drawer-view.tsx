@@ -1,47 +1,21 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Button from "@/components/ui/button";
 import Scrollbar from "@/components/ui/scrollbar";
 import CartItemList from "@/components/cart/cart-item-list";
 import CartEmpty from "@/components/cart/cart-empty";
 import usePrice from "@/lib/hooks/use-price";
-import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
-import {
-  selectNewOrder,
-  selectNewOrderDetailForInvoice,
-} from "@/store/newOrderSlice";
-import { selectGeneralInfo } from "../../store/generalInfoSlice";
-import {
-  formatNumber,
-  hourFormat,
-  formatInvoice,
-} from "../../helpers/functions/general";
-import { toShortDate } from "../../helpers/functions/general";
-import { NumeroALetras } from "@/helpers/functions/lettersAmount";
-import { NewOrderStartButton } from "../new-order/new-order-start";
-// const { ipcRenderer } = window.require('electron');
+import { useAppSelector } from "@/hooks/reduxHooks";
+import { selectNewOrder } from "@/store/newOrderSlice";
 
-interface InvoicePrintResponse {
-  success: boolean;
-  error: string;
-  message: string;
-}
+import { NewOrderStartButton } from "../new-order/new-order-start";
+import { useModalAction } from "../modal-views/context";
 
 function CartDrawerView() {
-  const dispatch = useAppDispatch();
+  const { openModal } = useModalAction();
 
   const { newOrderInfo, newOrderAmounts, newOrderDetail } =
     useAppSelector(selectNewOrder);
-
-  const newOrderDetailForInvoce = useAppSelector(
-    selectNewOrderDetailForInvoice
-  );
-
-  const { companyInfo } = useAppSelector(selectGeneralInfo);
-
-  useEffect(() => {
-    return () => {};
-  }, []);
 
   const {
     total,
@@ -64,92 +38,6 @@ function CartDrawerView() {
   const { price: subtotalAmount } = usePrice({
     amount: subtotal,
   });
-
-  const handleCheckout = async () => {
-    const invoiceDate = new Date();
-    setLoading(true);
-
-    const productDetails = [...newOrderDetailForInvoce];
-
-    const detail = productDetails.map((item) => {
-      return {
-        quantity: item.quantity,
-        price: formatNumber(item.sellingPrice),
-        total: formatNumber(item.total),
-      };
-    });
-
-    const orderModel = {
-      invoiceDate: toShortDate(invoiceDate),
-      invoiceHour: hourFormat(invoiceDate),
-      invoiceNumber: formatInvoice(
-        newOrderInfo.establishmentNumber,
-        newOrderInfo.documentTypeNumber,
-        newOrderInfo.invoicePointNumber,
-        newOrderInfo.invoiceNumber
-      ),
-      limitDate: toShortDate(newOrderInfo.limitDate!),
-      range: newOrderInfo.range,
-      companyInfo,
-      newOrderInfo,
-      newOrderAmountList: {
-        subtotal: formatNumber(newOrderAmounts.subtotal),
-        totalTax15: formatNumber(newOrderAmounts.totalTax15),
-        totalTax18: formatNumber(newOrderAmounts.totalTax18),
-        totalExempt: formatNumber(newOrderAmounts.totalExempt),
-        totalExonerated: formatNumber(newOrderAmounts.totalExonerated),
-        totalTax: formatNumber(newOrderAmounts.totalTax),
-        taxableAmount15: formatNumber(newOrderAmounts.taxableAmount15),
-        taxableAmount18: formatNumber(newOrderAmounts.taxableAmount18),
-        total: formatNumber(newOrderAmounts.total),
-      },
-      lettersAmount: NumeroALetras(newOrderAmounts.total),
-      newOrderProductDetail: detail,
-    };
-
-    console.log(orderModel);
-
-    // const invoicePrintResponse: InvoicePrintResponse = await ipcRenderer.invoke(
-    //   'print-invoice',
-    //   {
-    //     invoiceDate: toShortDate(invoiceDate),
-    //     invoiceHour: hourFormat(invoiceDate),
-    //     invoiceNumber: `${formatLeadingZeros(0, 3)}-${formatLeadingZeros(
-    //       1,
-    //       3
-    //     )}-${formatLeadingZeros(1, 3)}-${formatLeadingZeros(
-    //       newOrderInfo?.invoiceNumber,
-    //       8
-    //     )}`,
-    //     companyInfo,
-    //     newOrderInfo,
-    //     newOrderAmountList: {
-    //       subtotal: formatNumber(newOrderAmounts.subtotal),
-    //       totalTax15: formatNumber(newOrderAmounts.totalTax15),
-    //       totalTax18: formatNumber(newOrderAmounts.totalTax18),
-    //       totalExempt: formatNumber(newOrderAmounts.totalExempt),
-    //       totalExonerated: formatNumber(newOrderAmounts.totalExonerated),
-    //       totalTax: formatNumber(newOrderAmounts.totalTax),
-    //       taxableAmount15: formatNumber(newOrderAmounts.taxableAmount15),
-    //       taxableAmount18: formatNumber(newOrderAmounts.taxableAmount18),
-    //       total: formatNumber(newOrderAmounts.total),
-    //     },
-    //     lettersAmount: NumeroALetras(newOrderAmounts.total),
-    //     newOrderProductDetail: newOrderDetailForInvoce,
-    //   }
-    // );
-
-    setLoading(false);
-
-    // if (invoicePrintResponse.success) {
-    //   //alert(1);
-    // } else {
-    //   toast.error(invoicePrintResponse.error, {
-    //     position: 'bottom-center',
-    //     duration: 5000,
-    //   });
-    // }
-  };
 
   return (
     <>
@@ -205,10 +93,10 @@ function CartDrawerView() {
           <Button
             disabled={newOrderDetail.length === 0 || loading}
             isLoading={loading}
-            onClick={() => handleCheckout()}
+            onClick={() => openModal("END_NEW_ORDER_VIEW")}
             className="w-full text-sm md:h-[52px]"
           >
-            {!loading ? "Facturar" : "Imprimiendo Factura..."}
+            Pagar
           </Button>
         </div>
       </div>

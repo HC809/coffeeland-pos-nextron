@@ -16,11 +16,17 @@ const NewOrderView = dynamic(
 const NewOrderInvoiceDetailView = dynamic(
   () => import("@/components/new-order/new-order-invoice-detail")
 );
+const EndNewOrderView = dynamic(
+  () => import("@/components/new-order/end-new-order-view")
+);
 const CancelNewOrderView = dynamic(
   () => import("@/components/new-order/cancel-order-view")
 );
 const UpdateProductsView = dynamic(
   () => import("@/components/general/update-products-view")
+);
+const PrinterConfigView = dynamic(
+  () => import("@/components/general/printer-config-view")
 );
 
 function renderModalContent(view: MODAL_VIEWS) {
@@ -29,10 +35,14 @@ function renderModalContent(view: MODAL_VIEWS) {
       return <NewOrderView />;
     case "NEW_ORDER_INVOICE_DETAIL_VIEW":
       return <NewOrderInvoiceDetailView />;
+    case "END_NEW_ORDER_VIEW":
+      return <EndNewOrderView />;
     case "CANCEL_NEW_ORDER_VIEW":
       return <CancelNewOrderView />;
     case "UPDATE_PRODUCTS_VIEW":
       return <UpdateProductsView />;
+    case "PRINTER_CONFIG_VIEW":
+      return <PrinterConfigView />;
     default:
       return null;
   }
