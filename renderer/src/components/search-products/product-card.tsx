@@ -4,15 +4,18 @@ import Image from "@/components/ui/image";
 import placeholder from "@/assets/images/placeholders/product.svg";
 import { fadeInBottomWithScaleX } from "@/lib/framer-motion/fade-in-bottom";
 import { IProduct } from "../../models/IProduct";
-import { useAppDispatch } from "../../hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { addProductToNewOrder } from "@/store/newOrderSlice";
 import usePrice from "@/lib/hooks/use-price";
 import toast from "react-hot-toast";
+import { selectNewOrder } from "../../store/newOrderSlice";
 
 export default function ProductCard({ product }: { product: IProduct }) {
   const { name, image, sellingPrice } = product ?? {};
 
   const dispatch = useAppDispatch();
+
+  const { newOrderDetail } = useAppSelector(selectNewOrder);
 
   const { price: itemPrice } = usePrice({
     amount: sellingPrice,
@@ -24,6 +27,14 @@ export default function ProductCard({ product }: { product: IProduct }) {
       whileHover={{ scale: 1.05 }}
       variants={fadeInBottomWithScaleX()}
       onClick={() => {
+        const existProductInOrder = newOrderDetail.find(
+          (p) => p.productId === product.id
+        );
+
+        if (existProductInOrder) {
+          return toast.error("El producto ya existe en la orden.");
+        }
+
         dispatch(
           addProductToNewOrder({
             productId: product.id,

@@ -6,6 +6,8 @@ import dynamic from "next/dynamic";
 import React, { useEffect } from "react";
 import { useAppSelector } from "../hooks/reduxHooks";
 import { selectAuth } from "../store/authSlice";
+// @ts-ignore
+import LockScreen from "react-lock-screen";
 
 const PrivateRoute = dynamic(() => import("@/layouts/_private-route"), {
   ssr: false,
@@ -15,6 +17,14 @@ interface Props {
   Component: NextPageWithLayout;
   pageProps: any;
 }
+
+const getLockScreenUi = (setLock: any) => {
+  return (
+    <div className="fixed bg-red-200">
+      <button onClick={() => setLock(false)}>UNLOCK</button>
+    </div>
+  );
+};
 
 const CustomRouter = ({ Component, pageProps }: Props) => {
   const getLayout = Component.getLayout ?? ((page) => page);

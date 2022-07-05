@@ -3,5 +3,5 @@ export interface IInvoicePoint {
   name: string;
   number: number;
   establishment: number;
-  document_type: string;
+  documentType: number;
 }

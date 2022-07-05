@@ -5,6 +5,9 @@ export interface IOrder {
   finished: boolean;
   orderType: OrderType | null;
   cai: string;
+  establishmentNumber: number,
+  documentTypeNumber: number,
+  invoicePointNumber: number,
   invoiceNumber: number;
   limitDate: Date | null;
   range: string;

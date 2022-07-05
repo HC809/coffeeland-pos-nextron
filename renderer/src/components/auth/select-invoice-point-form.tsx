@@ -152,7 +152,7 @@ export default function SelectInvoicePointForm() {
                           invoicePoint,
                           activeInvoiceRange: {
                             ...invoiceRangeInUse,
-                            actualNumber: invoiceRangeInUse.startNumber,
+                            currentNumber: invoiceRangeInUse.startNumber,
                           },
                           pendingInvoiceRange: invoiceRangePending,
                         })
@@ -176,7 +176,7 @@ export default function SelectInvoicePointForm() {
               invoicePoint,
               activeInvoiceRange: {
                 ...invoiceRangeInUse,
-                actualNumber: invoiceRangeInUse.startNumber,
+                currentNumber: invoiceRangeInUse.startNumber,
               },
               pendingInvoiceRange: invoiceRangePending,
             })

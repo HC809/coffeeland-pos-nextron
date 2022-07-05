@@ -3,7 +3,7 @@ export interface IInvoiceRange {
   cai: string;
   startNumber: number;
   endNumber: number;
-  actualNumber: number;
+  currentNumber: number;
   current_number: number;
   limitDate: Date | null;
 }

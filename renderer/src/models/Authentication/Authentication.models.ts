@@ -1,5 +1,3 @@
-import { isNull } from "lodash";
-
 export interface ILoginUser {
   username: string;
   password: string;

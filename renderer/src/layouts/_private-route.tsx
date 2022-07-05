@@ -9,6 +9,8 @@ import OpenCashFlowForm from "@/components/auth/open-cash-flow-form";
 import { removeTaxInfo, selectTaxInfo } from "@/store/taxInfoSlice";
 import { selectShiftInfo } from "@/store/shiftInfoSlice";
 import SearchProductsPage from "@/pages/products-search";
+// @ts-ignore
+import LockScreen from "react-lock-screen";
 
 function UnAuthorizedView() {
   return (
@@ -58,6 +60,10 @@ function OpenCashFlowView() {
   );
 }
 
+const getLockScreenUi = (setLock: any) => {
+  return <button onClick={() => setLock(false)}>unlock</button>;
+};
+
 export default function PrivateRoute({
   children,
 }: React.PropsWithChildren<{}>) {
@@ -75,6 +81,14 @@ export default function PrivateRoute({
 
   if (!openShift) {
     return <OpenCashFlowView />;
+  }
+
+  if (true) {
+    return (
+      <LockScreen timeout={2000} ui={getLockScreenUi}>
+        <p>Lorem Ipsum is not simply</p>
+      </LockScreen>
+    );
   }
 
   return <>{<SearchProductsPage />}</>;

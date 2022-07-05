@@ -42,6 +42,7 @@
     "react-hook-form": "7.27.1",
     "react-hot-toast": "2.2.0",
     "react-icons": "^4.4.0",
+    "react-lock-screen": "^0.1.1",
     "react-phone-input-2": "2.15.0",
     "react-query": "3.34.15",
     "react-redux": "^8.0.2",

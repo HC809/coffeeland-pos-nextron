@@ -21,7 +21,7 @@ const initialState: State = {
     cai: '',
     startNumber: 0,
     endNumber: 0,
-    actualNumber: 0,
+    currentNumber: 0,
     limitDate: null,
   },
   pendingInvoiceRange: null,
@@ -38,16 +38,16 @@ export const taxInfoSlice = createSlice({
     },
     incrementRangeActualNumber: (state, action: PayloadAction<number>) => {
       if (state.activeInvoiceRange.id === action.payload) {
-        state.activeInvoiceRange.actualNumber =
-          state.activeInvoiceRange.actualNumber + 1;
+        state.activeInvoiceRange.currentNumber =
+          state.activeInvoiceRange.currentNumber + 1;
       }
 
       if (
         state.pendingInvoiceRange &&
         state.pendingInvoiceRange.id === action.payload
       ) {
-        state.pendingInvoiceRange.actualNumber =
-          state.pendingInvoiceRange.actualNumber + 1;
+        state.pendingInvoiceRange.currentNumber =
+          state.pendingInvoiceRange.currentNumber + 1;
       }
     },
     removeTaxInfo: (state) => {

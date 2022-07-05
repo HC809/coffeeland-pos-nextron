@@ -111,6 +111,16 @@ export default function Header() {
         >
           <AiFillAppstore size={25} color="#0D9965" /> Productos
         </Button>
+
+        <Button
+          onClick={() => {}}
+          variant="icon"
+          aria-label="Layout"
+          className="hidden 2xl:flex 2xl:w-5"
+        >
+          <NormalGridIcon className="h-[16px] w-[16px]" />
+        </Button>
+
         <LoginMenu />
       </div>
     </header>

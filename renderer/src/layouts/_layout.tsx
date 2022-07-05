@@ -11,6 +11,7 @@ import { BiPrinter, BiInfoCircle } from "react-icons/bi";
 import { BiEdit, BiStore } from "react-icons/bi";
 import { useAppSelector } from "../hooks/reduxHooks";
 import { selectNewOrder } from "../store/newOrderSlice";
+import { formatInvoice } from "../helpers/functions/general";
 
 export default function Layout({ children }: React.PropsWithChildren<{}>) {
   const { openModal } = useModalAction();
@@ -66,25 +67,15 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
               <ul className="mt-4 flex flex-col md:mt-0 md:flex-row md:space-x-8 md:text-sm md:font-medium">
                 <li>
                   <p>
-                    <b>Factura Nº:</b> {newOrderInfo.invoiceNumber}
+                    <b>Factura Nº:</b>{" "}
+                    {formatInvoice(
+                      newOrderInfo.establishmentNumber,
+                      newOrderInfo.documentTypeNumber,
+                      newOrderInfo.invoicePointNumber,
+                      newOrderInfo.invoiceNumber
+                    )}
                   </p>
                 </li>
-                {/* <li>
-                  <a
-                    href="#"
-                    className="block border-b border-gray-100 py-2 pr-4 pl-3 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:bg-transparent md:dark:hover:text-white"
-                  >
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="block border-b border-gray-100 py-2 pr-4 pl-3 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:bg-transparent md:dark:hover:text-white"
-                  >
-                    Services
-                  </a>
-                </li> */}
               </ul>
             </div>
           </div>

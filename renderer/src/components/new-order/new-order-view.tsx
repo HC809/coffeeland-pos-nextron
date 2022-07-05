@@ -1,38 +1,41 @@
-import * as yup from 'yup';
-import { useForm } from 'react-hook-form';
-import Input from '@/components/ui/forms/input';
-import Button from '@/components/ui/button';
-import { RegisterBgPattern } from '@/components/auth/register-bg-pattern';
-import { siteSettings } from '@/data/static/site-settings';
-import Image from '@/components/ui/image';
-import { useAppDispatch } from '../../hooks/reduxHooks';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { motion } from 'framer-motion';
-import { fadeInBottomWithScaleX } from '@/lib/framer-motion/fade-in-bottom';
-import { useEffect, useState } from 'react';
-import { OrderType } from '@/data/OrderTypes';
-import { setNewOrderType, selectNewOrder } from '@/store/newOrderSlice';
-import { useAppSelector } from '@/hooks/reduxHooks';
-import { useModalAction } from '../modal-views/context';
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import Input from "@/components/ui/forms/input";
+import Button from "@/components/ui/button";
+import { RegisterBgPattern } from "@/components/auth/register-bg-pattern";
+import { siteSettings } from "@/data/static/site-settings";
+import Image from "@/components/ui/image";
+import { useAppDispatch } from "../../hooks/reduxHooks";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { motion } from "framer-motion";
+import { fadeInBottomWithScaleX } from "@/lib/framer-motion/fade-in-bottom";
+import { useEffect, useState } from "react";
+import { OrderType } from "@/data/OrderTypes";
+import { setNewOrderType, selectNewOrder } from "@/store/newOrderSlice";
+import { useAppSelector } from "@/hooks/reduxHooks";
+import { useModalAction } from "../modal-views/context";
 
 export interface IFormValues {
-  ticketNumber: number;
-  customerName?: string;
+  ticketNumber?: number | null | undefined;
+  customerName?: string | null | undefined;
   rtn: string | null | undefined;
 }
 
 const validationSchema: yup.SchemaOf<IFormValues> = yup.object().shape({
   ticketNumber: yup
     .number()
-    .min(0, 'El número de ticket no puede ser menor a 0.')
-    .required(),
-  customerName: yup.string(),
+    .transform((curr, orig) => (orig === "" ? 0 : curr))
+    .min(0, "El número de ticket no puede ser menor a 0.")
+    .notRequired(),
+  customerName: yup
+    .string()
+    .transform((curr, orig) => (orig === "" ? "Consumidor Final" : curr)),
   rtn: yup
     .string()
-    .transform((curr, orig) => (orig === '' ? null : curr))
+    .transform((curr, orig) => (orig === "" ? null : curr))
     .matches(
       /^([0-9]){4}[-]([0-9]){4}[-]([0-9]){6}$/,
-      'Formato de RTN no válido.'
+      "Formato de RTN no válido."
     )
     .nullable(true)
     .notRequired(),
@@ -59,7 +62,7 @@ export default function StartNewOrderForm() {
     ticketNumber: newOrderInfo.started ? newOrderInfo.ticketNumber || 0 : 0,
     customerName: newOrderInfo.started
       ? newOrderInfo.customerName
-      : 'Consumidor Final',
+      : "Consumidor Final",
     rtn: newOrderInfo.started ? newOrderInfo.rtn : null,
   };
 
@@ -75,9 +78,9 @@ export default function StartNewOrderForm() {
   const onSubmit = async ({ customerName, rtn, ticketNumber }: IFormValues) => {
     await dispatch(
       setNewOrderType({
-        customerName: customerName || 'Consumidor Final',
+        customerName: customerName || "Consumidor Final",
         orderType: orderType!,
-        rtn: rtn || '',
+        rtn: rtn || "",
         ticketNumber: ticketNumber || 0,
       })
     );
@@ -87,30 +90,30 @@ export default function StartNewOrderForm() {
 
   return (
     <div className="px-6 pt-5 pb-8 sm:px-8 lg:p-12">
-      <RegisterBgPattern className="absolute bottom-0 left-0 text-light dark:text-dark-300 dark:opacity-60" />
+      <RegisterBgPattern className="text-light dark:text-dark-300 absolute bottom-0 left-0 dark:opacity-60" />
       <div className="relative z-10 flex items-center">
         <div className="w-full shrink-0 text-left md:w-[380px]">
           <div className="pb-2 text-center ">
-            <h1 className="text-lg font-medium tracking-[-0.3px] text-dark dark:text-light lg:text-xl">
-              {newOrderInfo.started ? 'Editar Venta' : 'Nueva Venta'}
+            <h1 className="text-dark dark:text-light text-lg font-medium tracking-[-0.3px] lg:text-xl">
+              {newOrderInfo.started ? "Editar Venta" : "Nueva Venta"}
             </h1>
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
             <>
-              <div className="grid h-full grid-cols-2 gap-5">
-                <motion.div
-                  whileHover={{
-                    scale: 1.1,
-                  }}
-                  whileTap={{ scale: 0.9 }}
+              <div className="grid h-full grid-cols-2 gap-5 pt-5">
+                <div
                   onClick={() => {
                     setOrderType(OrderType.SUC);
                   }}
-                  className="group cursor-pointer rounded-md bg-light px-4 py-7 text-center dark:bg-dark-250"
+                  className={`${
+                    orderType !== OrderType.SUC
+                      ? "group bg-light dark:bg-dark-250 cursor-pointer rounded-md px-4 py-7 text-center focus:border-2 focus:border-green-600"
+                      : "group bg-light dark:bg-dark-250 border-brand cursor-pointer rounded-md border-2 px-4 py-7 text-center"
+                  }`}
                 >
-                  <div className="relative mx-auto mb-2.5 h-[75px] w-[75px] md:h-20 md:w-20 lg:h-[90px] lg:w-[90px]">
+                  <div className="relative mx-auto mb-2.5 h-[10px] w-[70px] md:h-20 md:w-20 lg:h-[90px] lg:w-[90px]">
                     <Image
-                      alt={'eat-here'}
+                      alt={"eat-here"}
                       layout="fill"
                       quality={100}
                       objectFit="cover"
@@ -118,32 +121,30 @@ export default function StartNewOrderForm() {
                       className="rounded-3xl"
                     />
                   </div>
-
                   <h3
                     className={`${
                       orderType !== OrderType.SUC
-                        ? 'font-base mb-1 text-gray-300 transition-colors group-hover:text-brand dark:text-light'
-                        : 'font-base mb-1 text-lg text-brand'
+                        ? "font-base group-hover:text-brand dark:text-light mb-1 text-gray-300 transition-colors"
+                        : "font-base text-brand mb-1 text-lg "
                     }`}
                   >
-                    {'En Sucursal'}
+                    {"En Sucursal"}
                   </h3>
-                </motion.div>
+                </div>
 
-                <motion.div
-                  whileHover={{
-                    scale: 1.1,
-                  }}
-                  whileTap={{ scale: 0.9 }}
-                  variants={fadeInBottomWithScaleX()}
+                <div
                   onClick={() => {
                     setOrderType(OrderType.AS);
                   }}
-                  className="group cursor-pointer rounded-md bg-light px-4 py-7 text-center dark:bg-dark-250"
+                  className={`${
+                    orderType !== OrderType.AS
+                      ? "group bg-light dark:bg-dark-250 cursor-pointer rounded-md px-4 py-7 text-center focus:border-2 focus:border-green-600"
+                      : "group bg-light dark:bg-dark-250 border-brand cursor-pointer rounded-md border-2 px-4 py-7 text-center"
+                  }`}
                 >
                   <div className="relative mx-auto mb-2.5 h-[75px] w-[75px] md:h-20 md:w-20 lg:h-[90px] lg:w-[90px]">
                     <Image
-                      alt={'eat-here'}
+                      alt={"eat-here"}
                       layout="fill"
                       quality={100}
                       objectFit="cover"
@@ -155,31 +156,33 @@ export default function StartNewOrderForm() {
                   <h3
                     className={`${
                       orderType !== OrderType.AS
-                        ? 'font-base mb-1 text-gray-300 transition-colors group-hover:text-brand dark:text-light'
-                        : 'font-base mb-1 text-lg text-brand'
+                        ? "font-base group-hover:text-brand dark:text-light mb-1 text-gray-300 transition-colors"
+                        : "font-base text-brand mb-1 text-lg"
                     }`}
                   >
-                    {'Autoservicio'}
+                    {"Autoservicio"}
                   </h3>
-                </motion.div>
+                </div>
               </div>
+
+              <br></br>
 
               <Input
                 label="Ticket"
                 inputClassName="bg-light dark:bg-dark-300"
-                {...register('ticketNumber')}
+                {...register("ticketNumber")}
                 error={errors.ticketNumber?.message}
               />
               <Input
                 label="Cliente"
                 inputClassName="bg-light dark:bg-dark-300"
-                {...register('customerName')}
+                {...register("customerName")}
                 error={errors.customerName?.message}
               />
               <Input
                 label="RTN"
                 inputClassName="bg-light dark:bg-dark-300"
-                {...register('rtn')}
+                {...register("rtn")}
                 error={errors.rtn?.message}
               />
 
@@ -188,7 +191,7 @@ export default function StartNewOrderForm() {
                 className="!mt-5 w-full text-sm tracking-[0.2px] lg:!mt-7"
                 disabled={!orderType}
               >
-                {newOrderInfo.started ? 'Guardar' : 'Iniciar'}
+                {newOrderInfo.started ? "Guardar" : "Iniciar"}
               </Button>
             </>
           </form>

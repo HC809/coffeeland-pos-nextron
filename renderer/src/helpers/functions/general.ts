@@ -18,3 +18,14 @@ export const formatNumber = (number: number) =>
 export function formatLeadingZeros(number: number, many: number) {
   return ('0'.repeat(many) + number).slice(-many);
 }
+
+export function formatInvoice(establishment: number, documentType: number, invoicePoint: number, invoiceNumber: number) {
+  const establishmentString = formatLeadingZeros(establishment, 3);
+  const documentTypeString = formatLeadingZeros(documentType, 3);
+  const invoicePointString = formatLeadingZeros(invoicePoint, 2);
+  const invoiceNumberString = formatLeadingZeros(invoiceNumber, 8);
+
+  return `${establishmentString}-${documentTypeString}-${invoicePointString}-${invoiceNumberString}`;
+}
+
+
