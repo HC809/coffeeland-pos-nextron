@@ -17,12 +17,17 @@ import Image from "@/components/ui/image";
 import { siteSettings } from "@/data/static/site-settings";
 import { removeTaxInfo } from "@/store/taxInfoSlice";
 import { setCloseShift } from "@/store/shiftInfoSlice";
-import { cancelNewOrder } from "@/store/newOrderSlice";
+import { cancelNewOrder, selectNewOrder } from "@/store/newOrderSlice";
 import { NormalGridIcon } from "@/components/icons/normal-grid-icon";
 import routes from "@/config/routes";
 import { AiFillAppstore } from "react-icons/ai";
+import toast from "react-hot-toast";
 
 function AuthorizedMenu({ user }: { user: ILoggedUser }) {
+  const { openModal } = useModalAction();
+
+  const { newOrderInfo } = useAppSelector(selectNewOrder);
+
   const dispatch = useAppDispatch();
 
   return (
@@ -45,6 +50,37 @@ function AuthorizedMenu({ user }: { user: ILoggedUser }) {
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items className="bg-light text-dark shadow-dropdown dark:bg-dark-250 dark:text-light absolute top-[84%] right-0 z-30 mt-4 w-56 origin-top-right rounded-md py-1.5">
+          <Menu.Item>
+            <button
+              type="button"
+              className="transition-fill-colors hover:bg-light-400 dark:hover:bg-dark-600 w-full px-5 py-2.5 text-left"
+              onClick={() => {
+                if (newOrderInfo.started) {
+                  return toast.error(
+                    "Debe finalizar o cancelar la orden actual antes de poder actualizar los productos.",
+                    { duration: 4000 }
+                  );
+                } else openModal("UPDATE_PRODUCTS_VIEW");
+              }}
+            >
+              Actualizar Productos
+            </button>
+          </Menu.Item>
+          <Menu.Item>
+            <button
+              type="button"
+              className="transition-fill-colors hover:bg-light-400 dark:hover:bg-dark-600 w-full px-5 py-2.5 text-left"
+              onClick={async () => {
+                await dispatch(cancelNewOrder());
+                await dispatch(setCloseShift());
+                await dispatch(removeTaxInfo());
+                await dispatch(logout());
+                removeAuthUser();
+              }}
+            >
+              Configuración Impresora
+            </button>
+          </Menu.Item>
           <Menu.Item>
             <button
               type="button"

@@ -41,7 +41,7 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
               </div>
               <div className="relative hidden px-5 md:block">
                 <Button
-                  onClick={() => alert("Detalle Venta")}
+                  onClick={() => openModal("NEW_ORDER_INVOICE_DETAIL_VIEW")}
                   variant="text"
                   className="dark:bg-dark-100 dark:hover:bg-dark-200 text-sm text-gray-600 dark:text-gray-400 dark:hover:text-gray-500 md:h-[52px]"
                 >

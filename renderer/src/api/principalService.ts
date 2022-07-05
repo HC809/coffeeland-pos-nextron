@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { IApiResponse } from 'src/models/shared/IApiResponse';
 import axiosNoTokenApiInstance from 'src/api/axiosNoTokenInstance';
-import { IPOSData } from '../models/Authentication/IPOSData';
+import { IPOSData, IUpdatePOSData } from '../models/Authentication/IPOSData';
 import { IAuthResponse, ILoginUser } from '@/models/Authentication/Authentication.models';
 import axiosApiInstance from './axiosInstance.api';
 
@@ -35,9 +35,16 @@ export interface IPOSDataApiResponse extends IApiResponse {
   data: IPOSData;
 }
 
+export interface IUpdatePOSDataApiResponse extends IApiResponse {
+  data: IUpdatePOSData;
+}
+
 const ApiService = {
   validateInvoicePoint(id: number): Promise<IPOSDataApiResponse> {
     return requests.get(`auth/validateInvoicePoint/${id}`);
+  },
+  updatePOSProducts(): Promise<IUpdatePOSDataApiResponse> {
+    return requests.get(`auth/updateProducts`);
   },
 };
 

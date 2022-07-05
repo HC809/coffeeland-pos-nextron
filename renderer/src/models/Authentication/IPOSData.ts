@@ -12,3 +12,8 @@ export interface IPOSData {
   categories: ICategory[];
   products: IProduct[];
 }
+
+export interface IUpdatePOSData {
+  categories: ICategory[];
+  products: IProduct[];
+}

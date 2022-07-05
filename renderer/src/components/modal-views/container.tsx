@@ -1,29 +1,38 @@
-import { useEffect, Fragment } from 'react';
-import { useRouter } from 'next/router';
-import dynamic from 'next/dynamic';
+import { useEffect, Fragment } from "react";
+import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 import {
   MODAL_VIEWS,
   useModalAction,
   useModalState,
-} from '@/components/modal-views/context';
-import { Dialog } from '@/components/ui/dialog';
-import { Transition } from '@/components/ui/transition';
-import { CloseIcon } from '@/components/icons/close-icon';
+} from "@/components/modal-views/context";
+import { Dialog } from "@/components/ui/dialog";
+import { Transition } from "@/components/ui/transition";
+import { CloseIcon } from "@/components/icons/close-icon";
 
-const LoginUserForm = dynamic(() => import('@/components/auth/login-form'));
 const NewOrderView = dynamic(
-  () => import('@/components/new-order/new-order-view')
+  () => import("@/components/new-order/new-order-view")
+);
+const NewOrderInvoiceDetailView = dynamic(
+  () => import("@/components/new-order/new-order-invoice-detail")
 );
 const CancelNewOrderView = dynamic(
-  () => import('@/components/new-order/cancel-order-view')
+  () => import("@/components/new-order/cancel-order-view")
+);
+const UpdateProductsView = dynamic(
+  () => import("@/components/general/update-products-view")
 );
 
 function renderModalContent(view: MODAL_VIEWS) {
   switch (view) {
-    case 'NEW_ORDER_VIEW':
+    case "NEW_ORDER_VIEW":
       return <NewOrderView />;
-    case 'CANCEL_NEW_ORDER_VIEW':
+    case "NEW_ORDER_INVOICE_DETAIL_VIEW":
+      return <NewOrderInvoiceDetailView />;
+    case "CANCEL_NEW_ORDER_VIEW":
       return <CancelNewOrderView />;
+    case "UPDATE_PRODUCTS_VIEW":
+      return <UpdateProductsView />;
     default:
       return null;
   }
@@ -35,9 +44,9 @@ export default function ModalsContainer() {
   const { closeModal } = useModalAction();
   useEffect(() => {
     // close search modal when route change
-    router.events.on('routeChangeStart', closeModal);
+    router.events.on("routeChangeStart", closeModal);
     return () => {
-      router.events.off('routeChangeStart', closeModal);
+      router.events.off("routeChangeStart", closeModal);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -45,7 +54,7 @@ export default function ModalsContainer() {
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden xs:p-4"
+        className="xs:p-4 fixed inset-0 z-50 overflow-y-auto overflow-x-hidden"
         onClose={closeModal}
       >
         <div className="min-h-screen text-center">
@@ -58,7 +67,7 @@ export default function ModalsContainer() {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 z-40 cursor-pointer bg-dark bg-opacity-60 backdrop-blur dark:bg-opacity-80" />
+            <Dialog.Overlay className="bg-dark fixed inset-0 z-40 cursor-pointer bg-opacity-60 backdrop-blur dark:bg-opacity-80" />
           </Transition.Child>
 
           {/* This element is to trick the browser into centering the modal contents. */}
@@ -78,14 +87,14 @@ export default function ModalsContainer() {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-110"
           >
-            <div className="text-start relative z-50 inline-block min-h-screen w-full transform overflow-hidden align-middle transition-all xs:min-h-[auto] xs:w-auto">
-              <div className="relative flex min-h-screen items-center overflow-hidden bg-light dark:bg-dark-300 xs:block xs:min-h-[auto] xs:rounded-md">
+            <div className="text-start xs:min-h-[auto] xs:w-auto relative z-50 inline-block min-h-screen w-full transform overflow-hidden align-middle transition-all">
+              <div className="bg-light dark:bg-dark-300 xs:block xs:min-h-[auto] xs:rounded-md relative flex min-h-screen items-center overflow-hidden">
                 <button
                   onClick={closeModal}
                   aria-label="Close panel"
-                  className="absolute top-5 right-4 z-10 text-dark-900 outline-none transition-all hover:text-dark focus-visible:outline-none dark:text-dark-800 hover:dark:text-light-200 md:top-6 md:right-5 lg:top-7 lg:right-7"
+                  className="text-dark-900 hover:text-dark dark:text-dark-800 hover:dark:text-light-200 absolute top-5 right-4 z-10 outline-none transition-all focus-visible:outline-none md:top-6 md:right-5 lg:top-7 lg:right-7"
                 >
-                  <CloseIcon className="h-4 w-4 focus-visible:outline-none lg:h-[18px] lg:w-[18px] 3xl:h-5 3xl:w-5" />
+                  <CloseIcon className="3xl:h-5 3xl:w-5 h-4 w-4 focus-visible:outline-none lg:h-[18px] lg:w-[18px]" />
                 </button>
                 <div className="h-full w-full">
                   {view && renderModalContent(view)}
