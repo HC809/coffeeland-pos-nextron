@@ -1,5 +1,6 @@
 import { formatInvoice } from "@/helpers/functions/general";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
+import { selectGeneralInfo } from "@/store/generalInfoSlice";
 import { selectNewOrder, setNewOrderTaxInfo } from "@/store/newOrderSlice";
 import { selectTaxInfo } from "@/store/taxInfoSlice";
 import React from "react";
@@ -12,12 +13,17 @@ export const NewOrderStartButton = () => {
 
   const dispatch = useAppDispatch();
 
+  const { printerName } = useAppSelector(selectGeneralInfo);
   const { newOrderInfo } = useAppSelector(selectNewOrder);
 
   const { invoicePoint, activeInvoiceRange, pendingInvoiceRange } =
     useAppSelector(selectTaxInfo);
 
   const validateTaxInfo = async () => {
+    if (!printerName) {
+      return toast.error("No se ha encontrado una impresora conectada.");
+    }
+
     const {
       cai: activeCai,
       currentNumber: activeCurrentNumber,
@@ -27,7 +33,7 @@ export const NewOrderStartButton = () => {
     } = activeInvoiceRange;
 
     const activeNextNumber = activeCurrentNumber + 1;
-    if (activeNextNumber + 1 < activeEndNumber) {
+    if (activeNextNumber < activeEndNumber) {
       if (activeLimitDate && activeLimitDate < new Date()) {
         toast.error(`La fecha límite de emisión fue el ${activeLimitDate}.`);
       } else {

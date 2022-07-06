@@ -174,10 +174,7 @@ export default function SelectInvoicePointForm() {
           await dispatch(
             setTaxInfo({
               invoicePoint,
-              activeInvoiceRange: {
-                ...invoiceRangeInUse,
-                currentNumber: invoiceRangeInUse.startNumber,
-              },
+              activeInvoiceRange: invoiceRangeInUse,
               pendingInvoiceRange: invoiceRangePending,
             })
           );

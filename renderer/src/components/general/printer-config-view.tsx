@@ -8,6 +8,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useModalAction } from "../modal-views/context";
 import { selectGeneralInfo, setPrinterName } from "@/store/generalInfoSlice";
 import toast from "react-hot-toast";
+import { useEffect, useState } from "react";
+const { ipcRenderer } = window.require("electron");
 
 export interface IFormValues {
   printerName: string;
@@ -19,6 +21,14 @@ export default function PrinterConfigView() {
   const dispatch = useAppDispatch();
 
   const { printerName } = useAppSelector(selectGeneralInfo);
+
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    return () => {
+      setLoading(null as any);
+    };
+  }, []);
 
   const validationSchema: yup.SchemaOf<IFormValues> = yup.object().shape({
     printerName: yup.string().required("Campo requerido."),
@@ -40,11 +50,28 @@ export default function PrinterConfigView() {
 
   const onSubmit = async ({ printerName }: IFormValues) => {
     await dispatch(setPrinterName(printerName));
-    toast.success("Impresora actualizada.");
+    toast.success("Impresora actualizada.", { duration: 1000 });
     closeModal();
   };
 
-  const printTest = async () => {};
+  const printTest = async () => {
+    setLoading(true);
+    try {
+      const response = await ipcRenderer.invoke("print-test", {
+        printerName: getValues("printerName"),
+      });
+      if (!response.success) {
+        return toast.error(response.message, {
+          position: "top-center",
+          duration: 5000,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="px-6 pt-5 pb-8 sm:px-8 lg:p-12">
@@ -68,10 +95,11 @@ export default function PrinterConfigView() {
 
               <Button
                 type="button"
+                onClick={async () => await printTest()}
                 variant="text"
                 className="!mt-5 w-full text-sm tracking-[0.2px] lg:!mt-7"
               >
-                Prueba de Impresión
+                {`${loading ? "Imprimiendo..." : "Prueba de Impresión"}`}
               </Button>
 
               <Button

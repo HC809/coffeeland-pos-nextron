@@ -17,7 +17,10 @@ const NewOrderInvoiceDetailView = dynamic(
   () => import("@/components/new-order/new-order-invoice-detail")
 );
 const EndNewOrderView = dynamic(
-  () => import("@/components/new-order/end-new-order-view")
+  () => import("@/components/new-order/end-new-order-view"),
+  {
+    ssr: false,
+  }
 );
 const CancelNewOrderView = dynamic(
   () => import("@/components/new-order/cancel-order-view")
@@ -26,7 +29,10 @@ const UpdateProductsView = dynamic(
   () => import("@/components/general/update-products-view")
 );
 const PrinterConfigView = dynamic(
-  () => import("@/components/general/printer-config-view")
+  () => import("@/components/general/printer-config-view"),
+  {
+    ssr: false,
+  }
 );
 
 function renderModalContent(view: MODAL_VIEWS) {

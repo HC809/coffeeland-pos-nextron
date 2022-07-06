@@ -1,6 +1,6 @@
 import React from "react";
 
-export const _lockscreen = () => {
+ const LockScreen = () => {
   return (
     <div className="pin-login" id="mainPinLogin">
       <input type="password" className="pin-login__text" />
@@ -8,3 +8,5 @@ export const _lockscreen = () => {
     </div>
   );
 };
+
+export default LockScreen;

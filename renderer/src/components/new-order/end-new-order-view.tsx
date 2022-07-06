@@ -21,13 +21,8 @@ import {
 import { useState, useEffect } from "react";
 import { selectGeneralInfo } from "@/store/generalInfoSlice";
 import { NumeroALetras } from "@/helpers/functions/lettersAmount";
-// const { ipcRenderer } = window.require('electron');
-
-interface InvoicePrintResponse {
-  success: boolean;
-  error: string;
-  message: string;
-}
+import toast from "react-hot-toast";
+const { ipcRenderer } = window.require("electron");
 
 export interface IFormValues {
   cashAmount: number;
@@ -43,7 +38,7 @@ export default function EndNewOrderForm() {
   const newOrderDetailForInvoce = useAppSelector(
     selectNewOrderDetailForInvoice
   );
-  const { companyInfo } = useAppSelector(selectGeneralInfo);
+  const { companyInfo, printerName } = useAppSelector(selectGeneralInfo);
 
   const [loading, setLoadig] = useState<boolean>(false);
   const [totalAmount, setTotalAmount] = useState<number>(0);
@@ -125,16 +120,18 @@ export default function EndNewOrderForm() {
   };
 
   const onSubmit = async ({ cashAmount, cardAmount }: IFormValues) => {
+    setLoadig(true);
     const currentDate = new Date();
     await dispatch(
       setNewOrderPaymentInfo({
         cashAmount,
         cardAmount,
-        changeAmount, 
+        changeAmount,
         date: currentDate,
       })
     );
-    //await printInvoice(currentDate);
+    await printInvoice(currentDate);
+    setLoadig(false);
   };
 
   const printInvoice = async (invoiceDate: Date) => {
@@ -149,6 +146,7 @@ export default function EndNewOrderForm() {
     });
 
     const orderModel = {
+      printerName: printerName,
       invoiceDate: toShortDate(invoiceDate),
       invoiceHour: hourFormat(invoiceDate),
       invoiceNumber: formatInvoice(
@@ -158,7 +156,6 @@ export default function EndNewOrderForm() {
         newOrderInfo.invoiceNumber
       ),
       limitDate: toShortDate(newOrderInfo.limitDate!),
-      range: newOrderInfo.range,
       companyInfo,
       newOrderInfo,
       newOrderAmountList: {
@@ -178,44 +175,25 @@ export default function EndNewOrderForm() {
 
     console.log(orderModel);
 
-    // const invoicePrintResponse: InvoicePrintResponse = await ipcRenderer.invoke(
-    //   'print-invoice',
-    //   {
-    //     invoiceDate: toShortDate(invoiceDate),
-    //     invoiceHour: hourFormat(invoiceDate),
-    //     invoiceNumber: `${formatLeadingZeros(0, 3)}-${formatLeadingZeros(
-    //       1,
-    //       3
-    //     )}-${formatLeadingZeros(1, 3)}-${formatLeadingZeros(
-    //       newOrderInfo?.invoiceNumber,
-    //       8
-    //     )}`,
-    //     companyInfo,
-    //     newOrderInfo,
-    //     newOrderAmountList: {
-    //       subtotal: formatNumber(newOrderAmounts.subtotal),
-    //       totalTax15: formatNumber(newOrderAmounts.totalTax15),
-    //       totalTax18: formatNumber(newOrderAmounts.totalTax18),
-    //       totalExempt: formatNumber(newOrderAmounts.totalExempt),
-    //       totalExonerated: formatNumber(newOrderAmounts.totalExonerated),
-    //       totalTax: formatNumber(newOrderAmounts.totalTax),
-    //       taxableAmount15: formatNumber(newOrderAmounts.taxableAmount15),
-    //       taxableAmount18: formatNumber(newOrderAmounts.taxableAmount18),
-    //       total: formatNumber(newOrderAmounts.total),
-    //     },
-    //     lettersAmount: NumeroALetras(newOrderAmounts.total),
-    //     newOrderProductDetail: newOrderDetailForInvoce,
-    //   }
-    // );
-
-    // if (invoicePrintResponse.success) {
-    //   //alert(1);
-    // } else {
-    //   toast.error(invoicePrintResponse.error, {
-    //     position: 'bottom-center',
-    //     duration: 5000,
-    //   });
-    // }
+    const response = await ipcRenderer.invoke("print-invoice", {
+      invoiceDate: toShortDate(invoiceDate),
+      invoiceHour: hourFormat(invoiceDate),
+      companyInfo,
+      newOrderInfo,
+      newOrderAmountList: {
+        subtotal: formatNumber(newOrderAmounts.subtotal),
+        totalTax15: formatNumber(newOrderAmounts.totalTax15),
+        totalTax18: formatNumber(newOrderAmounts.totalTax18),
+        totalExempt: formatNumber(newOrderAmounts.totalExempt),
+        totalExonerated: formatNumber(newOrderAmounts.totalExonerated),
+        totalTax: formatNumber(newOrderAmounts.totalTax),
+        taxableAmount15: formatNumber(newOrderAmounts.taxableAmount15),
+        taxableAmount18: formatNumber(newOrderAmounts.taxableAmount18),
+        total: formatNumber(newOrderAmounts.total),
+      },
+      lettersAmount: NumeroALetras(newOrderAmounts.total),
+      newOrderProductDetail: newOrderDetailForInvoce,
+    });
   };
 
   return (

@@ -7,8 +7,6 @@ import { siteSettings } from "@/data/static/site-settings";
 import Image from "@/components/ui/image";
 import { useAppDispatch } from "../../hooks/reduxHooks";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { motion } from "framer-motion";
-import { fadeInBottomWithScaleX } from "@/lib/framer-motion/fade-in-bottom";
 import { useEffect, useState } from "react";
 import { OrderType } from "@/data/OrderTypes";
 import { setNewOrderType, selectNewOrder } from "@/store/newOrderSlice";
@@ -76,6 +74,7 @@ export default function StartNewOrderForm() {
   });
 
   const onSubmit = async ({ customerName, rtn, ticketNumber }: IFormValues) => {
+
     await dispatch(
       setNewOrderType({
         customerName: customerName || "Consumidor Final",

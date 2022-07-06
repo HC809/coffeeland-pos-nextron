@@ -29,7 +29,7 @@ export const calculateTotalOrderAmounts = (
         .filter((item) => item.taxName === 'ISV 15%')
         .map((x: IOrderDetail) => {
             totalTax15 = (totalTax15 + x.taxAmount) * x.quantity;
-            taxableAmount15 = taxableAmount15 + x.sellingPrice;
+            taxableAmount15 = (taxableAmount15 + x.sellingPrice) * x.quantity;
         });
 
     let totalTax18 = 0;
@@ -38,7 +38,7 @@ export const calculateTotalOrderAmounts = (
         .filter((item) => item.taxName === 'ISV 18%')
         .map((x: IOrderDetail) => {
             totalTax18 = (totalTax18 + x.taxAmount) * x.quantity;
-            taxableAmount18 = taxableAmount18 + x.sellingPrice;
+            taxableAmount18 = (taxableAmount18 + x.sellingPrice) * x.quantity;
         });
 
     newOrderDetail.map((item: IOrderDetail) => {
