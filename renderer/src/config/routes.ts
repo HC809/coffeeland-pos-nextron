@@ -1,8 +1,7 @@
 const routes = {
-  home: '/',
+  home: '/products-search',
   sales: '/sales',
   taxInfo: '/tax-info',
-  configPrinter: '/config-printer',
   productsSearch: '/products-search',
   productsSearchUrl: (categoryName: string) =>
     `/products-search/${categoryName}`,

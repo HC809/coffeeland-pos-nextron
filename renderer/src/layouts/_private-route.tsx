@@ -58,10 +58,6 @@ function OpenCashFlowView() {
   );
 }
 
-const getLockScreenUi = (setLock: any) => {
-  return <button onClick={() => setLock(false)}>unlock</button>;
-};
-
 export default function PrivateRoute({
   children,
 }: React.PropsWithChildren<{}>) {
@@ -81,5 +77,6 @@ export default function PrivateRoute({
     return <OpenCashFlowView />;
   }
 
-  return <>{<SearchProductsPage />}</>;
+  return <>{children}</>;
+  // return <>{<SearchProductsPage />}</>;
 }

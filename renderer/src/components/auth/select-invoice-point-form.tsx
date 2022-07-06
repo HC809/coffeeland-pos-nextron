@@ -2,8 +2,6 @@ import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import Button from "@/components/ui/button";
 import { RegisterBgPattern } from "@/components/auth/register-bg-pattern";
-import Image from "@/components/ui/image";
-import { siteSettings } from "@/data/static/site-settings";
 import { useAppSelector, useAppDispatch } from "../../hooks/reduxHooks";
 import { selectAuth } from "../../store/authSlice";
 import { SpinnerIcon } from "../icons/spinner-icon";
@@ -39,8 +37,6 @@ const validationSchema: yup.SchemaOf<IFormValues> = yup.object().shape({
 });
 
 export default function SelectInvoicePointForm() {
-  const { verifiedUser } = siteSettings;
-
   const dispatch = useAppDispatch();
 
   const { name } = useAppSelector(selectAuth);
@@ -150,10 +146,7 @@ export default function SelectInvoicePointForm() {
                       await dispatch(
                         setTaxInfo({
                           invoicePoint,
-                          activeInvoiceRange: {
-                            ...invoiceRangeInUse,
-                            currentNumber: invoiceRangeInUse.startNumber,
-                          },
+                          activeInvoiceRange: invoiceRangeInUse,
                           pendingInvoiceRange: invoiceRangePending,
                         })
                       );
@@ -222,12 +215,11 @@ export default function SelectInvoicePointForm() {
           <div className="relative z-10 flex items-center">
             <div className="w-full shrink-0 text-left md:w-[380px]">
               <div className="pb-5 text-center">
-                <Image
-                  src={verifiedUser}
-                  alt="user"
+                <img
                   width="50px"
                   height="50px"
-                  className="pb-1"
+                  className="ml-auto mr-auto"
+                  src="/images/verified-user.png"
                 />
                 <h1 className="text-xs">{name}</h1>
               </div>

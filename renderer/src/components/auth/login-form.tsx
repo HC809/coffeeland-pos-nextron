@@ -4,8 +4,6 @@ import Password from "@/components/ui/forms/password";
 import Input from "@/components/ui/forms/input";
 import Button from "@/components/ui/button";
 import { RegisterBgPattern } from "@/components/auth/register-bg-pattern";
-import { siteSettings } from "@/data/static/site-settings";
-import Image from "@/components/ui/image";
 import { login } from "@/store/authSlice";
 import { useAppDispatch } from "../../hooks/reduxHooks";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -28,8 +26,6 @@ const validationSchema: yup.SchemaOf<IFormValues> = yup.object().shape({
 });
 
 export default function LoginUserForm() {
-  const { lightLogo } = siteSettings;
-
   const dispatch = useAppDispatch();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -99,12 +95,11 @@ export default function LoginUserForm() {
       <div className="relative z-10 flex items-center">
         <div className="w-full shrink-0 text-left md:w-[380px]">
           <div className="pb-5 text-center ">
-            <Image
-              src={lightLogo}
-              alt="Logo"
+            <img
               width="200px"
               height="150px"
-              className="pb-5"
+              className="ml-auto mr-auto"
+              src="/images/coffeeland-logo.png"
             />
           </div>
           <div className="pb-5 text-center ">

@@ -1,27 +1,24 @@
-import * as yup from 'yup';
-import { useForm } from 'react-hook-form';
-import Input from '@/components/ui/forms/input';
-import Button from '@/components/ui/button';
-import { RegisterBgPattern } from '@/components/auth/register-bg-pattern';
-import Image from '@/components/ui/image';
-import { siteSettings } from '@/data/static/site-settings';
-import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
-import { selectAuth } from '../../store/authSlice';
-import { SpinnerIcon } from '../icons/spinner-icon';
-import { useEffect, useState } from 'react';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { setOpenShift } from '@/store/shiftInfoSlice';
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import Input from "@/components/ui/forms/input";
+import Button from "@/components/ui/button";
+import { RegisterBgPattern } from "@/components/auth/register-bg-pattern";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { selectAuth } from "../../store/authSlice";
+import { SpinnerIcon } from "../icons/spinner-icon";
+import { useEffect, useState } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { setOpenShift } from "@/store/shiftInfoSlice";
 
 export interface IFormValues {
   cashFlowAmount: number;
 }
 
 const validationSchema: yup.SchemaOf<IFormValues> = yup.object().shape({
-  cashFlowAmount: yup.number().min(0, 'El monto debe ser mayor a 0').required(),
+  cashFlowAmount: yup.number().min(0, "El monto debe ser mayor a 0").required(),
 });
 
 export default function OpenCashFlowForm() {
-  const { verifiedUser } = siteSettings;
 
   const dispatch = useAppDispatch();
   const { username } = useAppSelector(selectAuth);
@@ -68,21 +65,20 @@ export default function OpenCashFlowForm() {
         </div>
       ) : (
         <div className="px-6 pt-10 pb-8 sm:px-8 lg:p-12">
-          <RegisterBgPattern className="absolute bottom-0 left-0 text-light dark:text-dark-300 dark:opacity-60" />
+          <RegisterBgPattern className="text-light dark:text-dark-300 absolute bottom-0 left-0 dark:opacity-60" />
           <div className="relative z-10 flex items-center">
             <div className="w-full shrink-0 text-left md:w-[380px]">
               <div className="pb-5 text-center">
-                <Image
-                  src={verifiedUser}
-                  alt="user"
+                <img
                   width="50px"
                   height="50px"
-                  className="pb-1"
+                  className="ml-auto mr-auto"
+                  src="/images/verified-user.png"
                 />
                 <h1 className="text-xs">{username}</h1>
               </div>
               <div className="pt-5 pb-1 text-center ">
-                <h3 className="text-base font-medium tracking-[-0.3px] text-dark dark:text-light ">
+                <h3 className="text-dark dark:text-light text-base font-medium tracking-[-0.3px] ">
                   Abrir Turno de Caja
                 </h3>
               </div>
@@ -115,7 +111,7 @@ export default function OpenCashFlowForm() {
                     label="Efecito disponible en caja"
                     inputClassName="bg-light dark:bg-dark-300"
                     type="number"
-                    {...register('cashFlowAmount')}
+                    {...register("cashFlowAmount")}
                     error={errors.cashFlowAmount?.message}
                   />
                 </div>

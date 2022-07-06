@@ -28,11 +28,11 @@ if (isProd) {
   });
 
   if (isProd) {
-    await mainWindow.loadURL('app://./home.html');
+    await mainWindow.loadURL('app://./index.html');
   } else {
     console.log('development mode');
     const port = process.argv[2];
-    await mainWindow.loadURL(`http://localhost:${port}/home`);
+    await mainWindow.loadURL(`http://localhost:${port}/`);
 
     await installExtension([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS])
       .then((name) => console.log(`Added Extension:  ${name}`))
@@ -94,9 +94,12 @@ ipcMain.handle('print-invoice', async (event, arg) => {
   const newOrderAmounts = arg.newOrderAmountList;
   const newOrderDetail = arg.newOrderProductDetail;
   const invoiceDate = arg.invoiceDate;
-  const invoiceHour = arg.invoiceHour;
+  const invoiceNumber = arg.invoiceNumber;
   const limitDate = arg.limitDate;
   const lettersAmount = arg.lettersAmount;
+  const cash = arg.cash;
+  const card = arg.card;
+  const change = arg.change;
 
   const printerOptions = {
     preview: false, // preview in window or print
@@ -147,13 +150,13 @@ ipcMain.handle('print-invoice', async (event, arg) => {
     },
     {
       type: 'text',
-      value: `FECHA: ${invoiceDate}      HORA: ${invoiceHour}`,
+      value: `${invoiceDate}`,
       style: `text-align:left;`,
       css: { 'font-size': '12PX' },
     },
     {
       type: 'text',
-      value: `FACTRUA: ${newOrderInfo.invoiceNumber}`,
+      value: `FACTRUA: ${invoiceNumber}`,
       style: `text-align:left;`,
       css: { 'font-size': '12PX' },
     },
@@ -198,55 +201,55 @@ ipcMain.handle('print-invoice', async (event, arg) => {
     },
     {
       type: 'text',
-      value: `Subtotal:  ${newOrderAmounts.subtotal}`,
+      value: `Subtotal:  L ${newOrderAmounts.subtotal}`,
       style: `text-align:right;`,
       css: { 'font-size': '12PX' },
     },
     {
       type: 'text',
-      value: `Importe Exento:  ${newOrderAmounts.totalExempt}`,
+      value: `Importe Exento:  L ${newOrderAmounts.totalExempt}`,
       style: `text-align:right;`,
       css: { 'font-size': '12PX' },
     },
     {
       type: 'text',
-      value: `Importe Exonerado:  ${newOrderAmounts.totalExonerated}`,
+      value: `Importe Exonerado:  L ${newOrderAmounts.totalExonerated}`,
       style: `text-align:right;`,
       css: { 'font-size': '12PX' },
     },
     {
       type: 'text',
-      value: `Importe Gravado 15%:  ${newOrderAmounts.taxableAmount15}`,
+      value: `Importe Gravado 15%:  L ${newOrderAmounts.taxableAmount15}`,
       style: `text-align:right;`,
       css: { 'font-size': '12PX' },
     },
     {
       type: 'text',
-      value: `Importe Gravado 18%:  ${newOrderAmounts.taxableAmount18}`,
+      value: `Importe Gravado 18%:  L ${newOrderAmounts.taxableAmount18}`,
       style: `text-align:right;`,
       css: { 'font-size': '12PX' },
     },
     {
       type: 'text',
-      value: `Impuestos del 15%:  ${newOrderAmounts.totalTax15}`,
+      value: `Impuestos del 15%:  L ${newOrderAmounts.totalTax15}`,
       style: `text-align:right;`,
       css: { 'font-size': '12PX' },
     },
     {
       type: 'text',
-      value: `Impuestos del 18%:  ${newOrderAmounts.totalTax18}`,
+      value: `Impuestos del 18%:  L ${newOrderAmounts.totalTax18}`,
       style: `text-align:right;`,
       css: { 'font-size': '12PX' },
     },
     {
       type: 'text',
-      value: `Total Impuestos:  ${newOrderAmounts.totalTax}`,
+      value: `Total Impuestos:  L ${newOrderAmounts.totalTax}`,
       style: `text-align:right;`,
       css: { 'font-size': '12PX' },
     },
     {
       type: 'text',
-      value: `TOTAL A PAGAR:  ${newOrderAmounts.total}`,
+      value: `TOTAL A PAGAR:  L ${newOrderAmounts.total}`,
       style: `text-align:right;`,
       css: { 'font-size': '12PX' },
     },
@@ -261,6 +264,24 @@ ipcMain.handle('print-invoice', async (event, arg) => {
       value: `*** GRACIAS POR SU VISITA ***`,
       style: `text-align:center;`,
       css: { 'font-size': '12PX', 'padding-top': '10px' },
+    },
+    {
+      type: 'text',
+      value: `Efectivo: ${cash}`,
+      style: `text-align:center;`,
+      css: { 'font-size': '12PX', 'padding-top': '10px' },
+    },
+    {
+      type: 'text',
+      value: `Cambio: ${change}`,
+      style: `text-align:center;`,
+      css: { 'font-size': '12PX' },
+    },
+    {
+      type: 'text',
+      value: `Tarjeta: ${card}`,
+      style: `text-align:center;`,
+      css: { 'font-size': '12PX' },
     },
     {
       type: 'text',

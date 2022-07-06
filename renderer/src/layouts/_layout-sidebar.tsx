@@ -70,32 +70,7 @@ export function Sidebar({
     >
       <Scrollbar className="h-full w-full">
         <div className="flex h-full w-full flex-col">
-          <nav className="flex flex-col">
-            <NavLink
-              title={"Inicio"}
-              href={routes.productsSearch}
-              isCollapse={isCollapse}
-              icon={<BiStore className="h-4 w-4 text-current" />}
-            />
-            <NavLink
-              title={"Ventas"}
-              href={routes.sales}
-              isCollapse={isCollapse}
-              icon={<GrUnorderedList className="h-4 w-4 text-current" />}
-            />
-            <NavLink
-              title={"Inf. Fiscal"}
-              href={routes.taxInfo}
-              isCollapse={isCollapse}
-              icon={<BiInfoCircle className="h-4 w-4 text-current" />}
-            />
-            <NavLink
-              title={"Impresora"}
-              href={routes.configPrinter}
-              isCollapse={isCollapse}
-              icon={<BiPrinter className="h-4 w-4 text-current" />}
-            />
-          </nav>
+          <nav className="flex flex-col"></nav>
         </div>
       </Scrollbar>
 

@@ -139,15 +139,29 @@ export default function EndNewOrderForm() {
 
     const detail = productDetails.map((item) => {
       return {
+        productName: item.productName,
         quantity: item.quantity,
-        price: formatNumber(item.sellingPrice),
-        total: formatNumber(item.total),
+        price: `L ${formatNumber(item.sellingPrice)}`,
+        total: `L ${formatNumber(item.total)}`,
       };
     });
 
     const orderModel = {
       printerName: printerName,
-      invoiceDate: toShortDate(invoiceDate),
+      cash: `L ${
+        Number(getValues("cashAmount"))
+          ? formatNumber(Number(getValues("cashAmount")))
+          : "0"
+      }`,
+      card: `L ${
+        Number(getValues("cardAmount"))
+          ? formatNumber(Number(getValues("cardAmount")))
+          : "0"
+      }`,
+      change: `L ${changeAmount ? formatNumber(changeAmount) : "0"}`,
+      invoiceDate: `FECHA: ${toShortDate(invoiceDate)}  / HORA: ${hourFormat(
+        invoiceDate
+      )}`,
       invoiceHour: hourFormat(invoiceDate),
       invoiceNumber: formatInvoice(
         newOrderInfo.establishmentNumber,
@@ -175,25 +189,7 @@ export default function EndNewOrderForm() {
 
     console.log(orderModel);
 
-    const response = await ipcRenderer.invoke("print-invoice", {
-      invoiceDate: toShortDate(invoiceDate),
-      invoiceHour: hourFormat(invoiceDate),
-      companyInfo,
-      newOrderInfo,
-      newOrderAmountList: {
-        subtotal: formatNumber(newOrderAmounts.subtotal),
-        totalTax15: formatNumber(newOrderAmounts.totalTax15),
-        totalTax18: formatNumber(newOrderAmounts.totalTax18),
-        totalExempt: formatNumber(newOrderAmounts.totalExempt),
-        totalExonerated: formatNumber(newOrderAmounts.totalExonerated),
-        totalTax: formatNumber(newOrderAmounts.totalTax),
-        taxableAmount15: formatNumber(newOrderAmounts.taxableAmount15),
-        taxableAmount18: formatNumber(newOrderAmounts.taxableAmount18),
-        total: formatNumber(newOrderAmounts.total),
-      },
-      lettersAmount: NumeroALetras(newOrderAmounts.total),
-      newOrderProductDetail: newOrderDetailForInvoce,
-    });
+    await ipcRenderer.invoke("print-invoice", orderModel);
   };
 
   return (
@@ -208,24 +204,42 @@ export default function EndNewOrderForm() {
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
             <>
-              <Input
-                label="Efectivo"
-                inputClassName="bg-light dark:bg-dark-300"
-                {...register("cashAmount")}
-                onChange={(e) => sumCashAmounts(Number(e.target.value))}
-                error={errors.cashAmount?.message}
-              />
-              {changeAmount > 0 && <p>{`Cambio: L ${changeAmount}`}</p>}
+              <div className="grid h-full grid-cols-8">
+                <img
+                  className="col-span-2 pt-5"
+                  src="/images/money.png"
+                  width={50}
+                />
+                <div className="col-span-6">
+                  <Input
+                    label="Efectivo"
+                    inputClassName="bg-light dark:bg-dark-300"
+                    {...register("cashAmount")}
+                    onChange={(e) => sumCashAmounts(Number(e.target.value))}
+                    error={errors.cashAmount?.message}
+                    className={"pb-1"}
+                  />
+                  {changeAmount > 0 && <p>{`Cambio: L ${changeAmount}`}</p>}
+                </div>
+              </div>
 
               <br></br>
 
-              <Input
-                label="Tarjeta"
-                inputClassName="bg-light dark:bg-dark-300"
-                {...register("cardAmount")}
-                onChange={(e) => sumCardAmounts(Number(e.target.value))}
-                error={errors.cardAmount?.message}
-              />
+              <div className="grid h-full grid-cols-8">
+                <img
+                  className="col-span-2 pt-5"
+                  src="/images/credit-card.png"
+                  width={50}
+                />
+                <Input
+                  label="Tarjeta"
+                  inputClassName="bg-light dark:bg-dark-300"
+                  {...register("cardAmount")}
+                  onChange={(e) => sumCardAmounts(Number(e.target.value))}
+                  error={errors.cardAmount?.message}
+                  className="col-span-6"
+                />
+              </div>
 
               <Button
                 type="submit"

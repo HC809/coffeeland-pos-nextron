@@ -3,8 +3,6 @@ import { useForm } from "react-hook-form";
 import Input from "@/components/ui/forms/input";
 import Button from "@/components/ui/button";
 import { RegisterBgPattern } from "@/components/auth/register-bg-pattern";
-import { siteSettings } from "@/data/static/site-settings";
-import Image from "@/components/ui/image";
 import { useAppDispatch } from "../../hooks/reduxHooks";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
@@ -40,7 +38,6 @@ const validationSchema: yup.SchemaOf<IFormValues> = yup.object().shape({
 });
 
 export default function StartNewOrderForm() {
-  const { eatHere, takeAway } = siteSettings;
   const { closeModal } = useModalAction();
 
   const dispatch = useAppDispatch();
@@ -74,7 +71,6 @@ export default function StartNewOrderForm() {
   });
 
   const onSubmit = async ({ customerName, rtn, ticketNumber }: IFormValues) => {
-
     await dispatch(
       setNewOrderType({
         customerName: customerName || "Consumidor Final",
@@ -111,13 +107,9 @@ export default function StartNewOrderForm() {
                   }`}
                 >
                   <div className="relative mx-auto mb-2.5 h-[10px] w-[70px] md:h-20 md:w-20 lg:h-[90px] lg:w-[90px]">
-                    <Image
-                      alt={"eat-here"}
-                      layout="fill"
-                      quality={100}
-                      objectFit="cover"
-                      src={eatHere}
-                      className="rounded-3xl"
+                    <img
+                      className="ml-auto mr-auto"
+                      src="/images/eat-here.png"
                     />
                   </div>
                   <h3
@@ -142,16 +134,11 @@ export default function StartNewOrderForm() {
                   }`}
                 >
                   <div className="relative mx-auto mb-2.5 h-[75px] w-[75px] md:h-20 md:w-20 lg:h-[90px] lg:w-[90px]">
-                    <Image
-                      alt={"eat-here"}
-                      layout="fill"
-                      quality={100}
-                      objectFit="cover"
-                      src={takeAway}
-                      className="rounded-3xl"
+                  <img
+                      className="ml-auto mr-auto"
+                      src="/images/take-away.png"
                     />
                   </div>
-
                   <h3
                     className={`${
                       orderType !== OrderType.AS

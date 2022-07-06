@@ -28,8 +28,8 @@ export const calculateTotalOrderAmounts = (
     newOrderDetail
         .filter((item) => item.taxName === 'ISV 15%')
         .map((x: IOrderDetail) => {
-            totalTax15 = (totalTax15 + x.taxAmount) * x.quantity;
-            taxableAmount15 = (taxableAmount15 + x.sellingPrice) * x.quantity;
+            totalTax15 = (totalTax15 + x.taxAmount);
+            taxableAmount15 = taxableAmount15 + (x.sellingPrice * x.quantity);
         });
 
     let totalTax18 = 0;
@@ -37,8 +37,8 @@ export const calculateTotalOrderAmounts = (
     newOrderDetail
         .filter((item) => item.taxName === 'ISV 18%')
         .map((x: IOrderDetail) => {
-            totalTax18 = (totalTax18 + x.taxAmount) * x.quantity;
-            taxableAmount18 = (taxableAmount18 + x.sellingPrice) * x.quantity;
+            totalTax18 = (totalTax18 + x.taxAmount);
+            taxableAmount18 = taxableAmount18 + (x.sellingPrice * x.quantity);
         });
 
     newOrderDetail.map((item: IOrderDetail) => {
@@ -67,7 +67,7 @@ export const incremenetProductQuantity = (product: IOrderDetail) => {
         ...product,
         quantity: newQuantity,
         subtotal: newQuantity * product.priceBeforeTax,
-        taxAmount: product.sellingPrice - product.priceBeforeTax,
+        taxAmount: (product.sellingPrice - product.priceBeforeTax) * newQuantity,
         total: newQuantity * product.sellingPrice,
     };
 
@@ -81,7 +81,7 @@ export const decrementProductQuantity = (product: IOrderDetail) => {
         ...product,
         quantity: newQuantity,
         subtotal: newQuantity * product.priceBeforeTax,
-        taxAmount: product.sellingPrice - product.priceBeforeTax,
+        taxAmount: (product.sellingPrice - product.priceBeforeTax) * newQuantity,
         total: newQuantity * product.sellingPrice,
     };
 

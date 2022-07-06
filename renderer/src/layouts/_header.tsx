@@ -13,8 +13,6 @@ import { logout, selectAuth } from "@/store/authSlice";
 import { ILoggedUser } from "@/models/Authentication/Authentication.models";
 import { useAppDispatch } from "../hooks/reduxHooks";
 import { removeAuthUser } from "@/services/AuthenticationService";
-import Image from "@/components/ui/image";
-import { siteSettings } from "@/data/static/site-settings";
 import { removeTaxInfo } from "@/store/taxInfoSlice";
 import { setCloseShift } from "@/store/shiftInfoSlice";
 import { cancelNewOrder, selectNewOrder } from "@/store/newOrderSlice";
@@ -123,14 +121,18 @@ function LoginMenu() {
 }
 
 export default function Header() {
-  const { lightLogo } = siteSettings;
   const router = useRouter();
 
   useSwapBodyClassOnScrollDirection();
   return (
     <header className="app-header border-light-300 bg-light dark:border-dark-300 dark:bg-dark-250 sticky top-0 left-0 z-30 flex h-full w-full items-center justify-between border-b py-1 px-4 sm:h-[100px] sm:px-6">
       <div className="flex items-center gap-4">
-        <Image src={lightLogo} width={70} height={50} />
+        <img
+          width="90px"
+          height="70px"
+          className="ml-auto mr-auto"
+          src="/images/coffeeland-logo.png"
+        />
       </div>
       <div className="xs:gap-6 relative flex items-center gap-5 pr-0.5 sm:gap-7">
         <Button
