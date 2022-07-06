@@ -4,10 +4,12 @@ export interface IOrder {
   started: boolean;
   finished: boolean;
   orderType: OrderType | null;
-  cai: string;
+  invoicePointId: number;
   establishmentNumber: number,
   documentTypeNumber: number,
   invoicePointNumber: number,
+  cai: string;
+  invoiceRangeId: number;
   invoiceNumber: number;
   limitDate: Date | null;
   range: string;

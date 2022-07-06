@@ -8,6 +8,7 @@ import { selectProductByCategoryId } from "@/store/productsSlice";
 import { selectCategoryByName } from "@/store/categoriesSlice";
 import ProductsGrid from "@/components/search-products/products-grid";
 import { selectNewOrder } from "@/store/newOrderSlice";
+import { LongArrowIcon } from "@/components/icons/long-arrow-icon";
 
 function CategoryProductsGrid({ categoryId }: { categoryId: number }) {
   const products = useAppSelector(selectProductByCategoryId(categoryId));
@@ -45,6 +46,13 @@ const CategoryProductsPage: NextPageWithLayout = () => {
               />
             </div>
             <div className="dark:bg-dark/[0.85] relative z-10 h-full w-full bg-white/[0.85] px-4 pt-10 pb-16 text-center backdrop-blur-sm lg:px-8 lg:pt-5 lg:pb-5">
+              <div className="px-3">
+                <div className="bg-light-300 dark:bg-dark-100 sticky top-0 z-20 -mx-4 -mt-2 mb-1 flex items-center p-4 sm:static sm:top-auto sm:z-0 sm:m-0 sm:mb-4 sm:bg-transparent sm:p-0 sm:dark:bg-transparent">
+                  <button onClick={() => router.back()} className="">
+                    <LongArrowIcon className="h-6 w-6" />
+                  </button>
+                </div>
+              </div>
               <div className="3xl:h-[100px] 3xl:w-[100px] relative mx-auto h-[75px] w-[75px] md:h-20 md:w-20 2xl:h-[90px] 2xl:w-[90px]">
                 <Image
                   alt={category?.name}

@@ -18,11 +18,14 @@ const salesSlice = createSlice({
     addSale: (state, action: PayloadAction<ISale>) => {
       state.sales.push(action.payload);
     },
+    resetSales: (state,) => {
+      state.sales = initialState.sales;
+    },
   },
 });
 
 export const selectSales = (state: RootState) => state.sale;
 
-export const { addSale } = salesSlice.actions;
+export const { addSale, resetSales } = salesSlice.actions;
 
 export default salesSlice.reducer;

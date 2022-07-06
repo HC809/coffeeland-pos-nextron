@@ -65,14 +65,20 @@ export default function SelectInvoicePointForm() {
 
         setInvoicePointDataSelect([...data]);
       } else {
-        toast.error(
-          `Error al obtener los puntos de emisión: ${response.errorMessage}.`
+        return toast.error(
+          `Error al obtener los puntos de emisión: ${response.errorMessage}.`,
+          {
+            duration: 4000,
+          }
         );
       }
     } catch (error) {
       const errorMessage = getAxiosErrorMessage(error as AxiosError);
-      toast.error(`Error al obtener los puntos de emisión: ${errorMessage}.`);
       setDisplayRetryLink(true);
+      return toast.error(
+        `Error al obtener los puntos de emisión: ${errorMessage}.`,
+        { duration: 4000 }
+      );
     } finally {
       setLoadingData(false);
     }
@@ -109,7 +115,7 @@ export default function SelectInvoicePointForm() {
         } = data;
 
         if (!invoiceRangePending) {
-          toast.custom(
+          return toast.custom(
             (t) => (
               <div
                 className={`${
@@ -176,11 +182,18 @@ export default function SelectInvoicePointForm() {
           await dispatch(setCompanyInfo(generalInfo));
         }
       } else {
-        toast.error(<b>{errorMessage}</b>);
+        return toast.error(<b>{errorMessage}</b>, {
+          duration: 4000,
+        });
       }
     } catch (error) {
       const errorMessage = getAxiosErrorMessage(error as AxiosError);
-      toast.error(`Error al validar el punto de emisión: ${errorMessage}.`);
+      return toast.error(
+        `Error al validar el punto de emisión: ${errorMessage}.`,
+        {
+          duration: 4000,
+        }
+      );
     } finally {
       setLoading(false);
     }

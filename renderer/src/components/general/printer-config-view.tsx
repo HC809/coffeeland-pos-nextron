@@ -50,8 +50,8 @@ export default function PrinterConfigView() {
 
   const onSubmit = async ({ printerName }: IFormValues) => {
     await dispatch(setPrinterName(printerName));
-    toast.success("Impresora actualizada.", { duration: 1000 });
     closeModal();
+    return toast.success("Impresora actualizada.", { duration: 500 });
   };
 
   const printTest = async () => {

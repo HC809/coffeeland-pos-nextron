@@ -35,10 +35,14 @@ export const NewOrderStartButton = () => {
     const activeNextNumber = activeCurrentNumber + 1;
     if (activeNextNumber < activeEndNumber) {
       if (activeLimitDate && activeLimitDate < new Date()) {
-        toast.error(`La fecha límite de emisión fue el ${activeLimitDate}.`);
+        return toast.error(
+          `La fecha límite de emisión fue el ${activeLimitDate}.`
+        );
       } else {
         dispatch(
           setNewOrderTaxInfo({
+            invoicePointId: invoicePoint.id,
+            invoiceRangeId: activeInvoiceRange.id,
             establishmentNumber: invoicePoint.establishment,
             documentTypeNumber: invoicePoint.documentType,
             invoicePointNumber: invoicePoint.number,
@@ -73,12 +77,14 @@ export const NewOrderStartButton = () => {
         const pendingNextNumber = pendingCurrentNumber + 1;
         if (pendingNextNumber < pendingEndNumber) {
           if (pendingLimitDate && pendingLimitDate < new Date())
-            toast.error(
+            return toast.error(
               `La fecha límite de emisión fue el ${activeLimitDate}.`
             );
           else {
             dispatch(
               setNewOrderTaxInfo({
+                invoicePointId: invoicePoint.id,
+                invoiceRangeId: pendingInvoiceRange.id,
                 establishmentNumber: invoicePoint.establishment,
                 documentTypeNumber: invoicePoint.documentType,
                 invoicePointNumber: invoicePoint.number,
@@ -101,10 +107,14 @@ export const NewOrderStartButton = () => {
             openModal("NEW_ORDER_VIEW");
           }
         } else {
-          toast.error("No tiene números de factura disponibles para facturar.");
+          return toast.error(
+            "No tiene números de factura disponibles para facturar."
+          );
         }
       } else {
-        toast.error("No tiene números de factura disponibles para facturar.");
+        return toast.error(
+          "No tiene números de factura disponibles para facturar."
+        );
       }
     }
   };

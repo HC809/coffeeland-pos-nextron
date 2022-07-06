@@ -15,7 +15,7 @@ export default function CartItemList({ className }: { className?: string }) {
 
   function handleClearItemFromCart(productId: number) {
     dispatch(removeProductFromNewOrder(productId));
-    toast.success(<b>Producto removido del pedido!</b>, { duration: 1000 });
+    return toast.success(<b>Producto removido del pedido!</b>, { duration: 1000 });
   }
   return (
     <ul role="list" className={cn("-my-6 w-full", className)}>

@@ -136,6 +136,15 @@ export default function Header() {
       </div>
       <div className="xs:gap-6 relative flex items-center gap-5 pr-0.5 sm:gap-7">
         <Button
+          onClick={() => router.push(routes.sales)}
+          variant="icon"
+          aria-label="Layout"
+          className="2xl:w- text-center text-base font-medium 2xl:flex"
+        >
+          <AiFillAppstore size={25} color="#0D9965" /> Facturas
+        </Button>
+
+        <Button
           onClick={() => router.push(routes.productsSearch)}
           variant="icon"
           aria-label="Layout"

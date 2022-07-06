@@ -7,7 +7,6 @@ import { useAppDispatch } from "../../hooks/reduxHooks";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   selectNewOrder,
-  setNewOrderPaymentInfo,
   selectNewOrderDetailForInvoice,
 } from "@/store/newOrderSlice";
 import { useAppSelector } from "@/hooks/reduxHooks";
@@ -22,6 +21,9 @@ import { useState, useEffect } from "react";
 import { selectGeneralInfo } from "@/store/generalInfoSlice";
 import { NumeroALetras } from "@/helpers/functions/lettersAmount";
 import toast from "react-hot-toast";
+import { addSale } from "@/store/salesSlice";
+import { ISale } from "@/models/ISale";
+import { incrementCurrentNumberRange } from "@/store/taxInfoSlice";
 const { ipcRenderer } = window.require("electron");
 
 export interface IFormValues {
@@ -34,7 +36,8 @@ export default function EndNewOrderForm() {
 
   const dispatch = useAppDispatch();
 
-  const { newOrderInfo, newOrderAmounts } = useAppSelector(selectNewOrder);
+  const { newOrderInfo, newOrderAmounts, newOrderDetail } =
+    useAppSelector(selectNewOrder);
   const newOrderDetailForInvoce = useAppSelector(
     selectNewOrderDetailForInvoice
   );
@@ -122,15 +125,20 @@ export default function EndNewOrderForm() {
   const onSubmit = async ({ cashAmount, cardAmount }: IFormValues) => {
     setLoadig(true);
     const currentDate = new Date();
-    await dispatch(
-      setNewOrderPaymentInfo({
+    const completeInvoice: ISale = {
+      orderInfo: {
+        ...newOrderInfo,
         cashAmount,
         cardAmount,
         changeAmount,
         date: currentDate,
-      })
-    );
-    await printInvoice(currentDate);
+      },
+      orderAmounts: { ...newOrderAmounts },
+      orderDetail: { ...newOrderDetail },
+    };
+    await dispatch(addSale(completeInvoice));
+    await dispatch(incrementCurrentNumberRange(newOrderInfo.invoiceRangeId));
+    //await printInvoice(currentDate);
     setLoadig(false);
   };
 
@@ -186,8 +194,6 @@ export default function EndNewOrderForm() {
       lettersAmount: NumeroALetras(newOrderAmounts.total),
       newOrderProductDetail: detail,
     };
-
-    console.log(orderModel);
 
     await ipcRenderer.invoke("print-invoice", orderModel);
   };

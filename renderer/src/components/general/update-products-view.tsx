@@ -33,11 +33,12 @@ export default function UpdateProductsView() {
         const { products, categories } = data;
         await dispatch(setCategories(categories));
         await dispatch(setProducts(products));
-
-        toast.success(<b>Información actualizada correctamente!</b>);
         closeModal();
+        return toast.success(<b>Información actualizada correctamente!</b>, {
+          duration: 1000,
+        });
       } else {
-        toast.error(<b>{errorMessage}</b>);
+        return toast.error(<b>{errorMessage}</b>, { duration: 4000 });
       }
     } catch (error) {
       const errorMessage = getAxiosErrorMessage(error as AxiosError);

@@ -39,7 +39,7 @@ export const taxInfoSlice = createSlice({
       state.activeInvoiceRange = action.payload.activeInvoiceRange;
       state.pendingInvoiceRange = action.payload.pendingInvoiceRange;
     },
-    incrementRangeActualNumber: (state, action: PayloadAction<number>) => {
+    incrementCurrentNumberRange: (state, action: PayloadAction<number>) => {
       if (state.activeInvoiceRange.id === action.payload) {
         state.activeInvoiceRange.currentNumber =
           state.activeInvoiceRange.currentNumber + 1;
@@ -63,7 +63,7 @@ export const taxInfoSlice = createSlice({
 
 export const selectTaxInfo = (state: RootState) => state.taxInfo;
 
-export const { setTaxInfo, removeTaxInfo, incrementRangeActualNumber } =
+export const { setTaxInfo, removeTaxInfo, incrementCurrentNumberRange } =
   taxInfoSlice.actions;
 
 export default taxInfoSlice.reducer;

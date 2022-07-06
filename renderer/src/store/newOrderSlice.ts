@@ -12,6 +12,8 @@ interface NewOrderType {
 }
 
 interface NewOrderTaxInfo {
+  invoicePointId: number,
+  invoiceRangeId: number,
   cai: string;
   establishmentNumber: number,
   documentTypeNumber: number,
@@ -19,13 +21,6 @@ interface NewOrderTaxInfo {
   invoiceNumber: number;
   limitDate: Date;
   range: string;
-}
-
-interface NewOrderPaymentInfo {
-  cashAmount: number;
-  cardAmount: number;
-  changeAmount: number;
-  date: Date;
 }
 
 interface NewOrderState {
@@ -39,6 +34,8 @@ const initialState: NewOrderState = {
     customerName: 'Consumidor Final',
     rtn: '',
     cai: '',
+    invoicePointId: 0,
+    invoiceRangeId: 0,
     establishmentNumber: 0,
     documentTypeNumber: 0,
     invoicePointNumber: 0,
@@ -82,6 +79,8 @@ const newOrderSlice = createSlice({
       state.newOrderInfo.started = true;
     },
     setNewOrderTaxInfo: (state, action: PayloadAction<NewOrderTaxInfo>) => {
+      state.newOrderInfo.invoicePointId = action.payload.invoicePointId;
+      state.newOrderInfo.invoiceRangeId = action.payload.invoiceRangeId;
       state.newOrderInfo.cai = action.payload.cai;
       state.newOrderInfo.establishmentNumber = action.payload.establishmentNumber;
       state.newOrderInfo.documentTypeNumber = action.payload.documentTypeNumber;
@@ -89,12 +88,6 @@ const newOrderSlice = createSlice({
       state.newOrderInfo.invoiceNumber = action.payload.invoiceNumber;
       state.newOrderInfo.limitDate = action.payload.limitDate;
       state.newOrderInfo.range = action.payload.range;
-    },
-    setNewOrderPaymentInfo: (state, action: PayloadAction<NewOrderPaymentInfo>) => {
-      state.newOrderInfo.cashAmount = action.payload.cashAmount;
-      state.newOrderInfo.cardAmount = action.payload.cardAmount;
-      state.newOrderInfo.changeAmount = action.payload.changeAmount;
-      state.newOrderInfo.date = action.payload.date;
     },
     cancelNewOrder: (state) => {
       state.newOrderInfo = initialState.newOrderInfo;
@@ -167,7 +160,6 @@ export const selectNewOrderDetailForInvoice = (state: RootState) =>
 export const {
   setNewOrderType,
   setNewOrderTaxInfo,
-  setNewOrderPaymentInfo,
   cancelNewOrder,
   addProductToNewOrder,
   removeProductFromNewOrder,

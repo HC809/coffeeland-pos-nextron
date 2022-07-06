@@ -32,7 +32,9 @@ export default function ProductCard({ product }: { product: IProduct }) {
         );
 
         if (existProductInOrder) {
-          return toast.error("El producto ya existe en la orden.");
+          return toast.error("El producto ya existe en la orden.", {
+            duration: 1000,
+          });
         }
 
         dispatch(
@@ -52,7 +54,10 @@ export default function ProductCard({ product }: { product: IProduct }) {
             total: product.sellingPrice,
           })
         );
-        toast.success(<b>Producto agregado al pedido!</b>, { duration: 1000 });
+
+        return toast.success(<b>Producto agregado al pedido!</b>, {
+          duration: 1000,
+        });
       }}
       className="group bg-light dark:bg-dark-250 cursor-pointer rounded-md px-4 py-7 text-center"
     >
