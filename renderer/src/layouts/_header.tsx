@@ -16,10 +16,10 @@ import { removeAuthUser } from "@/services/AuthenticationService";
 import { removeTaxInfo } from "@/store/taxInfoSlice";
 import { setCloseShift } from "@/store/shiftInfoSlice";
 import { cancelNewOrder, selectNewOrder } from "@/store/newOrderSlice";
-import { NormalGridIcon } from "@/components/icons/normal-grid-icon";
 import routes from "@/config/routes";
 import { AiFillAppstore } from "react-icons/ai";
 import toast from "react-hot-toast";
+import { NewOrderStartButton } from "@/components/new-order/new-order-start";
 
 function AuthorizedMenu({ user }: { user: ILoggedUser }) {
   const { openModal } = useModalAction();
@@ -122,6 +122,7 @@ function LoginMenu() {
 
 export default function Header() {
   const router = useRouter();
+  const { newOrderInfo } = useAppSelector(selectNewOrder);
 
   useSwapBodyClassOnScrollDirection();
   return (
@@ -135,32 +136,29 @@ export default function Header() {
         />
       </div>
       <div className="xs:gap-6 relative flex items-center gap-5 pr-0.5 sm:gap-7">
-        <Button
-          onClick={() => router.push(routes.sales)}
-          variant="icon"
-          aria-label="Layout"
-          className="2xl:w- text-center text-base font-medium 2xl:flex"
-        >
-          <AiFillAppstore size={25} color="#0D9965" /> Facturas
-        </Button>
+        {newOrderInfo.started ? (
+          <>
+            {/* <Button
+              onClick={() => router.push(routes.sales)}
+              variant="icon"
+              aria-label="Layout"
+              className="2xl:w- text-center text-base font-medium 2xl:flex"
+            >
+              <AiFillAppstore size={25} color="#0D9965" /> Facturas
+            </Button> */}
 
-        <Button
-          onClick={() => router.push(routes.productsSearch)}
-          variant="icon"
-          aria-label="Layout"
-          className="2xl:w- text-center text-base font-medium 2xl:flex"
-        >
-          <AiFillAppstore size={25} color="#0D9965" /> Productos
-        </Button>
-
-        <Button
-          onClick={() => {}}
-          variant="icon"
-          aria-label="Layout"
-          className="hidden 2xl:flex 2xl:w-5"
-        >
-          <NormalGridIcon className="h-[16px] w-[16px]" />
-        </Button>
+            <Button
+              onClick={() => router.push(routes.productsSearch)}
+              variant="icon"
+              aria-label="Layout"
+              className="2xl:w- text-center text-base font-medium 2xl:flex"
+            >
+              <AiFillAppstore size={25} color="#0D9965" /> Productos
+            </Button>
+          </>
+        ) : (
+          <NewOrderStartButton />
+        )}
 
         <LoginMenu />
       </div>

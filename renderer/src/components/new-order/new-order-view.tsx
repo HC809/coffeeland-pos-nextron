@@ -10,6 +10,8 @@ import { OrderType } from "@/data/OrderTypes";
 import { setNewOrderType, selectNewOrder } from "@/store/newOrderSlice";
 import { useAppSelector } from "@/hooks/reduxHooks";
 import { useModalAction } from "../modal-views/context";
+import { useRouter } from "next/router";
+import routes from "@/config/routes";
 
 export interface IFormValues {
   ticketNumber?: number | null | undefined;
@@ -38,6 +40,7 @@ const validationSchema: yup.SchemaOf<IFormValues> = yup.object().shape({
 });
 
 export default function StartNewOrderForm() {
+  const router = useRouter();
   const { closeModal } = useModalAction();
 
   const dispatch = useAppDispatch();
@@ -80,6 +83,7 @@ export default function StartNewOrderForm() {
       })
     );
 
+    router.push(routes.productsSearch);
     closeModal();
   };
 
@@ -134,7 +138,7 @@ export default function StartNewOrderForm() {
                   }`}
                 >
                   <div className="relative mx-auto mb-2.5 h-[75px] w-[75px] md:h-20 md:w-20 lg:h-[90px] lg:w-[90px]">
-                  <img
+                    <img
                       className="ml-auto mr-auto"
                       src="/images/take-away.png"
                     />
@@ -155,6 +159,7 @@ export default function StartNewOrderForm() {
 
               <Input
                 label="Ticket"
+                type="number"
                 inputClassName="bg-light dark:bg-dark-300"
                 {...register("ticketNumber")}
                 error={errors.ticketNumber?.message}

@@ -18,8 +18,8 @@ const salesSlice = createSlice({
     addSale: (state, action: PayloadAction<ISale>) => {
       state.sales.push(action.payload);
     },
-    resetSales: (state,) => {
-      state.sales = initialState.sales;
+    resetSales: (state, action: PayloadAction) => {
+      state.sales = [];
     },
   },
 });

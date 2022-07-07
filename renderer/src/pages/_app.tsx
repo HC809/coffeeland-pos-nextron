@@ -16,6 +16,7 @@ import CustomRouter from "./_router";
 import "@/assets/css/scrollbar.css";
 import "@/assets/css/swiper-carousel.css";
 import "@/assets/css/globals.css";
+import "@/assets/css/table.css";
 
 let persistor = persistStore(store);
 

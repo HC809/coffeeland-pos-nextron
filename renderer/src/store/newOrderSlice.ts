@@ -21,6 +21,7 @@ interface NewOrderTaxInfo {
   invoiceNumber: number;
   limitDate: Date;
   range: string;
+  orderNumber: string;
 }
 
 interface NewOrderState {
@@ -50,6 +51,7 @@ const initialState: NewOrderState = {
     cashAmount: 0,
     cardAmount: 0,
     changeAmount: 0,
+    orderNumber: '',
   },
   newOrderAmounts: {
     subtotal: 0,
@@ -88,6 +90,7 @@ const newOrderSlice = createSlice({
       state.newOrderInfo.invoiceNumber = action.payload.invoiceNumber;
       state.newOrderInfo.limitDate = action.payload.limitDate;
       state.newOrderInfo.range = action.payload.range;
+      state.newOrderInfo.orderNumber = action.payload.orderNumber;
     },
     cancelNewOrder: (state) => {
       state.newOrderInfo = initialState.newOrderInfo;

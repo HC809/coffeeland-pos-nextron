@@ -7,6 +7,7 @@ import React from "react";
 import toast from "react-hot-toast";
 import { useModalAction } from "../modal-views/context";
 import Button from "../ui/button";
+import { FcPlus } from "react-icons/fc";
 
 export const NewOrderStartButton = () => {
   const { openModal } = useModalAction();
@@ -60,6 +61,7 @@ export const NewOrderStartButton = () => {
               newOrderInfo.invoicePointNumber,
               activeEndNumber
             )}`,
+            orderNumber: `${invoicePoint.number}-${activeNextNumber}`,
           })
         );
         openModal("NEW_ORDER_VIEW");
@@ -102,6 +104,7 @@ export const NewOrderStartButton = () => {
                   newOrderInfo.invoicePointNumber,
                   pendingEndNumber
                 )}`,
+                orderNumber: `${invoicePoint.number}-${pendingNextNumber}`,
               })
             );
             openModal("NEW_ORDER_VIEW");
@@ -121,8 +124,13 @@ export const NewOrderStartButton = () => {
 
   return (
     <>
-      <Button onClick={validateTaxInfo} className="w-full text-sm md:h-[52px]">
-        Nueva Venta
+      <Button
+        onClick={validateTaxInfo}
+        variant="icon"
+        aria-label="Layout"
+        className="2xl:flex 2xl:w-5"
+      >
+        <FcPlus size={25} /> Iniciar Venta
       </Button>
     </>
   );

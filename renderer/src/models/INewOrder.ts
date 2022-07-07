@@ -20,6 +20,7 @@ export interface IOrder {
   cashAmount: number;
   cardAmount: number;
   changeAmount: number;
+  orderNumber: string;
 }
 
 export interface IOrderAmounts {
