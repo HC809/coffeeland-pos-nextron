@@ -20,6 +20,7 @@ import routes from "@/config/routes";
 import { AiFillAppstore } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { NewOrderStartButton } from "@/components/new-order/new-order-start";
+import { InvoiceOptionsHeader } from "./_invoice-option-header";
 
 function AuthorizedMenu({ user }: { user: ILoggedUser }) {
   const { openModal } = useModalAction();
@@ -138,23 +139,15 @@ export default function Header() {
       <div className="xs:gap-6 relative flex items-center gap-5 pr-0.5 sm:gap-7">
         {newOrderInfo.started ? (
           <>
-            {/* <Button
-              onClick={() => router.push(routes.sales)}
-              variant="icon"
-              aria-label="Layout"
-              className="2xl:w- text-center text-base font-medium 2xl:flex"
-            >
-              <AiFillAppstore size={25} color="#0D9965" /> Facturas
-            </Button> */}
-
             <Button
-              onClick={() => router.push(routes.productsSearch)}
+              onClick={() => router.push(routes.home)}
               variant="icon"
               aria-label="Layout"
               className="2xl:w- text-center text-base font-medium 2xl:flex"
             >
-              <AiFillAppstore size={25} color="#0D9965" /> Productos
+              <AiFillAppstore size={25} color="#0D9965" /> Categorias
             </Button>
+            <InvoiceOptionsHeader />
           </>
         ) : (
           <NewOrderStartButton />

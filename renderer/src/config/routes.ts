@@ -1,10 +1,7 @@
 const routes = {
-  home: '/products-search',
-  sales: '/sales',
-  taxInfo: '/tax-info',
-  productsSearch: '/products-search',
-  productsSearchUrl: (categoryName: string) =>
-    `/products-search/${categoryName}`,
+  home: '/home',
+  homeCategorySarchUrl: (categoryName: string) =>
+    `/home/${categoryName}`,
 };
 
 export default routes;

@@ -3,18 +3,14 @@ import { RegisterBgPattern } from "@/components/auth/register-bg-pattern";
 import { useAppDispatch } from "../../hooks/reduxHooks";
 import { cancelNewOrder } from "@/store/newOrderSlice";
 import { useModalAction } from "../modal-views/context";
-import { useRouter } from "next/router";
-import routes from "@/config/routes";
 
 export default function CancelNewOrderForm() {
-  const router = useRouter();
   const { closeModal } = useModalAction();
 
   const dispatch = useAppDispatch();
 
   const cancelOrder = async () => {
     await dispatch(cancelNewOrder());
-    router.push(routes.sales);
     closeModal();
   };
 

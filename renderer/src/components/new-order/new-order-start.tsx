@@ -1,17 +1,15 @@
 import { formatInvoice } from "@/helpers/functions/general";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 import { selectGeneralInfo } from "@/store/generalInfoSlice";
-import { selectNewOrder, setNewOrderTaxInfo } from "@/store/newOrderSlice";
+import { selectNewOrder, setNewOrderStartTaxInfo } from "@/store/newOrderSlice";
 import { selectTaxInfo } from "@/store/taxInfoSlice";
 import React from "react";
 import toast from "react-hot-toast";
-import { useModalAction } from "../modal-views/context";
 import Button from "../ui/button";
 import { FcPlus } from "react-icons/fc";
+import { OrderType } from "@/data/OrderTypes";
 
 export const NewOrderStartButton = () => {
-  const { openModal } = useModalAction();
-
   const dispatch = useAppDispatch();
 
   const { printerName } = useAppSelector(selectGeneralInfo);
@@ -40,8 +38,8 @@ export const NewOrderStartButton = () => {
           `La fecha límite de emisión fue el ${activeLimitDate}.`
         );
       } else {
-        dispatch(
-          setNewOrderTaxInfo({
+        return dispatch(
+          setNewOrderStartTaxInfo({
             invoicePointId: invoicePoint.id,
             invoiceRangeId: activeInvoiceRange.id,
             establishmentNumber: invoicePoint.establishment,
@@ -62,9 +60,9 @@ export const NewOrderStartButton = () => {
               activeEndNumber
             )}`,
             orderNumber: `${invoicePoint.number}-${activeNextNumber}`,
+            orderType: OrderType.SUC,
           })
         );
-        openModal("NEW_ORDER_VIEW");
       }
     } else {
       if (pendingInvoiceRange) {
@@ -83,8 +81,8 @@ export const NewOrderStartButton = () => {
               `La fecha límite de emisión fue el ${activeLimitDate}.`
             );
           else {
-            dispatch(
-              setNewOrderTaxInfo({
+            return dispatch(
+              setNewOrderStartTaxInfo({
                 invoicePointId: invoicePoint.id,
                 invoiceRangeId: pendingInvoiceRange.id,
                 establishmentNumber: invoicePoint.establishment,
@@ -105,9 +103,9 @@ export const NewOrderStartButton = () => {
                   pendingEndNumber
                 )}`,
                 orderNumber: `${invoicePoint.number}-${pendingNextNumber}`,
+                orderType: OrderType.SUC,
               })
             );
-            openModal("NEW_ORDER_VIEW");
           }
         } else {
           return toast.error(

@@ -1,7 +1,7 @@
 import type { NextPageWithLayout } from "@/types";
 import type { GetStaticProps } from "next";
 import Layout from "@/layouts/_layout";
-import SearchProductsPage from "./products-search";
+import HomePage from "./home";
 
 export const getStaticProps: GetStaticProps = async () => {
   try {
@@ -17,7 +17,7 @@ export const getStaticProps: GetStaticProps = async () => {
 };
 
 const Home: NextPageWithLayout = () => {
-  return <SearchProductsPage />;
+  return <HomePage />;
 };
 
 Home.getLayout = function getLayout(page) {

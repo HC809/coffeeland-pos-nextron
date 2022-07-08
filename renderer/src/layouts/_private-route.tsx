@@ -8,7 +8,6 @@ import { logout } from "@/store/authSlice";
 import OpenCashFlowForm from "@/components/auth/open-cash-flow-form";
 import { removeTaxInfo, selectTaxInfo } from "@/store/taxInfoSlice";
 import { selectShiftInfo } from "@/store/shiftInfoSlice";
-import SearchProductsPage from "@/pages/products-search";
 
 function UnAuthorizedView() {
   return (
@@ -78,5 +77,4 @@ export default function PrivateRoute({
   }
 
   return <>{children}</>;
-  // return <>{<SearchProductsPage />}</>;
 }

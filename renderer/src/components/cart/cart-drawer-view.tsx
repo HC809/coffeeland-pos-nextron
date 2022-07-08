@@ -7,8 +7,6 @@ import CartEmpty from "@/components/cart/cart-empty";
 import usePrice from "@/lib/hooks/use-price";
 import { useAppSelector } from "@/hooks/reduxHooks";
 import { selectNewOrder } from "@/store/newOrderSlice";
-
-import { NewOrderStartButton } from "../new-order/new-order-start";
 import { useModalAction } from "../modal-views/context";
 
 function CartDrawerView() {
@@ -41,24 +39,14 @@ function CartDrawerView() {
 
   return (
     <>
-      <div className="flex h-[70px] items-center justify-between py-2 px-5 sm:px-7">
-        <h2 className="text-dark dark:text-light text-sm font-medium capitalize">
-          Pedido
-        </h2>
+      <div className="flex h-[50px] items-center justify-between px-7 ">
+        <h1 className="text-dark dark:text-light text-base font-medium capitalize">
+          {`Orden Nº ${newOrderInfo.orderNumber}`}
+        </h1>
       </div>
-      {newOrderInfo.started ? (
-        <Scrollbar className="cart-scrollbar w-full flex-1 py-6 px-6 sm:px-7">
-          {newOrderDetail.length > 0 ? <CartItemList /> : <CartEmpty />}
-        </Scrollbar>
-      ) : (
-        <Scrollbar className="cart-scrollbar w-full flex-1 py-6 px-6 sm:px-7">
-          <div className="flex h-full flex-col items-center justify-center">
-            <div className="mt-5 md:mt-8">
-              <NewOrderStartButton />
-            </div>
-          </div>
-        </Scrollbar>
-      )}
+      <Scrollbar className="cart-scrollbar w-full flex-1 py-6 px-6 sm:px-7">
+        {newOrderDetail.length > 0 ? <CartItemList /> : <CartEmpty />}
+      </Scrollbar>
 
       <div className="border-light-300 dark:border-dark-500 border-t px-5 py-6 sm:px-7 sm:pb-8 sm:pt-7">
         <div className="text-dark text-dark-800 dark:text-light flex justify-between pb-1 text-sm font-medium">

@@ -10,8 +10,6 @@ import { OrderType } from "@/data/OrderTypes";
 import { setNewOrderType, selectNewOrder } from "@/store/newOrderSlice";
 import { useAppSelector } from "@/hooks/reduxHooks";
 import { useModalAction } from "../modal-views/context";
-import { useRouter } from "next/router";
-import routes from "@/config/routes";
 
 export interface IFormValues {
   ticketNumber?: number | null | undefined;
@@ -40,7 +38,6 @@ const validationSchema: yup.SchemaOf<IFormValues> = yup.object().shape({
 });
 
 export default function StartNewOrderForm() {
-  const router = useRouter();
   const { closeModal } = useModalAction();
 
   const dispatch = useAppDispatch();
@@ -83,7 +80,6 @@ export default function StartNewOrderForm() {
       })
     );
 
-    router.push(routes.productsSearch);
     closeModal();
   };
 
@@ -94,7 +90,7 @@ export default function StartNewOrderForm() {
         <div className="w-full shrink-0 text-left md:w-[380px]">
           <div className="pb-2 text-center ">
             <h1 className="text-dark dark:text-light text-lg font-medium tracking-[-0.3px] lg:text-xl">
-              {newOrderInfo.started ? "Editar Venta" : "Nueva Venta"}
+              Editar Orden
             </h1>
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">

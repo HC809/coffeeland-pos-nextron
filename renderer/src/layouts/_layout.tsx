@@ -19,7 +19,6 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
       <Header />
       {newOrderInfo.started ? (
         <>
-          <InvoiceOptionsHeader />
           <div className="flex flex-1">
             <main className={cn("flex w-8/12 flex-col")}>{children}</main>
             <DrawersContainer />

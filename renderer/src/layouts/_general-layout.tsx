@@ -1,7 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "@/layouts/_header";
 import { fadeInBottom } from "@/lib/framer-motion/fade-in-bottom";
-import Copyright from "@/layouts/_copyright";
 
 export default function GeneralLayout({
   children,
@@ -27,7 +26,6 @@ export default function GeneralLayout({
             {children}
           </AnimatePresence>
         </main>
-        <Copyright className="text-dark-700 px-4 py-7 text-center font-medium md:py-10 lg:px-8" />
       </motion.div>
     </motion.div>
   );

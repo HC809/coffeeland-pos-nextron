@@ -7,6 +7,7 @@ import { ISale } from "@/models/ISale";
 import { Irender_row, ItableStyle } from "@/models/shared/ITailwindTable";
 import React from "react";
 import Table from "react-tailwind-table";
+import { toShortDate } from "../../helpers/functions/general";
 
 interface Props {
   sales: ISale[];
@@ -15,12 +16,16 @@ interface Props {
 export const SaleList = ({ sales }: Props) => {
   const salesList = sales.map((sale) => {
     return {
-      invoiceNumber: formatInvoice(
+      orderNumber: sale.orderInfo.orderNumber,
+      invoiceNumber: sale.orderInfo.invoiceNumber,
+      invoice: formatInvoice(
         sale.orderInfo.establishmentNumber,
         sale.orderInfo.invoicePointNumber,
         sale.orderInfo.documentTypeNumber,
         sale.orderInfo.invoiceNumber
       ),
+      customer: sale.orderInfo.customerName,
+      date: toShortDate(sale.orderInfo.date!),
       hour: hourFormat(sale.orderInfo.date!),
       orderType: sale.orderInfo.orderType,
       totalAmount: `L ${formatNumber(sale.orderAmounts.total)}`,
@@ -29,12 +34,24 @@ export const SaleList = ({ sales }: Props) => {
 
   const columns = [
     {
-      field: "invoiceNumber",
-      use: "# Factura",
+      field: "orderNumber",
+      use: "N Orden",
+    },
+    {
+      field: "invoice",
+      use: "N Factura",
     },
     {
       field: "orderType",
       use: "Tipo Orden",
+    },
+    {
+      field: "customer",
+      use: "Cliente",
+    },
+    {
+      field: "date",
+      use: "Fecha",
     },
     {
       field: "hour",
@@ -44,10 +61,14 @@ export const SaleList = ({ sales }: Props) => {
       field: "totalAmount",
       use: "Total",
     },
+    {
+      field: "invoiceNumber",
+      use: "Acciones",
+    },
   ];
 
   const rowcheck: Irender_row = (row, column, display_value) => {
-    if (column.field === "totalAmount") {
+    if (column.field === "invoiceNumber") {
       return (
         <button onClick={() => alert(row.invoiceNumber)} className="border p-2">
           Ver Detalle
@@ -55,7 +76,7 @@ export const SaleList = ({ sales }: Props) => {
       );
     }
 
-    if (column.field === "invoiceNumber") {
+    if (column.field === "orderNumber") {
       return <b>{display_value}</b>;
     }
 
@@ -65,11 +86,8 @@ export const SaleList = ({ sales }: Props) => {
   const tableStyle: ItableStyle = {
     base_bg_color: "bg-green-600",
     base_text_color: "bg-green-600",
-    //main: "bg-green-600",
-    top: {
-      elements: {
-        search: "Buscar..",
-      },
+    table_head: {
+      table_data: "bg-green-100 text-center",
     },
   };
 
@@ -80,6 +98,9 @@ export const SaleList = ({ sales }: Props) => {
       should_export={false}
       row_render={rowcheck}
       styling={tableStyle}
+      striped={true}
+      bordered={true}
+      hovered={true}
     />
   );
 };
