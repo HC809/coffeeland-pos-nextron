@@ -8,8 +8,11 @@ import toast from "react-hot-toast";
 import Button from "../ui/button";
 import { FcPlus } from "react-icons/fc";
 import { OrderType } from "@/data/OrderTypes";
+import { useRouter } from "next/router";
+import routes from "@/config/routes";
 
 export const NewOrderStartButton = () => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
 
   const { printerName } = useAppSelector(selectGeneralInfo);
@@ -38,7 +41,7 @@ export const NewOrderStartButton = () => {
           `La fecha límite de emisión fue el ${activeLimitDate}.`
         );
       } else {
-        return dispatch(
+        await  dispatch(
           setNewOrderStartTaxInfo({
             invoicePointId: invoicePoint.id,
             invoiceRangeId: activeInvoiceRange.id,
@@ -63,6 +66,7 @@ export const NewOrderStartButton = () => {
             orderType: OrderType.SUC,
           })
         );
+        return router.push(routes.home);
       }
     } else {
       if (pendingInvoiceRange) {
@@ -81,7 +85,7 @@ export const NewOrderStartButton = () => {
               `La fecha límite de emisión fue el ${activeLimitDate}.`
             );
           else {
-            return dispatch(
+            await dispatch(
               setNewOrderStartTaxInfo({
                 invoicePointId: invoicePoint.id,
                 invoiceRangeId: pendingInvoiceRange.id,
@@ -106,6 +110,7 @@ export const NewOrderStartButton = () => {
                 orderType: OrderType.SUC,
               })
             );
+            return router.push(routes.home);
           }
         } else {
           return toast.error(

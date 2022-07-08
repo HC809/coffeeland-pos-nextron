@@ -14,32 +14,35 @@ interface Props {
 }
 
 export const SaleList = ({ sales }: Props) => {
-  const salesList = sales.map((sale) => {
-    return {
-      orderNumber: sale.orderInfo.orderNumber,
-      invoiceNumber: sale.orderInfo.invoiceNumber,
-      invoice: formatInvoice(
-        sale.orderInfo.establishmentNumber,
-        sale.orderInfo.invoicePointNumber,
-        sale.orderInfo.documentTypeNumber,
-        sale.orderInfo.invoiceNumber
-      ),
-      customer: sale.orderInfo.customerName,
-      date: toShortDate(sale.orderInfo.date!),
-      hour: hourFormat(sale.orderInfo.date!),
-      orderType: sale.orderInfo.orderType,
-      totalAmount: `L ${formatNumber(sale.orderAmounts.total)}`,
-    };
-  });
+  const allSales = [...sales];
+  const salesList = allSales
+    .sort((a, b) => b.orderInfo.invoiceNumber - a.orderInfo.invoiceNumber)
+    .map((sale) => {
+      return {
+        orderNumber: sale.orderInfo.orderNumber,
+        invoiceNumber: sale.orderInfo.invoiceNumber,
+        invoice: formatInvoice(
+          sale.orderInfo.establishmentNumber,
+          sale.orderInfo.invoicePointNumber,
+          sale.orderInfo.documentTypeNumber,
+          sale.orderInfo.invoiceNumber
+        ),
+        customer: sale.orderInfo.customerName,
+        date: toShortDate(sale.orderInfo.date!),
+        hour: hourFormat(sale.orderInfo.date!),
+        orderType: sale.orderInfo.orderType,
+        totalAmount: `L ${formatNumber(sale.orderAmounts.total)}`,
+      };
+    });
 
   const columns = [
     {
       field: "orderNumber",
-      use: "N Orden",
+      use: "N° Orden",
     },
     {
       field: "invoice",
-      use: "N Factura",
+      use: "N° Factura",
     },
     {
       field: "orderType",

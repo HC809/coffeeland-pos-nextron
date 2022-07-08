@@ -24,6 +24,9 @@ import toast from "react-hot-toast";
 import { addSale } from "@/store/salesSlice";
 import { ISale } from "@/models/ISale";
 import { incrementCurrentNumberRange } from "@/store/taxInfoSlice";
+import { cancelNewOrder } from "@/store/newOrderSlice";
+import routes from "@/config/routes";
+import { useRouter } from "next/router";
 const { ipcRenderer } = window.require("electron");
 
 export interface IFormValues {
@@ -32,6 +35,7 @@ export interface IFormValues {
 }
 
 export default function EndNewOrderForm() {
+  const router = useRouter();
   const { closeModal } = useModalAction();
 
   const dispatch = useAppDispatch();
@@ -136,10 +140,16 @@ export default function EndNewOrderForm() {
       orderAmounts: { ...newOrderAmounts },
       orderDetail: { ...newOrderDetail },
     };
+
+    await printInvoice(currentDate);
+    setLoadig(false);
+
     await dispatch(addSale(completeInvoice));
     await dispatch(incrementCurrentNumberRange(newOrderInfo.invoiceRangeId));
-    //await printInvoice(currentDate);
-    setLoadig(false);
+    await dispatch(cancelNewOrder());
+
+    router.push(routes.home);
+    closeModal();
   };
 
   const printInvoice = async (invoiceDate: Date) => {
@@ -250,7 +260,8 @@ export default function EndNewOrderForm() {
               <Button
                 type="submit"
                 className="!mt-5 w-full text-sm tracking-[0.2px] lg:!mt-7"
-                disabled={newOrderAmounts.total > totalAmount}
+                isLoading={loading}
+                disabled={newOrderAmounts.total > totalAmount || loading}
               >
                 {!loading ? "Facturar" : "Imprimiendo Factura..."}
               </Button>

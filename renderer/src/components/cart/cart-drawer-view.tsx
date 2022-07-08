@@ -15,19 +15,7 @@ function CartDrawerView() {
   const { newOrderInfo, newOrderAmounts, newOrderDetail } =
     useAppSelector(selectNewOrder);
 
-  const {
-    total,
-    subtotal,
-    totalExempt,
-    totalExonerated,
-    totalTax15,
-    totalTax18,
-    taxableAmount15,
-    taxableAmount18,
-    totalTax,
-  } = newOrderAmounts;
-
-  const [loading, setLoading] = useState(false);
+  const { total, subtotal } = newOrderAmounts;
 
   const { price: totalAmount } = usePrice({
     amount: total,
@@ -53,34 +41,13 @@ function CartDrawerView() {
           <span>Subtotal:</span>
           <span>{subtotalAmount}</span>
         </div>
-        {/* <div className="flex justify-between pb-1 text-sm font-medium text-dark text-dark-800 dark:text-light">
-          <span>Importe Exento:</span>
-          <span>{totalExemptAmount}</span>
-        </div>
-        <div className="flex justify-between pb-1 text-sm font-medium text-dark text-dark-800 dark:text-light">
-          <span>Importe Exonerado:</span>
-          <span>{totalExoneratedAmount}</span>
-        </div>
-        <div className="flex justify-between pb-1 text-sm font-medium text-dark text-dark-800 dark:text-light">
-          <span>Importe Gravado 15%:</span>
-          <span>{totalTax15Amount}</span>
-        </div>
-        <div className="flex justify-between pb-1 text-sm font-medium text-dark text-dark-800 dark:text-light">
-          <span>Importe Gravado 18%:</span>
-          <span>{totalTax18Amount}</span>
-        </div>
-        <div className="flex justify-between pb-1 text-sm font-medium text-dark text-dark-800 dark:text-light">
-          <span>Total Impuesto:</span>
-          <span>{totalTaxAmount}</span>
-        </div> */}
         <div className="text-dark dark:text-light flex justify-between text-sm font-medium">
           <span>Total:</span>
           <span>{totalAmount}</span>
         </div>
         <div className="mt-3 md:mt-5">
           <Button
-            disabled={newOrderDetail.length === 0 || loading}
-            isLoading={loading}
+            disabled={newOrderDetail.length === 0}
             onClick={() => openModal("END_NEW_ORDER_VIEW")}
             className="w-full text-sm md:h-[52px]"
           >
