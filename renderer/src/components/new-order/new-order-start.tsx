@@ -15,7 +15,7 @@ export const NewOrderStartButton = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const { printerName } = useAppSelector(selectGeneralInfo);
+  const { printerName, orderTypes } = useAppSelector(selectGeneralInfo);
   const { newOrderInfo } = useAppSelector(selectNewOrder);
 
   const { invoicePoint, activeInvoiceRange, pendingInvoiceRange } =
@@ -23,7 +23,9 @@ export const NewOrderStartButton = () => {
 
   const validateTaxInfo = async () => {
     if (!printerName) {
-      return toast.error("No se ha encontrado una impresora conectada.");
+      return toast.error("No se ha encontrado una impresora conectada.", {
+        duration: 1000,
+      });
     }
 
     const {
@@ -41,7 +43,7 @@ export const NewOrderStartButton = () => {
           `La fecha límite de emisión fue el ${activeLimitDate}.`
         );
       } else {
-        await  dispatch(
+        await dispatch(
           setNewOrderStartTaxInfo({
             invoicePointId: invoicePoint.id,
             invoiceRangeId: activeInvoiceRange.id,
@@ -63,7 +65,7 @@ export const NewOrderStartButton = () => {
               activeEndNumber
             )}`,
             orderNumber: `${invoicePoint.number}-${activeNextNumber}`,
-            orderType: OrderType.SUC,
+            orderTypeCode: orderTypes[0].code,
           })
         );
         return router.push(routes.home);
@@ -107,7 +109,7 @@ export const NewOrderStartButton = () => {
                   pendingEndNumber
                 )}`,
                 orderNumber: `${invoicePoint.number}-${pendingNextNumber}`,
-                orderType: OrderType.SUC,
+                orderTypeCode: orderTypes[0].code,
               })
             );
             return router.push(routes.home);

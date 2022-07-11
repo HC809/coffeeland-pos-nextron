@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './store';
 import { IGeneralInfo } from '../models/IGeneralInfo';
+import { IOrderType } from '@/models/IOrderType';
 
 export type State = {
   companyInfo: IGeneralInfo;
   printerName: string;
+  orderTypes: IOrderType[];
 };
 
 export const initialState: State = {
@@ -16,6 +18,7 @@ export const initialState: State = {
     address: '',
   },
   printerName: '',
+  orderTypes: []
 };
 
 export const generalInfoSlice = createSlice({
@@ -28,11 +31,14 @@ export const generalInfoSlice = createSlice({
     setPrinterName: (state, action: PayloadAction<string>) => {
       state.printerName = action.payload;
     },
+    setOrderTypes: (state, action: PayloadAction<IOrderType[]>) => {
+      state.orderTypes = action.payload;
+    }
   },
 });
 
 export const selectGeneralInfo = (state: RootState) => state.generalInfo;
 
-export const { setCompanyInfo, setPrinterName } = generalInfoSlice.actions;
+export const { setCompanyInfo, setPrinterName, setOrderTypes } = generalInfoSlice.actions;
 
 export default generalInfoSlice.reducer;

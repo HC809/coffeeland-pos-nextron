@@ -3,7 +3,7 @@ import { OrderType } from "../data/OrderTypes";
 export interface IOrder {
   started: boolean;
   finished: boolean;
-  orderType: OrderType | null;
+  orderTypeCode: string;
   invoicePointId: number;
   establishmentNumber: number,
   documentTypeNumber: number,
@@ -25,10 +25,12 @@ export interface IOrder {
 
 export interface IOrderAmounts {
   subtotal: number;
+  totalDiscount: number;
   totalTax15: number;
   totalTax18: number;
   totalExempt: number;
   totalExonerated: number;
+  taxableAmountDiscount: number;
   taxableAmount15: number;
   taxableAmount18: number;
   totalTax: number;
@@ -46,6 +48,8 @@ export interface IOrderDetail {
   sellingPrice: number;
   priceBeforeTax: number;
   quantity: number;
+  discountPercentage: number;
+  discount: number;
   taxAmount: number;
   subtotal: number;
   total: number;

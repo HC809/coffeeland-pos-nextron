@@ -1,11 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IOrder, IOrderAmounts, IOrderDetail } from '../models/INewOrder';
 import { RootState } from './store';
-import { OrderType } from '../data/OrderTypes';
 import { calculateTotalOrderAmounts, decrementProductQuantity, incremenetProductQuantity } from '@/services/NewOrderService';
 
 interface NewOrderType {
-  orderType: OrderType;
+  orderTypeCode: string;
   customerName: string;
   rtn: string;
   ticketNumber: number;
@@ -22,7 +21,7 @@ interface NewOrderStartTaxInfo {
   limitDate: Date;
   range: string;
   orderNumber: string;
-  orderType: OrderType;
+  orderTypeCode: string;
 }
 
 interface NewOrderState {
@@ -44,7 +43,7 @@ const initialState: NewOrderState = {
     invoiceNumber: 0,
     limitDate: null,
     range: '',
-    orderType: null,
+    orderTypeCode: '',
     ticketNumber: null,
     started: false,
     finished: false,
@@ -56,13 +55,15 @@ const initialState: NewOrderState = {
   },
   newOrderAmounts: {
     subtotal: 0,
+    totalDiscount: 0,
     totalTax15: 0,
     totalTax18: 0,
     totalExempt: 0,
     totalExonerated: 0,
-    totalTax: 0,
+    taxableAmountDiscount: 0,
     taxableAmount15: 0,
     taxableAmount18: 0,
+    totalTax: 0,
     total: 0,
   },
   newOrderDetail: [],
@@ -84,12 +85,12 @@ const newOrderSlice = createSlice({
       state.newOrderInfo.limitDate = action.payload.limitDate;
       state.newOrderInfo.range = action.payload.range;
       state.newOrderInfo.orderNumber = action.payload.orderNumber;
-      state.newOrderInfo.orderType = action.payload.orderType;
+      state.newOrderInfo.orderTypeCode = action.payload.orderTypeCode;
 
       state.newOrderInfo.started = true;
     },
     setNewOrderType: (state, action: PayloadAction<NewOrderType>) => {
-      state.newOrderInfo.orderType = action.payload.orderType;
+      state.newOrderInfo.orderTypeCode = action.payload.orderTypeCode;
       state.newOrderInfo.customerName = action.payload.customerName;
       state.newOrderInfo.rtn = action.payload.rtn;
       state.newOrderInfo.ticketNumber = action.payload.ticketNumber;

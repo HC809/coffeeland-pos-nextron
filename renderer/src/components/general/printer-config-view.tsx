@@ -60,6 +60,7 @@ export default function PrinterConfigView() {
       const response = await ipcRenderer.invoke("print-test", {
         printerName: getValues("printerName"),
       });
+      console.log(response);
       if (!response.success) {
         return toast.error(response.message, {
           position: "top-center",

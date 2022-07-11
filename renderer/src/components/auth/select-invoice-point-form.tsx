@@ -17,9 +17,10 @@ import { TiWarning } from "react-icons/ti";
 import { setCategories } from "@/store/categoriesSlice";
 import { setProducts } from "@/store/productsSlice";
 import { setTaxInfo } from "@/store/taxInfoSlice";
-import { setCompanyInfo } from "@/store/generalInfoSlice";
+import { setCompanyInfo, setOrderTypes } from "@/store/generalInfoSlice";
 import { AxiosError } from "axios";
 import { getAxiosErrorMessage } from "@/helpers/manageAxiosError";
+import { IPOSData } from "../../models/Authentication/IPOSData";
 
 export interface IFormValues {
   invoicePointOption: IReactSelectOption;
@@ -96,6 +97,30 @@ export default function SelectInvoicePointForm() {
     };
   }, []);
 
+  const setData = async (data: IPOSData) => {
+    const {
+      generalInfo,
+      invoicePoint,
+      invoiceRangeInUse,
+      invoiceRangePending,
+      products,
+      categories,
+      orderTypes,
+    } = data;
+
+    await dispatch(
+      setTaxInfo({
+        invoicePoint,
+        activeInvoiceRange: invoiceRangeInUse,
+        pendingInvoiceRange: invoiceRangePending,
+      })
+    );
+    await dispatch(setCategories(categories));
+    await dispatch(setProducts(products));
+    await dispatch(setCompanyInfo(generalInfo));
+    await dispatch(setOrderTypes(orderTypes));
+  };
+
   const onSubmit = async ({ invoicePointOption }: IFormValues) => {
     toast.remove();
     setLoading(true);
@@ -105,14 +130,7 @@ export default function SelectInvoicePointForm() {
         await ApiService.validateInvoicePoint(invoicePointOption.value);
 
       if (success) {
-        const {
-          generalInfo,
-          invoicePoint,
-          invoiceRangeInUse,
-          invoiceRangePending,
-          products,
-          categories,
-        } = data;
+        const { invoiceRangeInUse, invoiceRangePending } = data;
 
         if (!invoiceRangePending) {
           return toast.custom(
@@ -149,16 +167,7 @@ export default function SelectInvoicePointForm() {
                   <button
                     onClick={async () => {
                       toast.remove(t.id);
-                      await dispatch(
-                        setTaxInfo({
-                          invoicePoint,
-                          activeInvoiceRange: invoiceRangeInUse,
-                          pendingInvoiceRange: invoiceRangePending,
-                        })
-                      );
-                      await dispatch(setCategories(categories));
-                      await dispatch(setProducts(products));
-                      await dispatch(setCompanyInfo(generalInfo));
+                      await setData(data);
                     }}
                     className="flex w-full items-center justify-center rounded-none rounded-r-lg border border-transparent p-4 text-sm font-medium text-green-600 hover:text-green-500 focus:ring-green-500"
                   >
@@ -170,16 +179,7 @@ export default function SelectInvoicePointForm() {
             { duration: 20000 }
           );
         } else {
-          await dispatch(
-            setTaxInfo({
-              invoicePoint,
-              activeInvoiceRange: invoiceRangeInUse,
-              pendingInvoiceRange: invoiceRangePending,
-            })
-          );
-          await dispatch(setCategories(categories));
-          await dispatch(setProducts(products));
-          await dispatch(setCompanyInfo(generalInfo));
+          await setData(data);
         }
       } else {
         return toast.error(<b>{errorMessage}</b>, {

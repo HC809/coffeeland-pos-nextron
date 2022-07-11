@@ -79,6 +79,7 @@ ipcMain.handle('print-test', async (event, arg) => {
       };
     })
     .catch((err) => {
+      console.log(err);
       return {
         success: false,
         message: 'Error: Verifique que la impresora este conectada correctamente, que el nombre sea correcto y que tenga suficiente papel.',

@@ -11,8 +11,7 @@
     "build:all": "nextron build --all",
     "build:win32": "nextron build --win --ia32",
     "build:win64": "nextron build --win --x64",
-    "postinstall": "electron-builder install-app-deps",
-    "postinstall2": "patch-package"
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@babel/core": "^7.18.5",

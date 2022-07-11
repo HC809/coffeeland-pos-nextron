@@ -6,10 +6,10 @@ import { RegisterBgPattern } from "@/components/auth/register-bg-pattern";
 import { useAppDispatch } from "../../hooks/reduxHooks";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
-import { OrderType } from "@/data/OrderTypes";
 import { setNewOrderType, selectNewOrder } from "@/store/newOrderSlice";
 import { useAppSelector } from "@/hooks/reduxHooks";
 import { useModalAction } from "../modal-views/context";
+import { selectGeneralInfo } from "../../store/generalInfoSlice";
 
 export interface IFormValues {
   ticketNumber?: number | null | undefined;
@@ -42,14 +42,17 @@ export default function StartNewOrderForm() {
 
   const dispatch = useAppDispatch();
   const { newOrderInfo } = useAppSelector(selectNewOrder);
+  const { orderTypes } = useAppSelector(selectGeneralInfo);
 
-  const [orderType, setOrderType] = useState<OrderType | null>(
-    newOrderInfo.started ? newOrderInfo.orderType : null
+  console.log(orderTypes);
+
+  const [orderTypeCode, setOrderTypeCode] = useState<string>(
+    newOrderInfo.orderTypeCode
   );
 
   useEffect(() => {
     return () => {
-      setOrderType(null as any);
+      setOrderTypeCode(null as any);
     };
   }, []);
 
@@ -74,7 +77,7 @@ export default function StartNewOrderForm() {
     await dispatch(
       setNewOrderType({
         customerName: customerName || "Consumidor Final",
-        orderType: orderType!,
+        orderTypeCode: orderTypeCode!,
         rtn: rtn || "",
         ticketNumber: ticketNumber || 0,
       })
@@ -95,8 +98,38 @@ export default function StartNewOrderForm() {
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
             <>
-              <div className="grid h-full grid-cols-2 gap-5 pt-5">
-                <div
+              <div className="grid h-full grid-cols-3 gap-5 pt-5">
+                {orderTypes.map((item) => {
+                  return (
+                    <div
+                      onClick={() => {
+                        setOrderTypeCode(item.code);
+                      }}
+                      className={`${
+                        orderTypeCode !== item.code
+                          ? "group bg-light dark:bg-dark-250 cursor-pointer rounded-md px-4 py-7 text-center focus:border-2 focus:border-green-600"
+                          : "group bg-light dark:bg-dark-250 border-brand cursor-pointer rounded-md border-2 px-4 py-7 text-center"
+                      }`}
+                    >
+                      <div className="relative mx-auto mb-2.5 h-[75px] w-[75px] md:h-20 md:w-20 lg:h-[90px] lg:w-[90px]">
+                        <img
+                          className="ml-auto mr-auto"
+                          src="/images/take-away.png"
+                        />
+                      </div>
+                      <h3
+                        className={`${
+                          orderTypeCode !== item.code
+                            ? "font-base group-hover:text-brand dark:text-light mb-1 text-gray-300 transition-colors"
+                            : "font-base text-brand mb-1 text-lg"
+                        }`}
+                      >
+                        {item.name}
+                      </h3>
+                    </div>
+                  );
+                })}
+                {/* <div
                   onClick={() => {
                     setOrderType(OrderType.SUC);
                   }}
@@ -121,9 +154,9 @@ export default function StartNewOrderForm() {
                   >
                     {"En Sucursal"}
                   </h3>
-                </div>
+                </div> */}
 
-                <div
+                {/* <div
                   onClick={() => {
                     setOrderType(OrderType.AS);
                   }}
@@ -148,7 +181,7 @@ export default function StartNewOrderForm() {
                   >
                     {"Autoservicio"}
                   </h3>
-                </div>
+                </div> */}
               </div>
 
               <br></br>
@@ -176,7 +209,7 @@ export default function StartNewOrderForm() {
               <Button
                 type="submit"
                 className="!mt-5 w-full text-sm tracking-[0.2px] lg:!mt-7"
-                disabled={!orderType}
+                disabled={!orderTypeCode}
               >
                 {newOrderInfo.started ? "Guardar" : "Iniciar"}
               </Button>
