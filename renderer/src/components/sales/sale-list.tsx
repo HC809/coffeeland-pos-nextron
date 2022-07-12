@@ -38,6 +38,7 @@ export const SaleList = ({ sales }: Props) => {
           (c) => c.code === sale.orderInfo.orderTypeCode
         )?.name,
         totalAmount: `L ${formatNumber(sale.orderAmounts.total)}`,
+        isSync: sale.orderInfo.isSync,
       };
     });
 
@@ -71,6 +72,10 @@ export const SaleList = ({ sales }: Props) => {
       use: "Total",
     },
     {
+      field: "isSync",
+      use: "Estado",
+    },
+    {
       field: "invoiceNumber",
       use: "Acciones",
     },
@@ -87,6 +92,22 @@ export const SaleList = ({ sales }: Props) => {
 
     if (column.field === "orderNumber") {
       return <b>{display_value}</b>;
+    }
+
+    if (column.field === "isSync") {
+      return (
+        <b>
+          {display_value === true ? (
+            <span className="mr-2 rounded bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-800 dark:bg-green-200 dark:text-green-900">
+              Sincronizada
+            </span>
+          ) : (
+            <span className="mr-2 rounded bg-gray-100 px-2.5 py-0.5 text-xs font-semibold text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+              Pendiente
+            </span>
+          )}
+        </b>
+      );
     }
 
     return display_value;

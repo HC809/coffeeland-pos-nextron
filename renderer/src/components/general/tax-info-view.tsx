@@ -89,27 +89,27 @@ export default function TaxInfoView() {
                 <div className="text-dark">
                   <div className="text-dark text-dark-700 dark:text-light flex justify-between pb-2 text-base font-medium">
                     <span>Número Inicio</span>
-                    <span>{activeInvoiceRange.startNumber}</span>
+                    <span>{pendingInvoiceRange.startNumber}</span>
                   </div>
                 </div>
                 <div className="text-dark">
                   <div className="text-dark text-dark-700 dark:text-light flex justify-between pb-2 text-base font-medium">
                     <span>Número Final</span>
-                    <span>{activeInvoiceRange.endNumber}</span>
+                    <span>{pendingInvoiceRange.endNumber}</span>
                   </div>
                 </div>
                 <div className="text-dark">
                   <div className="text-dark text-dark-700 dark:text-light flex justify-between pb-2 text-base font-medium">
                     <span>Número Actual</span>
-                    <span>{activeInvoiceRange.currentNumber}</span>
+                    <span>{pendingInvoiceRange.currentNumber}</span>
                   </div>
                 </div>
                 <div className="text-dark">
                   <div className="text-dark text-dark-700 dark:text-light flex justify-between pb-2 text-base font-medium">
                     <span>Números Disponibles</span>
                     <span>
-                      {activeInvoiceRange.endNumber -
-                        activeInvoiceRange.currentNumber}
+                      {pendingInvoiceRange.endNumber -
+                        pendingInvoiceRange.currentNumber}
                     </span>
                   </div>
                 </div>

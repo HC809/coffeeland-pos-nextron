@@ -41,16 +41,24 @@ export const taxInfoSlice = createSlice({
     },
     incrementCurrentNumberRange: (state, action: PayloadAction<number>) => {
       if (state.activeInvoiceRange.id === action.payload) {
-        state.activeInvoiceRange.currentNumber =
-          state.activeInvoiceRange.currentNumber + 1;
+        const currentNumber = state.activeInvoiceRange.currentNumber;
+        if (currentNumber === 0)
+          state.activeInvoiceRange.currentNumber = state.activeInvoiceRange.startNumber;
+        else
+          state.activeInvoiceRange.currentNumber =
+            currentNumber + 1;
       }
 
       if (
         state.pendingInvoiceRange &&
         state.pendingInvoiceRange.id === action.payload
       ) {
-        state.pendingInvoiceRange.currentNumber =
-          state.pendingInvoiceRange.currentNumber + 1;
+        const currentNumber = state.pendingInvoiceRange.currentNumber;
+        if (currentNumber === 0)
+          state.pendingInvoiceRange.currentNumber = state.pendingInvoiceRange.startNumber;
+        else
+          state.pendingInvoiceRange.currentNumber =
+            currentNumber + 1;
       }
     },
     removeTaxInfo: (state) => {

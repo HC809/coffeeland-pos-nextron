@@ -22,6 +22,7 @@ import { cancelNewOrder } from "@/store/newOrderSlice";
 import routes from "@/config/routes";
 import { useRouter } from "next/router";
 import { printInvoice } from "@/services/PrintService";
+import { duration } from "moment";
 
 export interface IFormValues {
   cashAmount: number;
@@ -132,42 +133,51 @@ export default function EndNewOrderForm() {
     cardAmount,
     reference,
   }: IFormValues) => {
-    setLoadig(true);
-    const currentDate = new Date();
-    const completeInvoice: ISale = {
-      orderInfo: {
-        ...newOrderInfo,
-        cashAmount,
-        cardAmount,
-        changeAmount,
-        reference: reference || "",
-        date: currentDate,
-      },
-      orderAmounts: { ...newOrderAmounts },
-      orderDetail: { ...newOrderDetail },
-    };
+    console.log(totalAmount);
+    console.log(newOrderAmounts.total);
 
-    // await printInvoice(
-    //   printerName,
-    //   newOrderInfo,
-    //   newOrderAmounts,
-    //   [...newOrderDetailForInvoce],
-    //   companyInfo,
-    //   currentDate,
-    //   Number(getValues("cardAmount")),
-    //   Number(getValues("cashAmount")),
-    //   Number(getValues("reference")),
-    //   false
-    // );
+    if (totalAmount < newOrderAmounts.total) {
+      return toast.error("El monto a pagar debe ser mayor al total.", {
+        duration: 2000,
+      });
+    } else {
+      setLoadig(true);
+      const currentDate = new Date();
+      const completeInvoice: ISale = {
+        orderInfo: {
+          ...newOrderInfo,
+          cashAmount,
+          cardAmount,
+          changeAmount,
+          reference: reference || "",
+          date: currentDate,
+        },
+        orderAmounts: { ...newOrderAmounts },
+        orderDetail: { ...newOrderDetail },
+      };
 
-    setLoadig(false);
+      // await printInvoice(
+      //   printerName,
+      //   newOrderInfo,
+      //   newOrderAmounts,
+      //   [...newOrderDetailForInvoce],
+      //   companyInfo,
+      //   currentDate,
+      //   Number(getValues("cardAmount")),
+      //   Number(getValues("cashAmount")),
+      //   Number(getValues("reference")),
+      //   false
+      // );
 
-    await dispatch(addSale(completeInvoice));
-    await dispatch(incrementCurrentNumberRange(newOrderInfo.invoiceRangeId));
-    await dispatch(cancelNewOrder());
+      setLoadig(false);
 
-    router.push(routes.home);
-    closeModal();
+      await dispatch(addSale(completeInvoice));
+      await dispatch(incrementCurrentNumberRange(newOrderInfo.invoiceRangeId));
+      await dispatch(cancelNewOrder());
+
+      router.push(routes.home);
+      closeModal();
+    }
   };
 
   useEffect(() => {

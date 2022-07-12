@@ -19,6 +19,7 @@ export const NewOrderStartButton = () => {
     useAppSelector(selectTaxInfo);
 
   const startNewOrder = async (
+    invoiceRangeId: number,
     invoiceNumber: number,
     limitDate: Date,
     cai: string,
@@ -28,7 +29,7 @@ export const NewOrderStartButton = () => {
     await dispatch(
       setNewOrderStartTaxInfo({
         invoicePointId: invoicePoint.id,
-        invoiceRangeId: activeInvoiceRange.id,
+        invoiceRangeId: invoiceRangeId,
         establishmentNumber: invoicePoint.establishment,
         documentTypeNumber: invoicePoint.documentType,
         invoicePointNumber: invoicePoint.number,
@@ -67,7 +68,8 @@ export const NewOrderStartButton = () => {
       limitDate: activeLimitDate,
     } = activeInvoiceRange;
 
-    const activeNextNumber = activeCurrentNumber + 1;
+    const activeNextNumber =
+      activeCurrentNumber === 0 ? activeStartNumber : activeCurrentNumber + 1;
     if (activeNextNumber <= activeEndNumber) {
       if (activeLimitDate && activeLimitDate < new Date()) {
         return toast.error(
@@ -75,6 +77,7 @@ export const NewOrderStartButton = () => {
         );
       } else {
         startNewOrder(
+          activeInvoiceRange.id,
           activeNextNumber,
           activeLimitDate!,
           activeCai,
@@ -92,7 +95,10 @@ export const NewOrderStartButton = () => {
           cai: pendingCai,
         } = pendingInvoiceRange;
 
-        const pendingNextNumber = pendingCurrentNumber + 1;
+        const pendingNextNumber =
+          pendingCurrentNumber === 0
+            ? pendingStartNumber
+            : pendingCurrentNumber + 1;
         if (pendingNextNumber <= pendingEndNumber) {
           if (pendingLimitDate && pendingLimitDate < new Date())
             return toast.error(
@@ -100,6 +106,7 @@ export const NewOrderStartButton = () => {
             );
           else {
             startNewOrder(
+              pendingInvoiceRange.id,
               pendingNextNumber,
               pendingLimitDate!,
               pendingCai,

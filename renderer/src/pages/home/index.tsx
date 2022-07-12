@@ -6,6 +6,7 @@ import { selectCategories } from "@/store/categoriesSlice";
 import { selectNewOrder } from "../../store/newOrderSlice";
 import { resetSales, selectSales } from "@/store/salesSlice";
 import { SaleList } from "@/components/sales/sale-list";
+import Button from "@/components/ui/button";
 
 const HomePage: NextPageWithLayout = () => {
   const { newOrderInfo } = useAppSelector(selectNewOrder);
@@ -31,6 +32,7 @@ const HomePage: NextPageWithLayout = () => {
           </button>
           <div className="group bg-light dark:bg-dark-250 cursor-pointer rounded-md px-4 py-1 text-center">
             <p className="pt-5 text-xl font-bold">Lista de Facturas</p>
+            <Button >Sincronizar</Button>
             <SaleList sales={sales} />
           </div>
         </div>
