@@ -1,5 +1,3 @@
-import { OrderType } from "../data/OrderTypes";
-
 export interface IOrder {
   started: boolean;
   finished: boolean;
@@ -19,8 +17,11 @@ export interface IOrder {
   date: Date | null;
   cashAmount: number;
   cardAmount: number;
+  reference: string;
   changeAmount: number;
   orderNumber: string;
+
+  isSync: boolean;
 }
 
 export interface IOrderAmounts {
@@ -50,6 +51,16 @@ export interface IOrderDetail {
   quantity: number;
   discountPercentage: number;
   discount: number;
+  taxAmount: number;
+  subtotal: number;
+  total: number;
+}
+
+export interface IOrderDetailSummary {
+  productName: string;
+  sellingPrice: number;
+  priceBeforeTax: number;
+  quantity: number;
   taxAmount: number;
   subtotal: number;
   total: number;

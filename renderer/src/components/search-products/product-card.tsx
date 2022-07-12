@@ -49,14 +49,16 @@ export default function ProductCard({ product }: { product: IProduct }) {
             sellingPrice: product.sellingPrice || 0,
             priceBeforeTax: product.priceBeforeTax || 0,
             quantity: 1,
+            discount: 0,
+            discountPercentage: 0,
             taxAmount: product.sellingPrice - product.priceBeforeTax,
             subtotal: product.priceBeforeTax,
             total: product.sellingPrice,
           })
         );
 
-        return toast.success(<b>Producto agregado al pedido!</b>, {
-          duration: 1000,
+        toast.success(<b>Producto agregado al pedido!</b>, {
+          duration: 500,
         });
       }}
       className="group bg-light dark:bg-dark-250 cursor-pointer rounded-md px-4 py-7 text-center"

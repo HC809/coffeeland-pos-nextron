@@ -10,6 +10,8 @@ import { setNewOrderType, selectNewOrder } from "@/store/newOrderSlice";
 import { useAppSelector } from "@/hooks/reduxHooks";
 import { useModalAction } from "../modal-views/context";
 import { selectGeneralInfo } from "../../store/generalInfoSlice";
+import Image from "@/components/ui/image";
+import placeholder from "@/assets/images/placeholders/product.svg";
 
 export interface IFormValues {
   ticketNumber?: number | null | undefined;
@@ -90,7 +92,7 @@ export default function StartNewOrderForm() {
     <div className="px-6 pt-5 pb-8 sm:px-8 lg:p-12">
       <RegisterBgPattern className="text-light dark:text-dark-300 absolute bottom-0 left-0 dark:opacity-60" />
       <div className="relative z-10 flex items-center">
-        <div className="w-full shrink-0 text-left md:w-[380px]">
+        <div className="w-full shrink-0 text-left md:w-[480px]">
           <div className="pb-2 text-center ">
             <h1 className="text-dark dark:text-light text-lg font-medium tracking-[-0.3px] lg:text-xl">
               Editar Orden
@@ -102,6 +104,7 @@ export default function StartNewOrderForm() {
                 {orderTypes.map((item) => {
                   return (
                     <div
+                      key={item.code}
                       onClick={() => {
                         setOrderTypeCode(item.code);
                       }}
@@ -112,9 +115,17 @@ export default function StartNewOrderForm() {
                       }`}
                     >
                       <div className="relative mx-auto mb-2.5 h-[75px] w-[75px] md:h-20 md:w-20 lg:h-[90px] lg:w-[90px]">
-                        <img
-                          className="ml-auto mr-auto"
-                          src="/images/take-away.png"
+                        <Image
+                          alt={item.code}
+                          layout="fill"
+                          quality={100}
+                          objectFit="cover"
+                          src={
+                            item.image
+                              ? `data:image/jpeg;base64,${item.image}`
+                              : placeholder
+                          }
+                          className="rounded-3xl"
                         />
                       </div>
                       <h3
@@ -129,59 +140,6 @@ export default function StartNewOrderForm() {
                     </div>
                   );
                 })}
-                {/* <div
-                  onClick={() => {
-                    setOrderType(OrderType.SUC);
-                  }}
-                  className={`${
-                    orderType !== OrderType.SUC
-                      ? "group bg-light dark:bg-dark-250 cursor-pointer rounded-md px-4 py-7 text-center focus:border-2 focus:border-green-600"
-                      : "group bg-light dark:bg-dark-250 border-brand cursor-pointer rounded-md border-2 px-4 py-7 text-center"
-                  }`}
-                >
-                  <div className="relative mx-auto mb-2.5 h-[10px] w-[70px] md:h-20 md:w-20 lg:h-[90px] lg:w-[90px]">
-                    <img
-                      className="ml-auto mr-auto"
-                      src="/images/eat-here.png"
-                    />
-                  </div>
-                  <h3
-                    className={`${
-                      orderType !== OrderType.SUC
-                        ? "font-base group-hover:text-brand dark:text-light mb-1 text-gray-300 transition-colors"
-                        : "font-base text-brand mb-1 text-lg "
-                    }`}
-                  >
-                    {"En Sucursal"}
-                  </h3>
-                </div> */}
-
-                {/* <div
-                  onClick={() => {
-                    setOrderType(OrderType.AS);
-                  }}
-                  className={`${
-                    orderType !== OrderType.AS
-                      ? "group bg-light dark:bg-dark-250 cursor-pointer rounded-md px-4 py-7 text-center focus:border-2 focus:border-green-600"
-                      : "group bg-light dark:bg-dark-250 border-brand cursor-pointer rounded-md border-2 px-4 py-7 text-center"
-                  }`}
-                >
-                  <div className="relative mx-auto mb-2.5 h-[75px] w-[75px] md:h-20 md:w-20 lg:h-[90px] lg:w-[90px]">
-                    <img
-                      className="ml-auto mr-auto"
-                      src="/images/take-away.png"
-                    />
-                  </div>
-                  <h3
-                    className={`${
-                      orderType !== OrderType.AS
-                        ? "font-base group-hover:text-brand dark:text-light mb-1 text-gray-300 transition-colors"
-                        : "font-base text-brand mb-1 text-lg"
-                    }`}
-                  >
-                    {"Autoservicio"}
-                  </h3>
-                </div> */}
               </div>
 
               <br></br>

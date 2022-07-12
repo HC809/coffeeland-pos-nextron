@@ -5,15 +5,19 @@ import {
 } from "@/helpers/functions/general";
 import { ISale } from "@/models/ISale";
 import { Irender_row, ItableStyle } from "@/models/shared/ITailwindTable";
+import { selectGeneralInfo } from "@/store/generalInfoSlice";
 import React from "react";
 import Table from "react-tailwind-table";
 import { toShortDate } from "../../helpers/functions/general";
+import { useAppSelector } from "../../hooks/reduxHooks";
 
 interface Props {
   sales: ISale[];
 }
 
 export const SaleList = ({ sales }: Props) => {
+  const { orderTypes } = useAppSelector(selectGeneralInfo);
+
   const allSales = [...sales];
   const salesList = allSales
     .sort((a, b) => b.orderInfo.invoiceNumber - a.orderInfo.invoiceNumber)
@@ -30,7 +34,9 @@ export const SaleList = ({ sales }: Props) => {
         customer: sale.orderInfo.customerName,
         date: toShortDate(sale.orderInfo.date!),
         hour: hourFormat(sale.orderInfo.date!),
-        orderType: sale.orderInfo.orderType,
+        orderType: orderTypes.find(
+          (c) => c.code === sale.orderInfo.orderTypeCode
+        )?.name,
         totalAmount: `L ${formatNumber(sale.orderAmounts.total)}`,
       };
     });

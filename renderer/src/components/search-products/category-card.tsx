@@ -31,9 +31,9 @@ export default function CategoryCard({ category }: { category: ICategory }) {
       <h3 className="font-base  text-dark group-hover:text-brand dark:text-light mb-1 text-lg transition-colors">
         {name}
       </h3>
-      <div className="text-dark-800 dark:text-dark-base text-sm font-medium">
+      {/* <div className="text-dark-800 dark:text-dark-base text-sm font-medium">
         {5} Productos
-      </div>
+      </div> */}
     </motion.div>
   );
 }

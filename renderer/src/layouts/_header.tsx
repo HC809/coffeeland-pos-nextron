@@ -69,6 +69,15 @@ function AuthorizedMenu({ user }: { user: ILoggedUser }) {
             <button
               type="button"
               className="transition-fill-colors hover:bg-light-400 dark:hover:bg-dark-600 w-full px-5 py-2.5 text-left"
+              onClick={async () => openModal("TAX_INFO_VIEW")}
+            >
+              Información Fiacal
+            </button>
+          </Menu.Item>
+          <Menu.Item>
+            <button
+              type="button"
+              className="transition-fill-colors hover:bg-light-400 dark:hover:bg-dark-600 w-full px-5 py-2.5 text-left"
               onClick={async () => openModal("PRINTER_CONFIG_VIEW")}
             >
               Configuración Impresora

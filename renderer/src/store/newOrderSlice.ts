@@ -50,8 +50,10 @@ const initialState: NewOrderState = {
     date: null,
     cashAmount: 0,
     cardAmount: 0,
+    reference: '',
     changeAmount: 0,
     orderNumber: '',
+    isSync: false,
   },
   newOrderAmounts: {
     subtotal: 0,

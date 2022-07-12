@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IOrder, IOrderAmounts, IOrderDetail } from '../models/INewOrder';
 import { RootState } from './store';
 import { ISale } from '@/models/ISale';
 

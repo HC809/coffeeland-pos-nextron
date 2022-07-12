@@ -13,9 +13,11 @@ export const initialState: State = {
   companyInfo: {
     rtn: '',
     name: '',
+    commercialName: '',
     email: '',
     phoneNumber: '',
     address: '',
+    invoiceComment: '',
   },
   printerName: '',
   orderTypes: []

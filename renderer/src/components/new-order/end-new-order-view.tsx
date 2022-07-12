@@ -11,15 +11,9 @@ import {
 } from "@/store/newOrderSlice";
 import { useAppSelector } from "@/hooks/reduxHooks";
 import { useModalAction } from "../modal-views/context";
-import {
-  formatInvoice,
-  formatNumber,
-  hourFormat,
-  toShortDate,
-} from "@/helpers/functions/general";
+import { formatNumber } from "@/helpers/functions/general";
 import { useState, useEffect } from "react";
 import { selectGeneralInfo } from "@/store/generalInfoSlice";
-import { NumeroALetras } from "@/helpers/functions/lettersAmount";
 import toast from "react-hot-toast";
 import { addSale } from "@/store/salesSlice";
 import { ISale } from "@/models/ISale";
@@ -27,11 +21,12 @@ import { incrementCurrentNumberRange } from "@/store/taxInfoSlice";
 import { cancelNewOrder } from "@/store/newOrderSlice";
 import routes from "@/config/routes";
 import { useRouter } from "next/router";
-const { ipcRenderer } = window.require("electron");
+import { printInvoice } from "@/services/PrintService";
 
 export interface IFormValues {
   cashAmount: number;
   cardAmount: number;
+  reference?: string;
 }
 
 export default function EndNewOrderForm() {
@@ -71,17 +66,23 @@ export default function EndNewOrderForm() {
       .min(0, "El monto no puede ser menor a 0.")
       .max(newOrderAmounts.total, "No puede pagar más del monto total.")
       .required(),
+    reference: yup.string().when("cardAmount", {
+      is: (cardAmount: number) => cardAmount > 0,
+      then: yup.string().required("El número de referencia es requerido."),
+    }),
   });
 
   const initialValues: IFormValues = {
     cashAmount: 0,
     cardAmount: 0,
+    reference: "",
   };
 
   const {
     handleSubmit,
     register,
     getValues,
+    setFocus,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
@@ -126,7 +127,11 @@ export default function EndNewOrderForm() {
     }
   };
 
-  const onSubmit = async ({ cashAmount, cardAmount }: IFormValues) => {
+  const onSubmit = async ({
+    cashAmount,
+    cardAmount,
+    reference,
+  }: IFormValues) => {
     setLoadig(true);
     const currentDate = new Date();
     const completeInvoice: ISale = {
@@ -135,13 +140,26 @@ export default function EndNewOrderForm() {
         cashAmount,
         cardAmount,
         changeAmount,
+        reference: reference || "",
         date: currentDate,
       },
       orderAmounts: { ...newOrderAmounts },
       orderDetail: { ...newOrderDetail },
     };
 
-    await printInvoice(currentDate);
+    // await printInvoice(
+    //   printerName,
+    //   newOrderInfo,
+    //   newOrderAmounts,
+    //   [...newOrderDetailForInvoce],
+    //   companyInfo,
+    //   currentDate,
+    //   Number(getValues("cardAmount")),
+    //   Number(getValues("cashAmount")),
+    //   Number(getValues("reference")),
+    //   false
+    // );
+
     setLoadig(false);
 
     await dispatch(addSale(completeInvoice));
@@ -152,61 +170,9 @@ export default function EndNewOrderForm() {
     closeModal();
   };
 
-  const printInvoice = async (invoiceDate: Date) => {
-    const productDetails = [...newOrderDetailForInvoce];
-
-    const detail = productDetails.map((item) => {
-      return {
-        productName: item.productName,
-        quantity: item.quantity,
-        price: `L ${formatNumber(item.sellingPrice)}`,
-        total: `L ${formatNumber(item.total)}`,
-      };
-    });
-
-    const orderModel = {
-      printerName: printerName,
-      cash: `L ${
-        Number(getValues("cashAmount"))
-          ? formatNumber(Number(getValues("cashAmount")))
-          : "0"
-      }`,
-      card: `L ${
-        Number(getValues("cardAmount"))
-          ? formatNumber(Number(getValues("cardAmount")))
-          : "0"
-      }`,
-      change: `L ${changeAmount ? formatNumber(changeAmount) : "0"}`,
-      invoiceDate: `FECHA: ${toShortDate(invoiceDate)}  / HORA: ${hourFormat(
-        invoiceDate
-      )}`,
-      invoiceHour: hourFormat(invoiceDate),
-      invoiceNumber: formatInvoice(
-        newOrderInfo.establishmentNumber,
-        newOrderInfo.documentTypeNumber,
-        newOrderInfo.invoicePointNumber,
-        newOrderInfo.invoiceNumber
-      ),
-      limitDate: toShortDate(newOrderInfo.limitDate!),
-      companyInfo,
-      newOrderInfo,
-      newOrderAmountList: {
-        subtotal: formatNumber(newOrderAmounts.subtotal),
-        totalTax15: formatNumber(newOrderAmounts.totalTax15),
-        totalTax18: formatNumber(newOrderAmounts.totalTax18),
-        totalExempt: formatNumber(newOrderAmounts.totalExempt),
-        totalExonerated: formatNumber(newOrderAmounts.totalExonerated),
-        totalTax: formatNumber(newOrderAmounts.totalTax),
-        taxableAmount15: formatNumber(newOrderAmounts.taxableAmount15),
-        taxableAmount18: formatNumber(newOrderAmounts.taxableAmount18),
-        total: formatNumber(newOrderAmounts.total),
-      },
-      lettersAmount: NumeroALetras(newOrderAmounts.total),
-      newOrderProductDetail: detail,
-    };
-
-    await ipcRenderer.invoke("print-invoice", orderModel);
-  };
+  useEffect(() => {
+    setFocus("cashAmount");
+  }, [setFocus]);
 
   return (
     <div className="px-6 pt-5 pb-8 sm:px-8 lg:p-12">
@@ -253,6 +219,17 @@ export default function EndNewOrderForm() {
                   {...register("cardAmount")}
                   onChange={(e) => sumCardAmounts(Number(e.target.value))}
                   error={errors.cardAmount?.message}
+                  className="col-span-6"
+                />
+              </div>
+
+              <div className="grid h-full grid-cols-8">
+                <div className="col-span-2 pt-5"></div>
+                <Input
+                  label="Referencia"
+                  inputClassName="bg-light dark:bg-dark-300"
+                  {...register("reference")}
+                  error={errors.reference?.message}
                   className="col-span-6"
                 />
               </div>

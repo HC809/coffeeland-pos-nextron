@@ -7,12 +7,9 @@ import React from "react";
 import toast from "react-hot-toast";
 import Button from "../ui/button";
 import { FcPlus } from "react-icons/fc";
-import { OrderType } from "@/data/OrderTypes";
-import { useRouter } from "next/router";
 import routes from "@/config/routes";
 
 export const NewOrderStartButton = () => {
-  const router = useRouter();
   const dispatch = useAppDispatch();
 
   const { printerName, orderTypes } = useAppSelector(selectGeneralInfo);
@@ -20,6 +17,40 @@ export const NewOrderStartButton = () => {
 
   const { invoicePoint, activeInvoiceRange, pendingInvoiceRange } =
     useAppSelector(selectTaxInfo);
+
+  const startNewOrder = async (
+    invoiceNumber: number,
+    limitDate: Date,
+    cai: string,
+    startRangeNumber: number,
+    endRangeNumber: number
+  ) => {
+    await dispatch(
+      setNewOrderStartTaxInfo({
+        invoicePointId: invoicePoint.id,
+        invoiceRangeId: activeInvoiceRange.id,
+        establishmentNumber: invoicePoint.establishment,
+        documentTypeNumber: invoicePoint.documentType,
+        invoicePointNumber: invoicePoint.number,
+        invoiceNumber: invoiceNumber,
+        limitDate: limitDate,
+        cai: cai,
+        range: `${formatInvoice(
+          invoicePoint.establishment,
+          invoicePoint.documentType,
+          invoicePoint.number,
+          startRangeNumber
+        )} / ${formatInvoice(
+          newOrderInfo.establishmentNumber,
+          newOrderInfo.documentTypeNumber,
+          newOrderInfo.invoicePointNumber,
+          endRangeNumber
+        )}`,
+        orderNumber: `${invoicePoint.number}-${invoiceNumber}`,
+        orderTypeCode: "COMERAQUI",
+      })
+    );
+  };
 
   const validateTaxInfo = async () => {
     if (!printerName) {
@@ -37,38 +68,19 @@ export const NewOrderStartButton = () => {
     } = activeInvoiceRange;
 
     const activeNextNumber = activeCurrentNumber + 1;
-    if (activeNextNumber < activeEndNumber) {
+    if (activeNextNumber <= activeEndNumber) {
       if (activeLimitDate && activeLimitDate < new Date()) {
         return toast.error(
           `La fecha límite de emisión fue el ${activeLimitDate}.`
         );
       } else {
-        await dispatch(
-          setNewOrderStartTaxInfo({
-            invoicePointId: invoicePoint.id,
-            invoiceRangeId: activeInvoiceRange.id,
-            establishmentNumber: invoicePoint.establishment,
-            documentTypeNumber: invoicePoint.documentType,
-            invoicePointNumber: invoicePoint.number,
-            invoiceNumber: activeNextNumber,
-            limitDate: activeLimitDate!,
-            cai: activeCai,
-            range: `${formatInvoice(
-              invoicePoint.establishment,
-              invoicePoint.documentType,
-              invoicePoint.number,
-              activeStartNumber
-            )} / ${formatInvoice(
-              newOrderInfo.establishmentNumber,
-              newOrderInfo.documentTypeNumber,
-              newOrderInfo.invoicePointNumber,
-              activeEndNumber
-            )}`,
-            orderNumber: `${invoicePoint.number}-${activeNextNumber}`,
-            orderTypeCode: orderTypes[0].code,
-          })
+        startNewOrder(
+          activeNextNumber,
+          activeLimitDate!,
+          activeCai,
+          activeStartNumber,
+          activeEndNumber
         );
-        return router.push(routes.home);
       }
     } else {
       if (pendingInvoiceRange) {
@@ -81,38 +93,19 @@ export const NewOrderStartButton = () => {
         } = pendingInvoiceRange;
 
         const pendingNextNumber = pendingCurrentNumber + 1;
-        if (pendingNextNumber < pendingEndNumber) {
+        if (pendingNextNumber <= pendingEndNumber) {
           if (pendingLimitDate && pendingLimitDate < new Date())
             return toast.error(
               `La fecha límite de emisión fue el ${activeLimitDate}.`
             );
           else {
-            await dispatch(
-              setNewOrderStartTaxInfo({
-                invoicePointId: invoicePoint.id,
-                invoiceRangeId: pendingInvoiceRange.id,
-                establishmentNumber: invoicePoint.establishment,
-                documentTypeNumber: invoicePoint.documentType,
-                invoicePointNumber: invoicePoint.number,
-                invoiceNumber: pendingNextNumber,
-                limitDate: pendingLimitDate!,
-                cai: pendingCai,
-                range: `${formatInvoice(
-                  invoicePoint.establishment,
-                  invoicePoint.documentType,
-                  invoicePoint.number,
-                  pendingStartNumber
-                )} / ${formatInvoice(
-                  newOrderInfo.establishmentNumber,
-                  newOrderInfo.documentTypeNumber,
-                  newOrderInfo.invoicePointNumber,
-                  pendingEndNumber
-                )}`,
-                orderNumber: `${invoicePoint.number}-${pendingNextNumber}`,
-                orderTypeCode: orderTypes[0].code,
-              })
+            startNewOrder(
+              pendingNextNumber,
+              pendingLimitDate!,
+              pendingCai,
+              pendingStartNumber,
+              pendingEndNumber
             );
-            return router.push(routes.home);
           }
         } else {
           return toast.error(
