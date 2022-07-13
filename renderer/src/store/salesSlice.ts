@@ -24,6 +24,7 @@ const salesSlice = createSlice({
 });
 
 export const selectSales = (state: RootState) => state.sale;
+export const selectPendingSales = (state: RootState) => state.sale.sales.filter(sale => sale.orderInfo.isSync === false);
 
 export const { addSale, resetSales } = salesSlice.actions;
 

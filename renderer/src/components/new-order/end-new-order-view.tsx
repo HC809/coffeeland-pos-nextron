@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import {
   selectNewOrder,
   selectNewOrderDetailForInvoice,
+  selectNewOrderDetailForTocket,
 } from "@/store/newOrderSlice";
 import { useAppSelector } from "@/hooks/reduxHooks";
 import { useModalAction } from "../modal-views/context";
@@ -21,8 +22,8 @@ import { incrementCurrentNumberRange } from "@/store/taxInfoSlice";
 import { cancelNewOrder } from "@/store/newOrderSlice";
 import routes from "@/config/routes";
 import { useRouter } from "next/router";
-import { printInvoice } from "@/services/PrintService";
-import { duration } from "moment";
+import { printInvoice, printTicket } from "@/services/PrintService";
+import { Switch } from "@headlessui/react";
 
 export interface IFormValues {
   cashAmount: number;
@@ -41,17 +42,21 @@ export default function EndNewOrderForm() {
   const newOrderDetailForInvoce = useAppSelector(
     selectNewOrderDetailForInvoice
   );
-  const { companyInfo, printerName } = useAppSelector(selectGeneralInfo);
+  const newOrderDetailForTicket = useAppSelector(selectNewOrderDetailForTocket);
+  const { companyInfo, printerName, orderTypes } =
+    useAppSelector(selectGeneralInfo);
 
   const [loading, setLoadig] = useState<boolean>(false);
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [changeAmount, setChangeAmount] = useState<number>(0);
+  const [printKitchenTicket, setPrintKitchenTicket] = useState<boolean>(false);
 
   useEffect(() => {
     return () => {
       setLoadig(null as any);
       setTotalAmount(null as any);
       setChangeAmount(null as any);
+      setPrintKitchenTicket(null as any);
     };
   }, []);
 
@@ -133,9 +138,6 @@ export default function EndNewOrderForm() {
     cardAmount,
     reference,
   }: IFormValues) => {
-    console.log(totalAmount);
-    console.log(newOrderAmounts.total);
-
     if (totalAmount < newOrderAmounts.total) {
       return toast.error("El monto a pagar debe ser mayor al total.", {
         duration: 2000,
@@ -146,28 +148,52 @@ export default function EndNewOrderForm() {
       const completeInvoice: ISale = {
         orderInfo: {
           ...newOrderInfo,
-          cashAmount,
-          cardAmount,
-          changeAmount,
+          cashAmount: cashAmount,
+          cardAmount: cardAmount,
+          changeAmount: changeAmount,
           reference: reference || "",
           date: currentDate,
         },
         orderAmounts: { ...newOrderAmounts },
-        orderDetail: { ...newOrderDetail },
+        orderDetail: [...newOrderDetail],
       };
 
-      // await printInvoice(
-      //   printerName,
-      //   newOrderInfo,
-      //   newOrderAmounts,
-      //   [...newOrderDetailForInvoce],
-      //   companyInfo,
-      //   currentDate,
-      //   Number(getValues("cardAmount")),
-      //   Number(getValues("cashAmount")),
-      //   Number(getValues("reference")),
-      //   false
-      // );
+      await printInvoice(
+        printerName,
+        newOrderInfo,
+        newOrderAmounts,
+        [...newOrderDetailForInvoce],
+        companyInfo,
+        currentDate,
+        Number(getValues("cashAmount")),
+        Number(getValues("cardAmount")),
+        Number(getValues("reference")),
+        false
+      );
+
+      await printInvoice(
+        printerName,
+        newOrderInfo,
+        newOrderAmounts,
+        [...newOrderDetailForInvoce],
+        companyInfo,
+        currentDate,
+        Number(getValues("cashAmount")),
+        Number(getValues("cardAmount")),
+        Number(getValues("reference")),
+        true
+      );
+
+      if (printKitchenTicket) {
+        await printTicket(
+          printerName,
+          newOrderInfo.orderNumber,
+          currentDate,
+          orderTypes.find((ot) => ot.code === newOrderInfo.orderTypeCode)
+            ?.name || "",
+          [...newOrderDetailForTicket]
+        );
+      }
 
       setLoadig(false);
 
@@ -194,8 +220,8 @@ export default function EndNewOrderForm() {
               {`Total: L ${formatNumber(newOrderAmounts.total)}`}
             </h1>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
-            <>
+          <form onSubmit={(e) => e.preventDefault()} className="space-y-2">
+            <div>
               <div className="grid h-full grid-cols-8">
                 <img
                   className="col-span-2 pt-5"
@@ -244,15 +270,33 @@ export default function EndNewOrderForm() {
                 />
               </div>
 
+              <div className="pt-10 text-center">
+                <label className="relative mr-5 inline-flex cursor-pointer items-center">
+                  <input
+                    type="checkbox"
+                    value=""
+                    onChange={() => setPrintKitchenTicket((val) => !val)}
+                    id="green-toggle"
+                    className="peer sr-only"
+                    checked={printKitchenTicket}
+                  />
+                  <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:top-0.5 after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-green-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-green-800"></div>
+                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                    Imprimir Ticket de Cocina
+                  </span>
+                </label>
+              </div>
+
               <Button
-                type="submit"
+                type="button"
+                onClick={() => onSubmit(getValues())}
                 className="!mt-5 w-full text-sm tracking-[0.2px] lg:!mt-7"
                 isLoading={loading}
                 disabled={newOrderAmounts.total > totalAmount || loading}
               >
                 {!loading ? "Facturar" : "Imprimiendo Factura..."}
               </Button>
-            </>
+            </div>
           </form>
         </div>
       </div>

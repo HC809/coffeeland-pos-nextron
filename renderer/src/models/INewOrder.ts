@@ -65,3 +65,9 @@ export interface IOrderDetailSummary {
   subtotal: number;
   total: number;
 }
+
+export interface IOrderKitchenSummary {
+  productName: string;
+  quantity: number;
+  comment: string;
+}

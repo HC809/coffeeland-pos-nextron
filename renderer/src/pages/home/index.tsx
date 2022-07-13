@@ -7,8 +7,11 @@ import { selectNewOrder } from "../../store/newOrderSlice";
 import { resetSales, selectSales } from "@/store/salesSlice";
 import { SaleList } from "@/components/sales/sale-list";
 import Button from "@/components/ui/button";
+import { useModalAction } from "@/components/modal-views/context";
 
 const HomePage: NextPageWithLayout = () => {
+  const { openModal } = useModalAction();
+
   const { newOrderInfo } = useAppSelector(selectNewOrder);
   const { categories } = useAppSelector(selectCategories);
   const { sales } = useAppSelector(selectSales);
@@ -32,7 +35,9 @@ const HomePage: NextPageWithLayout = () => {
           </button>
           <div className="group bg-light dark:bg-dark-250 cursor-pointer rounded-md px-4 py-1 text-center">
             <p className="pt-5 text-xl font-bold">Lista de Facturas</p>
-            <Button >Sincronizar</Button>
+            <Button onClick={() => openModal("SYNC_INVOICES_VIEW")}>
+              Sincronizar
+            </Button>
             <SaleList sales={sales} />
           </div>
         </div>

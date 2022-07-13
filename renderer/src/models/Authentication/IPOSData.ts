@@ -19,3 +19,10 @@ export interface IUpdatePOSData {
   categories: ICategory[];
   products: IProduct[];
 }
+
+export interface SaveInvoiceResponse {
+  itSaved: boolean;
+  invoiceNumber: number;
+  cai: string;
+  errorMsg: string;
+}

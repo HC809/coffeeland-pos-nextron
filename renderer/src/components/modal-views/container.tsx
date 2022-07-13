@@ -29,6 +29,9 @@ const UpdateProductsView = dynamic(
   () => import("@/components/general/update-products-view")
 );
 const TaxInfoView = dynamic(() => import("@/components/general/tax-info-view"));
+const SyncInvoicesView = dynamic(
+  () => import("@/components/general/sync-invoices-view")
+);
 const PrinterConfigView = dynamic(
   () => import("@/components/general/printer-config-view"),
   {
@@ -52,6 +55,8 @@ function renderModalContent(view: MODAL_VIEWS) {
       return <PrinterConfigView />;
     case "TAX_INFO_VIEW":
       return <TaxInfoView />;
+    case "SYNC_INVOICES_VIEW":
+      return <SyncInvoicesView />;
     default:
       return null;
   }

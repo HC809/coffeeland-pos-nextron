@@ -9,6 +9,7 @@ export type MODAL_VIEWS =
   | "PRINTER_CONFIG_VIEW"
   | "UPDATE_PRODUCTS_VIEW"
   | "TAX_INFO_VIEW"
+  | "SYNC_INVOICES_VIEW"
   | "PRODUCT_DETAILS";
 
 interface State {

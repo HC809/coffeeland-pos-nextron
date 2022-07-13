@@ -2,7 +2,7 @@ const { ipcRenderer } = window.require("electron");
 import { formatInvoice, formatNumber, hourFormat, toShortDate } from "@/helpers/functions/general";
 import { NumeroALetras } from "@/helpers/functions/lettersAmount";
 import { IGeneralInfo } from "@/models/IGeneralInfo";
-import { IOrder, IOrderAmounts, IOrderDetailSummary } from '../models/INewOrder';
+import { IOrder, IOrderAmounts, IOrderDetailSummary, IOrderKitchenSummary } from '../models/INewOrder';
 
 export const printInvoice = async (
     printerName: string,
@@ -51,18 +51,35 @@ export const printInvoice = async (
         newOrderInfo,
         newOrderAmountList: {
             subtotal: formatNumber(newOrderAmounts.subtotal),
+            totalDiscount: formatNumber(newOrderAmounts.totalDiscount),
             totalTax15: formatNumber(newOrderAmounts.totalTax15),
             totalTax18: formatNumber(newOrderAmounts.totalTax18),
             totalExempt: formatNumber(newOrderAmounts.totalExempt),
             totalExonerated: formatNumber(newOrderAmounts.totalExonerated),
-            totalTax: formatNumber(newOrderAmounts.totalTax),
             taxableAmount15: formatNumber(newOrderAmounts.taxableAmount15),
             taxableAmount18: formatNumber(newOrderAmounts.taxableAmount18),
+            taxableAmountDiscount: formatNumber(newOrderAmounts.taxableAmountDiscount),
+            totalTax: formatNumber(newOrderAmounts.totalTax),
             total: formatNumber(newOrderAmounts.total),
         },
         lettersAmount: NumeroALetras(newOrderAmounts.total),
         newOrderProductDetail: detail,
+        copy: copy ? "Copia" : "",
     };
 
     await ipcRenderer.invoke("print-invoice", orderModel);
 };
+
+export const printTicket = async (printerName: string, orderNumber: string, date: Date, orderType: string, detail: IOrderKitchenSummary[]) => {
+    const model = {
+        printerName,
+        orderNumber,
+        orderType,
+        invoiceDate: `FECHA: ${toShortDate(date)}  / HORA: ${hourFormat(
+            date
+        )}`,
+        detail,
+    }
+
+    await ipcRenderer.invoke("print-kitchen-ticket", model);
+}

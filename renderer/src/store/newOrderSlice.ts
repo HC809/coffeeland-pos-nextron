@@ -166,6 +166,14 @@ export const selectNewOrderDetailForInvoice = (state: RootState) =>
       total: item.total,
     };
   });
+export const selectNewOrderDetailForTocket = (state: RootState) =>
+  state.newOrder.newOrderDetail.map((item) => {
+    return {
+      productName: item.productName,
+      quantity: item.quantity,
+      comment: ""
+    };
+  });
 
 export const {
   setNewOrderType,

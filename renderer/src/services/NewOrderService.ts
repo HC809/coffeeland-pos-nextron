@@ -49,12 +49,14 @@ export const calculateTotalOrderAmounts = (
 
     return {
         subtotal: amounts.subtotal,
+        totalDiscount: 0,
         totalTax15: totalTax15,
         totalTax18: totalTax18,
         totalExempt: totalExemptTax,
         totalExonerated: totalExoneratedTax,
         taxableAmount15: taxableAmount15,
         taxableAmount18: taxableAmount18,
+        taxableAmountDiscount: 0,
         totalTax: amounts.totalTax,
         total: amounts.total,
     };

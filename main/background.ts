@@ -101,6 +101,7 @@ ipcMain.handle('print-invoice', async (event, arg) => {
   const cash = arg.cash;
   const card = arg.card;
   const change = arg.change;
+  const copy = arg.copy;
 
   const printerOptions = {
     preview: false, // preview in window or print
@@ -115,9 +116,15 @@ ipcMain.handle('print-invoice', async (event, arg) => {
   const data = [
     {
       type: 'text',
-      value: companyInfo.name,
+      value: companyInfo.commercialName,
       style: `text-align:center;`,
       css: { 'font-weight': '700', 'font-size': '20px' },
+    },
+    {
+      type: 'text',
+      value: companyInfo.name,
+      style: `text-align:center;`,
+      css: { 'font-weight': '700', 'font-size': '16' },
     },
     {
       type: 'text',
@@ -208,6 +215,12 @@ ipcMain.handle('print-invoice', async (event, arg) => {
     },
     {
       type: 'text',
+      value: `Descuentos y Rebajas:  L ${newOrderAmounts.totalDiscount}`,
+      style: `text-align:right;`,
+      css: { 'font-size': '12PX' },
+    },
+    {
+      type: 'text',
       value: `Importe Exento:  L ${newOrderAmounts.totalExempt}`,
       style: `text-align:right;`,
       css: { 'font-size': '12PX' },
@@ -262,12 +275,6 @@ ipcMain.handle('print-invoice', async (event, arg) => {
     },
     {
       type: 'text',
-      value: `*** GRACIAS POR SU VISITA ***`,
-      style: `text-align:center;`,
-      css: { 'font-size': '12PX', 'padding-top': '10px' },
-    },
-    {
-      type: 'text',
       value: `Efectivo: ${cash}`,
       style: `text-align:center;`,
       css: { 'font-size': '12PX', 'padding-top': '10px' },
@@ -283,6 +290,12 @@ ipcMain.handle('print-invoice', async (event, arg) => {
       value: `Tarjeta: ${card}`,
       style: `text-align:center;`,
       css: { 'font-size': '12PX' },
+    },
+    {
+      type: 'text',
+      value: `${companyInfo.invoiceComment}`,
+      style: `text-align:center;`,
+      css: { 'font-size': '12PX', 'padding-top': '10px' },
     },
     {
       type: 'text',
@@ -314,6 +327,12 @@ ipcMain.handle('print-invoice', async (event, arg) => {
       style: `text-align:center;`,
       css: { 'font-size': '12PX' },
     },
+    {
+      type: 'text',
+      value: `${copy}`,
+      style: `text-align:center;`,
+      css: { 'font-size': '12PX', 'padding-top': `${copy === "" ? "0px" : "10px"}` },
+    },
   ];
 
   return PosPrinter.print(data, printerOptions)
@@ -322,6 +341,72 @@ ipcMain.handle('print-invoice', async (event, arg) => {
         success: true,
         error: null,
         message: 'Factura impresa correctamente!',
+      };
+    })
+    .catch((err) => {
+      console.log(err);
+      return {
+        success: false,
+        message: 'Error: Verifique que la impresora este conectada correctamente, que el nombre sea correcto y que tenga suficiente papel.',
+      };
+    });
+});
+
+//PRINT INVOICE
+ipcMain.handle('print-kitchen-ticket', async (event, arg) => {
+  const printerName = arg.printerName;
+  const orderNumber = arg.orderNumber;
+  const invoiceDate = arg.invoiceDate;
+  const orderType = arg.orderType;
+  const detail = arg.detail;
+
+
+  const printerOptions = {
+    preview: false, // preview in window or print
+    width: '270px', //  width of content body
+    margin: '0 0 0 0', // margin of content body
+    copies: 1, // Number of copies to print
+    printerName: printerName, // printerName: string
+    timeOutPerLine: 5000,
+    silent: true,
+  };
+
+  const data = [
+    {
+      type: 'text',
+      value: `COCINA / ORDEN ${orderNumber}`,
+      style: `text-align:center;`,
+      css: { 'font-weight': '700', 'font-size': '14' },
+    },
+    {
+      type: 'text',
+      value: `${invoiceDate}`,
+      style: `text-align:left;`,
+      css: { 'font-size': '12PX', 'padding-top': '14px' },
+    },
+    {
+      type: 'text',
+      value: `${orderType}`,
+      style: `text-align:left;`,
+      css: { 'font-size': '12PX', 'padding-top': '14px' },
+    },
+    {
+      type: 'table',
+      style: 'border: 1px solid #ddd',
+      tableHeader: ['UDS', 'DESCRIPCION'],
+      tableBody: detail.map((prod) => {
+        return [prod.quantity, prod.productName];
+      }),
+      tableBodyStyle: 'border: 0.5px solid #ddd',
+    },
+  ];
+
+  return PosPrinter.print(data, printerOptions)
+    .then(() => {
+      return {
+        success: true,
+        error: null,
+        message: 'Ticket impresa correctamente!',
       };
     })
     .catch((err) => {
