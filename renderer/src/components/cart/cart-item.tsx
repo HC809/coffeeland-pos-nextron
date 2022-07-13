@@ -8,8 +8,10 @@ import { useAppSelector } from "../../hooks/reduxHooks";
 import {
   decrementProductQuantityFromNewOrder,
   incremenetProductQuantityFromNewOrder,
+  setItemToEdit,
 } from "@/store/newOrderSlice";
 import { AiFillEdit } from "react-icons/ai";
+import { useModalAction } from "../modal-views/context";
 
 export default function CartItem({
   item,
@@ -19,6 +21,8 @@ export default function CartItem({
   notAvailable?: boolean;
 }) {
   const { productName, productId, image } = item;
+
+  const { openModal } = useModalAction();
 
   const dispatch = useAppDispatch();
 
@@ -85,7 +89,10 @@ export default function CartItem({
             <button
               type="button"
               className="text-dark-900 top-1/2 p-2 font-medium hover:text-green-600"
-              onClick={() => {}}
+              onClick={async () => {
+                await dispatch(setItemToEdit(item));
+                openModal("NEW_ORDER_EDIT_ITEM_VIEW");
+              }}
             >
               <AiFillEdit size={25} />
             </button>

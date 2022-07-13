@@ -28,6 +28,7 @@ interface NewOrderState {
   newOrderInfo: IOrder;
   newOrderAmounts: IOrderAmounts;
   newOrderDetail: IOrderDetail[];
+  newOrderEditItem: IOrderDetail | null;
 }
 
 const initialState: NewOrderState = {
@@ -69,6 +70,7 @@ const initialState: NewOrderState = {
     total: 0,
   },
   newOrderDetail: [],
+  newOrderEditItem: null,
 };
 
 
@@ -150,6 +152,9 @@ const newOrderSlice = createSlice({
 
       state.newOrderAmounts = calculateTotalOrderAmounts(state.newOrderDetail);
     },
+    setItemToEdit: (state, action: PayloadAction<IOrderDetail>) => {
+      state.newOrderEditItem = action.payload;
+    }
   },
 });
 
@@ -174,6 +179,7 @@ export const selectNewOrderDetailForTocket = (state: RootState) =>
       comment: ""
     };
   });
+export const selectItemToEditImage = (state: RootState) => state.product.products.find((item) => item.id === state.newOrder.newOrderEditItem?.productId || 0)?.image;
 
 export const {
   setNewOrderType,
@@ -183,6 +189,7 @@ export const {
   removeProductFromNewOrder,
   incremenetProductQuantityFromNewOrder,
   decrementProductQuantityFromNewOrder,
+  setItemToEdit
 } = newOrderSlice.actions;
 
 export default newOrderSlice.reducer;

@@ -54,6 +54,8 @@ export interface IOrderDetail {
   taxAmount: number;
   subtotal: number;
   total: number;
+
+  comment?: string;
 }
 
 export interface IOrderDetailSummary {
