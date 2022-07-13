@@ -9,7 +9,11 @@ import { setProducts } from "@/store/productsSlice";
 import { getAxiosErrorMessage } from "@/helpers/manageAxiosError";
 import { toast } from "react-hot-toast";
 import { AxiosError } from "axios";
-import { selectSales, selectPendingSales } from "../../store/salesSlice";
+import {
+  selectSales,
+  selectPendingSales,
+  updateSyncInvoices,
+} from "../../store/salesSlice";
 import { getInvoicesModel } from "@/services/InvoiceService";
 import { selectAuth } from "../../store/authSlice";
 
@@ -21,7 +25,7 @@ export default function UpdateProductsView() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const { username } = useAppSelector(selectAuth);
-  const pendingSales = useAppSelector(selectSales);
+  const pendingSales = useAppSelector(selectPendingSales);
 
   useEffect(() => {
     return () => {
@@ -32,25 +36,21 @@ export default function UpdateProductsView() {
   const saveInvoices = async () => {
     setLoading(true);
     try {
-      const invoices = getInvoicesModel(pendingSales.sales, username || "");
+      const invoices = getInvoicesModel(pendingSales, username || "");
 
       const { data, success, errorMessage } = await ApiService.saveInvoices(
         invoices
       );
 
-      console.log(data);
-
-      // if (success) {
-      //   const { products, categories } = data;
-      //   await dispatch(setCategories(categories));
-      //   await dispatch(setProducts(products));
-      //   closeModal();
-      //   return toast.success(<b>Información actualizada correctamente!</b>, {
-      //     duration: 1000,
-      //   });
-      // } else {
-      //   return toast.error(<b>{errorMessage}</b>, { duration: 4000 });
-      // }
+      if (success) {
+        await dispatch(updateSyncInvoices(data));
+        closeModal();
+        return toast.success(<b>Facturas sincronizadas exitosamente!</b>, {
+          duration: 1000,
+        });
+      } else {
+        return toast.error(<b>{errorMessage}</b>, { duration: 4000 });
+      }
     } catch (error) {
       const errorMessage = getAxiosErrorMessage(error as AxiosError);
       console.log(errorMessage);
@@ -70,8 +70,8 @@ export default function UpdateProductsView() {
               Sincronizar Facturas
             </h1>
             <p>
-              {pendingSales.sales.length > 0
-                ? `${pendingSales.sales.length} factura(s) pendiente(s) de sincronizar.`
+              {pendingSales.length > 0
+                ? `${pendingSales.length} factura(s) pendiente(s) de sincronizar.`
                 : "No hay facturas pendientes de sincronizar."}
             </p>
           </div>
@@ -79,7 +79,7 @@ export default function UpdateProductsView() {
             <Button
               type="button"
               isLoading={loading}
-              disabled={loading || pendingSales.sales.length === 0}
+              disabled={loading || pendingSales.length === 0}
               onClick={saveInvoices}
               className="!mt-5 w-full text-sm tracking-[0.2px] lg:!mt-7"
             >

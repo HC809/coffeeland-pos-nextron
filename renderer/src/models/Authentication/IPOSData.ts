@@ -24,5 +24,4 @@ export interface SaveInvoiceResponse {
   itSaved: boolean;
   invoiceNumber: number;
   cai: string;
-  errorMsg: string;
 }

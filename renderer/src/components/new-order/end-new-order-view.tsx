@@ -158,42 +158,42 @@ export default function EndNewOrderForm() {
         orderDetail: [...newOrderDetail],
       };
 
-      await printInvoice(
-        printerName,
-        newOrderInfo,
-        newOrderAmounts,
-        [...newOrderDetailForInvoce],
-        companyInfo,
-        currentDate,
-        Number(getValues("cashAmount")),
-        Number(getValues("cardAmount")),
-        Number(getValues("reference")),
-        false
-      );
+      // await printInvoice(
+      //   printerName,
+      //   newOrderInfo,
+      //   newOrderAmounts,
+      //   [...newOrderDetailForInvoce],
+      //   companyInfo,
+      //   currentDate,
+      //   Number(getValues("cashAmount")),
+      //   Number(getValues("cardAmount")),
+      //   Number(getValues("reference")),
+      //   false
+      // );
 
-      await printInvoice(
-        printerName,
-        newOrderInfo,
-        newOrderAmounts,
-        [...newOrderDetailForInvoce],
-        companyInfo,
-        currentDate,
-        Number(getValues("cashAmount")),
-        Number(getValues("cardAmount")),
-        Number(getValues("reference")),
-        true
-      );
+      // await printInvoice(
+      //   printerName,
+      //   newOrderInfo,
+      //   newOrderAmounts,
+      //   [...newOrderDetailForInvoce],
+      //   companyInfo,
+      //   currentDate,
+      //   Number(getValues("cashAmount")),
+      //   Number(getValues("cardAmount")),
+      //   Number(getValues("reference")),
+      //   true
+      // );
 
-      if (printKitchenTicket) {
-        await printTicket(
-          printerName,
-          newOrderInfo.orderNumber,
-          currentDate,
-          orderTypes.find((ot) => ot.code === newOrderInfo.orderTypeCode)
-            ?.name || "",
-          [...newOrderDetailForTicket]
-        );
-      }
+      // if (printKitchenTicket) {
+      //   await printTicket(
+      //     printerName,
+      //     newOrderInfo.orderNumber,
+      //     currentDate,
+      //     orderTypes.find((ot) => ot.code === newOrderInfo.orderTypeCode)
+      //       ?.name || "",
+      //     [...newOrderDetailForTicket]
+      //   );
+      // }
 
       setLoadig(false);
 

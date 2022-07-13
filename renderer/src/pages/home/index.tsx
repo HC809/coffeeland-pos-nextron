@@ -10,7 +10,7 @@ import Button from "@/components/ui/button";
 import { useModalAction } from "@/components/modal-views/context";
 
 const HomePage: NextPageWithLayout = () => {
-  const { openModal } = useModalAction();
+
 
   const { newOrderInfo } = useAppSelector(selectNewOrder);
   const { categories } = useAppSelector(selectCategories);
@@ -35,9 +35,6 @@ const HomePage: NextPageWithLayout = () => {
           </button>
           <div className="group bg-light dark:bg-dark-250 cursor-pointer rounded-md px-4 py-1 text-center">
             <p className="pt-5 text-xl font-bold">Lista de Facturas</p>
-            <Button onClick={() => openModal("SYNC_INVOICES_VIEW")}>
-              Sincronizar
-            </Button>
             <SaleList sales={sales} />
           </div>
         </div>

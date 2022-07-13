@@ -51,7 +51,7 @@ const ApiService = {
   updatePOSProducts(): Promise<IUpdatePOSDataApiResponse> {
     return requests.get(`auth/updateProducts`);
   },
-  saveInvoices(body: IInvoice[]): Promise<IUpdatePOSDataApiResponse> {
+  saveInvoices(body: IInvoice[]): Promise<ISaveInvoicesDataApiResponse> {
     return requests.post(`invoices/saveInvoices`, body);
   },
 };

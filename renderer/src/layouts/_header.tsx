@@ -17,17 +17,37 @@ import { removeTaxInfo } from "@/store/taxInfoSlice";
 import { setCloseShift } from "@/store/shiftInfoSlice";
 import { cancelNewOrder, selectNewOrder } from "@/store/newOrderSlice";
 import routes from "@/config/routes";
-import { AiFillAppstore } from "react-icons/ai";
+import { AiFillAppstore, AiOutlineCloudUpload } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { NewOrderStartButton } from "@/components/new-order/new-order-start";
 import { InvoiceOptionsHeader } from "./_invoice-option-header";
+import { selectPendingSales, resetSales } from "@/store/salesSlice";
 
 function AuthorizedMenu({ user }: { user: ILoggedUser }) {
   const { openModal } = useModalAction();
 
   const { newOrderInfo } = useAppSelector(selectNewOrder);
+  const pendingSales = useAppSelector(selectPendingSales);
 
   const dispatch = useAppDispatch();
+
+  const endShift = async () => {
+    if (pendingSales.length > 0) {
+      return toast.error(
+        "No puede cerrar el turno con facturas pendientes de sincronizar.",
+        {
+          duration: 3000,
+        }
+      );
+    } else {
+      await dispatch(cancelNewOrder());
+      await dispatch(setCloseShift());
+      await dispatch(removeTaxInfo());
+      await dispatch(resetSales());
+      await dispatch(logout());
+      removeAuthUser();
+    }
+  };
 
   return (
     <Menu>
@@ -87,13 +107,7 @@ function AuthorizedMenu({ user }: { user: ILoggedUser }) {
             <button
               type="button"
               className="transition-fill-colors hover:bg-light-400 dark:hover:bg-dark-600 w-full px-5 py-2.5 text-left"
-              onClick={async () => {
-                await dispatch(cancelNewOrder());
-                await dispatch(setCloseShift());
-                await dispatch(removeTaxInfo());
-                await dispatch(logout());
-                removeAuthUser();
-              }}
+              onClick={endShift}
             >
               Finalizar Turno
             </button>
@@ -132,6 +146,8 @@ function LoginMenu() {
 
 export default function Header() {
   const router = useRouter();
+  const { openModal } = useModalAction();
+
   const { newOrderInfo } = useAppSelector(selectNewOrder);
 
   useSwapBodyClassOnScrollDirection();
@@ -154,12 +170,23 @@ export default function Header() {
               aria-label="Layout"
               className="2xl:w- text-center text-base font-medium 2xl:flex"
             >
-              <AiFillAppstore size={25} color="#0D9965" /> Categorias
+              <AiFillAppstore size={25} color="#0D9965" /> Categorías
             </Button>
             <InvoiceOptionsHeader />
           </>
         ) : (
-          <NewOrderStartButton />
+          <>
+            <Button
+              onClick={() => openModal("SYNC_INVOICES_VIEW")}
+              variant="icon"
+              aria-label="Layout"
+              className="2xl:flex 2xl:w-5"
+            >
+              <AiOutlineCloudUpload size={27} color="#0D9965" /> Sincronizar
+              Facturas
+            </Button>
+            <NewOrderStartButton />
+          </>
         )}
 
         <LoginMenu />

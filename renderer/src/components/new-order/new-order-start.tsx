@@ -7,12 +7,11 @@ import React from "react";
 import toast from "react-hot-toast";
 import Button from "../ui/button";
 import { FcPlus } from "react-icons/fc";
-import routes from "@/config/routes";
 
 export const NewOrderStartButton = () => {
   const dispatch = useAppDispatch();
 
-  const { printerName, orderTypes } = useAppSelector(selectGeneralInfo);
+  const { printerName } = useAppSelector(selectGeneralInfo);
   const { newOrderInfo } = useAppSelector(selectNewOrder);
 
   const { invoicePoint, activeInvoiceRange, pendingInvoiceRange } =
