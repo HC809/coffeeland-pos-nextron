@@ -6,7 +6,6 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import { persistStore } from "redux-persist";
 import store from "../store/store";
-import { CartProvider } from "@/components/cart/lib/cart.context";
 import { ModalProvider } from "@/components/modal-views/context";
 import { Toaster } from "react-hot-toast";
 import ModalsContainer from "@/components/modal-views/container";
@@ -33,21 +32,19 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
           defaultTheme="light"
           enableSystem={false}
         >
-          <CartProvider>
-            <ModalProvider>
-              <AnimatePresence
-                exitBeforeEnter
-                initial={false}
-                onExitComplete={() => window.scrollTo(0, 0)}
-              >
-                <>
-                  <CustomRouter Component={Component} pageProps={pageProps} />
-                  <ModalsContainer />
-                  <Toaster containerClassName="!top-16 sm:!top-3.5 !bottom-16 sm:!bottom-3.5" />
-                </>
-              </AnimatePresence>
-            </ModalProvider>
-          </CartProvider>
+          <ModalProvider>
+            <AnimatePresence
+              exitBeforeEnter
+              initial={false}
+              onExitComplete={() => window.scrollTo(0, 0)}
+            >
+              <>
+                <CustomRouter Component={Component} pageProps={pageProps} />
+                <ModalsContainer />
+                <Toaster containerClassName="!top-16 sm:!top-3.5 !bottom-16 sm:!bottom-3.5" />
+              </>
+            </AnimatePresence>
+          </ModalProvider>
         </ThemeProvider>
       </PersistGate>
     </Provider>

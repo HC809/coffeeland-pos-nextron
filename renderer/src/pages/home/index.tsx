@@ -10,8 +10,6 @@ import Button from "@/components/ui/button";
 import { useModalAction } from "@/components/modal-views/context";
 
 const HomePage: NextPageWithLayout = () => {
-
-
   const { newOrderInfo } = useAppSelector(selectNewOrder);
   const { categories } = useAppSelector(selectCategories);
   const { sales } = useAppSelector(selectSales);
@@ -30,9 +28,6 @@ const HomePage: NextPageWithLayout = () => {
     <>
       {sales.length > 0 ? (
         <div className="3xl:px-8 flex flex-grow flex-col px-4 pt-6 pb-10 md:px-6 lg:px-7 lg:pb-12">
-          <button onClick={() => dispatch(resetSales())}>
-            ELIMINAR FACTURAS
-          </button>
           <div className="group bg-light dark:bg-dark-250 cursor-pointer rounded-md px-4 py-1 text-center">
             <p className="pt-5 text-xl font-bold">Lista de Facturas</p>
             <SaleList sales={sales} />

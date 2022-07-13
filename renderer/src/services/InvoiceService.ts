@@ -35,6 +35,8 @@ export const getInvoicesModel = (sales: ISale[], username: string): IInvoice[] =
             cardAmount: sale.orderInfo.cardAmount,
             changeAmount: sale.orderInfo.changeAmount,
             username: username,
+            invoicePointId: sale.orderInfo.invoicePointId,
+            invoiceRangeId: sale.orderInfo.invoiceRangeId,
             detail: getInvoiceDetail(sale.orderDetail)
         }
     });

@@ -29,6 +29,9 @@ export interface IInvoice {
     changeAmount: number;
     username: string;
     detail: IInvoiceDetail[];
+
+    invoicePointId: number;
+    invoiceRangeId: number;
 }
 
 export interface IInvoiceDetail {
