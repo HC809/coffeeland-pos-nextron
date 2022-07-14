@@ -45,6 +45,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
             categoryId: product.categoryId || 0,
             categoryName: product.category || "",
             taxId: product.taxRateId || 0,
+            taxPercentage: product.taxPercentage,
             taxName: product.taxRate || "",
             sellingPrice: product.sellingPrice || 0,
             priceBeforeTax: product.priceBeforeTax || 0,

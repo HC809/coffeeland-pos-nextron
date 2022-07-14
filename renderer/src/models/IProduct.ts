@@ -11,6 +11,7 @@ export interface IProduct {
   categoryId: number;
   category?: string;
   taxRateId: number;
+  taxPercentage: number;
   taxRate?: string;
   isActive: boolean;
   image?: string;

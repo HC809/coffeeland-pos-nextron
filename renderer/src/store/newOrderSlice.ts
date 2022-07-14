@@ -24,6 +24,19 @@ interface NewOrderStartTaxInfo {
   orderTypeCode: string;
 }
 
+interface NewOrderApplyDiscountItem {
+  productId: number;
+  discountPercentage: number;
+  discount: number;
+  taxAmount: number;
+  total: number;
+}
+
+interface NewOrderApplyCommentItem {
+  productId: number;
+  comment: string
+}
+
 interface NewOrderState {
   newOrderInfo: IOrder;
   newOrderAmounts: IOrderAmounts;
@@ -154,6 +167,25 @@ const newOrderSlice = createSlice({
     },
     setItemToEdit: (state, action: PayloadAction<IOrderDetail>) => {
       state.newOrderEditItem = action.payload;
+    },
+    applyDiscountToItem: (state, action: PayloadAction<NewOrderApplyDiscountItem>) => {
+      const index = state.newOrderDetail.findIndex((x) => x.productId === action.payload.productId);
+      if (index !== -1) state.newOrderDetail[index] = {
+        ...state.newOrderDetail[index],
+        discountPercentage: action.payload.discountPercentage,
+        discount: action.payload.discount,
+        taxAmount: action.payload.taxAmount,
+        total: action.payload.total,
+      };
+
+      state.newOrderAmounts = calculateTotalOrderAmounts(state.newOrderDetail);
+    },
+    setCommentToItem: (state, action: PayloadAction<NewOrderApplyCommentItem>) => {
+      const index = state.newOrderDetail.findIndex((x) => x.productId === action.payload.productId);
+      if (index !== -1) state.newOrderDetail[index] = {
+        ...state.newOrderDetail[index],
+        comment: action.payload.comment,
+      }
     }
   },
 });
@@ -189,7 +221,9 @@ export const {
   removeProductFromNewOrder,
   incremenetProductQuantityFromNewOrder,
   decrementProductQuantityFromNewOrder,
-  setItemToEdit
+  setItemToEdit,
+  applyDiscountToItem,
+  setCommentToItem,
 } = newOrderSlice.actions;
 
 export default newOrderSlice.reducer;

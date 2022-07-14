@@ -39,6 +39,9 @@ export default function EndNewOrderForm() {
 
   const { newOrderInfo, newOrderAmounts, newOrderDetail } =
     useAppSelector(selectNewOrder);
+
+  const totalToPay = Number(formatNumber(newOrderAmounts.total));
+
   const newOrderDetailForInvoce = useAppSelector(
     selectNewOrderDetailForInvoice
   );
@@ -50,6 +53,8 @@ export default function EndNewOrderForm() {
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [changeAmount, setChangeAmount] = useState<number>(0);
   const [printKitchenTicket, setPrintKitchenTicket] = useState<boolean>(false);
+
+  console.log("total", totalToPay);
 
   useEffect(() => {
     return () => {
@@ -70,7 +75,7 @@ export default function EndNewOrderForm() {
       .number()
       .transform((curr, orig) => (orig === "" ? 0 : curr))
       .min(0, "El monto no puede ser menor a 0.")
-      .max(newOrderAmounts.total, "No puede pagar más del monto total.")
+      .max(totalToPay, "No puede pagar más del monto total.")
       .required(),
     reference: yup.string().when("cardAmount", {
       is: (cardAmount: number) => cardAmount > 0,
@@ -85,7 +90,6 @@ export default function EndNewOrderForm() {
   };
 
   const {
-    handleSubmit,
     register,
     getValues,
     setFocus,
@@ -99,12 +103,12 @@ export default function EndNewOrderForm() {
     const cardAmount = getValues("cardAmount");
     const total = Number(cashAmount) + Number(cardAmount);
 
-    if (total > newOrderAmounts.total) {
-      if (cardAmount > newOrderAmounts.total) {
+    if (total > totalToPay) {
+      if (cardAmount > totalToPay) {
         setTotalAmount(total);
         setChangeAmount(0);
       } else {
-        const difference = Number(total) - Number(newOrderAmounts.total);
+        const difference = Number(total) - Number(totalToPay);
         setTotalAmount(total);
         setChangeAmount(difference);
       }
@@ -118,12 +122,12 @@ export default function EndNewOrderForm() {
     const cashAmount = getValues("cashAmount");
     const total = Number(cashAmount) + Number(cardAmount);
 
-    if (total > newOrderAmounts.total) {
-      if (cardAmount > newOrderAmounts.total) {
+    if (total > totalToPay) {
+      if (cardAmount > totalToPay) {
         setTotalAmount(total);
         setChangeAmount(0);
       } else {
-        const difference = Number(total) - Number(newOrderAmounts.total);
+        const difference = Number(total) - Number(totalToPay);
         setTotalAmount(total);
         setChangeAmount(difference);
       }
@@ -138,7 +142,7 @@ export default function EndNewOrderForm() {
     cardAmount,
     reference,
   }: IFormValues) => {
-    if (totalAmount < newOrderAmounts.total) {
+    if (totalAmount < totalToPay) {
       return toast.error("El monto a pagar debe ser mayor al total.", {
         duration: 2000,
       });
@@ -158,42 +162,42 @@ export default function EndNewOrderForm() {
         orderDetail: [...newOrderDetail],
       };
 
-      // await printInvoice(
-      //   printerName,
-      //   newOrderInfo,
-      //   newOrderAmounts,
-      //   [...newOrderDetailForInvoce],
-      //   companyInfo,
-      //   currentDate,
-      //   Number(getValues("cashAmount")),
-      //   Number(getValues("cardAmount")),
-      //   Number(getValues("reference")),
-      //   false
-      // );
+      await printInvoice(
+        printerName,
+        newOrderInfo,
+        newOrderAmounts,
+        [...newOrderDetailForInvoce],
+        companyInfo,
+        currentDate,
+        Number(getValues("cashAmount")),
+        Number(getValues("cardAmount")),
+        Number(getValues("reference")),
+        false
+      );
 
-      // await printInvoice(
-      //   printerName,
-      //   newOrderInfo,
-      //   newOrderAmounts,
-      //   [...newOrderDetailForInvoce],
-      //   companyInfo,
-      //   currentDate,
-      //   Number(getValues("cashAmount")),
-      //   Number(getValues("cardAmount")),
-      //   Number(getValues("reference")),
-      //   true
-      // );
+      await printInvoice(
+        printerName,
+        newOrderInfo,
+        newOrderAmounts,
+        [...newOrderDetailForInvoce],
+        companyInfo,
+        currentDate,
+        Number(getValues("cashAmount")),
+        Number(getValues("cardAmount")),
+        Number(getValues("reference")),
+        true
+      );
 
-      // if (printKitchenTicket) {
-      //   await printTicket(
-      //     printerName,
-      //     newOrderInfo.orderNumber,
-      //     currentDate,
-      //     orderTypes.find((ot) => ot.code === newOrderInfo.orderTypeCode)
-      //       ?.name || "",
-      //     [...newOrderDetailForTicket]
-      //   );
-      // }
+      if (printKitchenTicket) {
+        await printTicket(
+          printerName,
+          newOrderInfo.orderNumber,
+          currentDate,
+          orderTypes.find((ot) => ot.code === newOrderInfo.orderTypeCode)
+            ?.name || "",
+          [...newOrderDetailForTicket]
+        );
+      }
 
       setLoadig(false);
 
@@ -201,8 +205,8 @@ export default function EndNewOrderForm() {
       await dispatch(incrementCurrentNumberRange(newOrderInfo.invoiceRangeId));
       await dispatch(cancelNewOrder());
 
-      router.push(routes.home);
       closeModal();
+      router.push(routes.home);
     }
   };
 
@@ -217,7 +221,7 @@ export default function EndNewOrderForm() {
         <div className="w-full shrink-0 text-left md:w-[380px]">
           <div className="pb-2 text-center ">
             <h1 className="text-dark dark:text-light text-lg font-medium tracking-[-0.3px] lg:text-xl">
-              {`Total: L ${formatNumber(newOrderAmounts.total)}`}
+              {`Total: L ${formatNumber(totalToPay)}`}
             </h1>
           </div>
           <form onSubmit={(e) => e.preventDefault()} className="space-y-2">
@@ -292,7 +296,7 @@ export default function EndNewOrderForm() {
                 onClick={() => onSubmit(getValues())}
                 className="!mt-5 w-full text-sm tracking-[0.2px] lg:!mt-7"
                 isLoading={loading}
-                disabled={newOrderAmounts.total > totalAmount || loading}
+                disabled={totalToPay > totalAmount || loading}
               >
                 {!loading ? "Facturar" : "Imprimiendo Factura..."}
               </Button>

@@ -45,6 +45,7 @@ export interface IOrderDetail {
   categoryId: number;
   categoryName: string;
   taxId: number;
+  taxPercentage: number;
   taxName: string;
   sellingPrice: number;
   priceBeforeTax: number;

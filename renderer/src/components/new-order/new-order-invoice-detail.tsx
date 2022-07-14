@@ -13,6 +13,7 @@ export default function NewOrderInvoiceDetail() {
   const {
     total,
     subtotal,
+    totalDiscount,
     totalExempt,
     totalExonerated,
     totalTax15,
@@ -46,6 +47,14 @@ export default function NewOrderInvoiceDetail() {
                 </span>
               </div>
               <div className="text-dark text-dark-700 dark:text-light flex justify-between pb-2 text-base font-medium">
+                <span>Subtotal:</span>
+                <span>L {formatNumber(subtotal)}</span>
+              </div>
+              <div className="text-dark text-dark-700 dark:text-light flex justify-between pb-2 text-base font-medium">
+                <span>Descuentos y Rebajas:</span>
+                <span>L {formatNumber(totalDiscount)}</span>
+              </div>
+              <div className="text-dark text-dark-700 dark:text-light flex justify-between pb-2 text-base font-medium">
                 <span>Importe Exento:</span>
                 <span>L {formatNumber(totalExempt)}</span>
               </div>
@@ -72,10 +81,6 @@ export default function NewOrderInvoiceDetail() {
               <div className="text-dark text-dark-700 dark:text-light flex justify-between pb-2 text-base font-medium">
                 <span>Total Impuesto:</span>
                 <span>L {formatNumber(totalTax)}</span>
-              </div>
-              <div className="text-dark text-dark-700 dark:text-light flex justify-between pb-2 text-base font-medium">
-                <span>Subtotal:</span>
-                <span>L {formatNumber(subtotal)}</span>
               </div>
               <div className="text-dark text-dark-500 dark:text-light flex justify-between pb-1 text-lg  font-medium">
                 <span>Total a Pagar:</span>
