@@ -20,6 +20,9 @@ export interface IOrder {
   reference: string;
   changeAmount: number;
   orderNumber: string;
+  cancelled: boolean;
+  cancelledDate?: Date | null;
+  cancelledReason?: string;
 
   isSync: boolean;
 }

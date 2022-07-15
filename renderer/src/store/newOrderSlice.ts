@@ -68,6 +68,9 @@ const initialState: NewOrderState = {
     changeAmount: 0,
     orderNumber: '',
     isSync: false,
+    cancelled: false,
+    cancelledDate: null,
+    cancelledReason: '',
   },
   newOrderAmounts: {
     subtotal: 0,

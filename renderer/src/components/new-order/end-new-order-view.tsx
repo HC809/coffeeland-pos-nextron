@@ -54,8 +54,6 @@ export default function EndNewOrderForm() {
   const [changeAmount, setChangeAmount] = useState<number>(0);
   const [printKitchenTicket, setPrintKitchenTicket] = useState<boolean>(false);
 
-  console.log("total", totalToPay);
-
   useEffect(() => {
     return () => {
       setLoadig(null as any);

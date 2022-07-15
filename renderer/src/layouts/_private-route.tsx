@@ -62,7 +62,7 @@ export default function PrivateRoute({
 }: React.PropsWithChildren<{}>) {
   const { logged } = useAppSelector(selectAuth);
   const { invoicePoint } = useAppSelector(selectTaxInfo);
-  const { openShift } = useAppSelector(selectShiftInfo);
+  const { isOpen: openShift } = useAppSelector(selectShiftInfo);
 
   if (!logged) {
     return <UnAuthorizedView />;

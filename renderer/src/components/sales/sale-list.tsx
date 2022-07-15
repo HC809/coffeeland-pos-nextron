@@ -6,16 +6,20 @@ import {
 import { ISale } from "@/models/ISale";
 import { Irender_row, ItableStyle } from "@/models/shared/ITailwindTable";
 import { selectGeneralInfo } from "@/store/generalInfoSlice";
+import { setSaleToView } from "@/store/salesSlice";
 import React from "react";
 import Table from "react-tailwind-table";
 import { toShortDate } from "../../helpers/functions/general";
-import { useAppSelector } from "../../hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { useModalAction } from "../modal-views/context";
 
 interface Props {
   sales: ISale[];
 }
 
 export const SaleList = ({ sales }: Props) => {
+  const { openModal } = useModalAction();
+  const dispatch = useAppDispatch();
   const { orderTypes } = useAppSelector(selectGeneralInfo);
 
   const allSales = [...sales];
@@ -23,6 +27,7 @@ export const SaleList = ({ sales }: Props) => {
     .sort((a, b) => b.orderInfo.invoiceNumber - a.orderInfo.invoiceNumber)
     .map((sale) => {
       return {
+        order: sale.orderInfo.orderNumber,
         orderNumber: sale.orderInfo.orderNumber,
         invoiceNumber: sale.orderInfo.invoiceNumber,
         invoice: formatInvoice(
@@ -44,7 +49,7 @@ export const SaleList = ({ sales }: Props) => {
 
   const columns = [
     {
-      field: "orderNumber",
+      field: "order",
       use: "N° Orden",
     },
     {
@@ -76,21 +81,30 @@ export const SaleList = ({ sales }: Props) => {
       use: "Estado",
     },
     {
-      field: "invoiceNumber",
+      field: "orderNumber",
       use: "Acciones",
     },
   ];
 
   const rowcheck: Irender_row = (row, column, display_value) => {
-    if (column.field === "invoiceNumber") {
+    if (column.field === "orderNumber") {
       return (
-        <button onClick={() => alert(row.invoiceNumber)} className="border p-2">
+        <button
+          onClick={async () => {
+            const saleToView =
+              sales.find((s) => s.orderInfo.orderNumber === row.orderNumber) ||
+              null;
+            await dispatch(setSaleToView(saleToView));
+            openModal("SALE_DETAIL_VIEW");
+          }}
+          className="border p-2"
+        >
           Ver Detalle
         </button>
       );
     }
 
-    if (column.field === "orderNumber") {
+    if (column.field === "order") {
       return <b>{display_value}</b>;
     }
 

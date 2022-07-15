@@ -9,6 +9,7 @@ import { SpinnerIcon } from "../icons/spinner-icon";
 import { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { setOpenShift } from "@/store/shiftInfoSlice";
+import { v4 as uuidv4 } from "uuid";
 
 export interface IFormValues {
   cashFlowAmount: number;
@@ -19,9 +20,8 @@ const validationSchema: yup.SchemaOf<IFormValues> = yup.object().shape({
 });
 
 export default function OpenCashFlowForm() {
-
   const dispatch = useAppDispatch();
-  const { username } = useAppSelector(selectAuth);
+  const { name, username } = useAppSelector(selectAuth);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -51,7 +51,14 @@ export default function OpenCashFlowForm() {
 
     setLoading(true);
     await setTimeoutPromise(1000);
-    dispatch(setOpenShift(cashFlowAmount));
+    dispatch(
+      setOpenShift({
+        uuid: uuidv4(),
+        username: username || "",
+        name: name || "",
+        initCashFlow: cashFlowAmount,
+      })
+    );
     setLoading(false);
   };
 

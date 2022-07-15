@@ -164,7 +164,7 @@ ipcMain.handle('print-invoice', async (event, arg) => {
     },
     {
       type: 'text',
-      value: `FACTRUA: ${invoiceNumber}`,
+      value: `FACTURA: ${invoiceNumber}`,
       style: `text-align:left;`,
       css: { 'font-size': '12PX' },
     },

@@ -2,34 +2,52 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { RootState } from './store';
 
+interface InitShiftInfo {
+  uuid: string;
+  username: string;
+  name: string;
+  initCashFlow: number;
+}
+
 export type State = {
-  openShift: boolean;
-  openShiftDate: Date | null;
-  closeShiftDate: Date | null;
+  uuid: string;
+  username: string;
+  name: string;
+  isOpen: boolean;
+  openDate: Date | null;
+  closeDate: Date | null;
   initCashFlow: number;
   endCashFlow: number;
+  totalSale: number;
 };
 
 const initialState: State = {
-  openShift: false,
-  openShiftDate: null,
-  closeShiftDate: null,
+  uuid: '',
+  username: '',
+  name: '',
+  isOpen: false,
+  openDate: null,
+  closeDate: null,
   initCashFlow: 0,
   endCashFlow: 0,
+  totalSale: 0,
 };
 
 export const shiftInfoSlice = createSlice({
   name: 'shiftInfo',
   initialState,
   reducers: {
-    setOpenShift: (state, action: PayloadAction<number>) => {
-      state.openShift = true;
-      state.openShiftDate = new Date();
-      state.initCashFlow = action.payload;
+    setOpenShift: (state, action: PayloadAction<InitShiftInfo>) => {
+      state.uuid = action.payload.uuid;
+      state.username = action.payload.username;
+      state.name = action.payload.name;
+      state.initCashFlow = action.payload.initCashFlow;
+      state.isOpen = true;
+      state.openDate = new Date();
     },
     setCloseShift: (state) => {
-      state.openShift = false;
-      state.closeShiftDate = new Date();
+      state.isOpen = false;
+      state.closeDate = new Date();
     },
   },
 });

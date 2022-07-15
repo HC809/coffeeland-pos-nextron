@@ -21,7 +21,7 @@ const CustomRouter = ({ Component, pageProps }: Props) => {
 
   const auth = useAppSelector(selectAuth);
   const { invoicePoint } = useAppSelector(selectTaxInfo);
-  const { openShift } = useAppSelector(selectShiftInfo);
+  const { isOpen: openShift } = useAppSelector(selectShiftInfo);
 
   useEffect(() => {
     if (!auth) return;

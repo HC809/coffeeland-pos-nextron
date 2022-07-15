@@ -35,6 +35,12 @@ const SyncInvoicesView = dynamic(
 const NewOrderEditItemView = dynamic(
   () => import("@/components/cart/cart-item-edit-view")
 );
+const SaleDetailView = dynamic(
+  () => import("@/components/sales/sale-detail-view"),
+  {
+    ssr: false,
+  }
+);
 const PrinterConfigView = dynamic(
   () => import("@/components/general/printer-config-view"),
   {
@@ -62,6 +68,8 @@ function renderModalContent(view: MODAL_VIEWS) {
       return <SyncInvoicesView />;
     case "NEW_ORDER_EDIT_ITEM_VIEW":
       return <NewOrderEditItemView />;
+    case "SALE_DETAIL_VIEW":
+      return <SaleDetailView />;
     default:
       return null;
   }
