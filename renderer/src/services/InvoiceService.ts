@@ -7,6 +7,7 @@ export const getInvoicesModel = (sales: ISale[], username: string): IInvoice[] =
     const invoices: IInvoice[] = sales.map((sale) => {
         return {
             id: 0,
+            shiftUuid: sale.shiftUuid,
             orderTypeCode: sale.orderInfo.orderTypeCode,
             invoiceNumber: sale.orderInfo.invoiceNumber,
             invoicePointNumber: sale.orderInfo.invoicePointNumber,

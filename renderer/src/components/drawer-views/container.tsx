@@ -9,10 +9,8 @@ const CartDrawerView = dynamic(
 
 export default function DrawersContainer() {
   return (
-    <div className="bg-light w-4/12">
-      <div className="flex h-full flex-col">
-        <CartDrawerView />
-      </div>
+    <div className="bg-light">
+      <CartDrawerView />
     </div>
   );
 }

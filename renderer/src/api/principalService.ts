@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { IApiResponse } from 'src/models/shared/IApiResponse';
 import axiosNoTokenApiInstance from 'src/api/axiosNoTokenInstance';
-import { IPOSData, IUpdatePOSData, SaveInvoiceResponse } from '../models/Authentication/IPOSData';
+import { IPOSData, IUpdateInvoiceRangePOSData, IUpdatePOSData, SaveInvoiceResponse } from '../models/Authentication/IPOSData';
 import { IAuthResponse, ILoginUser } from '@/models/Authentication/Authentication.models';
 import axiosApiInstance from './axiosInstance.api';
 import { IInvoice } from '@/models/IInvoice';
@@ -40,6 +40,10 @@ export interface IUpdatePOSDataApiResponse extends IApiResponse {
   data: IUpdatePOSData;
 }
 
+export interface IUpdateInvoiceRangeDataApiResponse extends IApiResponse {
+  data: IUpdateInvoiceRangePOSData;
+}
+
 export interface ISaveInvoicesDataApiResponse extends IApiResponse {
   data: SaveInvoiceResponse[];
 }
@@ -50,6 +54,9 @@ const ApiService = {
   },
   updatePOSProducts(): Promise<IUpdatePOSDataApiResponse> {
     return requests.get(`auth/updateProducts`);
+  },
+  updateInvoiceRanges(id: number): Promise<IUpdateInvoiceRangeDataApiResponse> {
+    return requests.get(`auth/updateInvoiceRanges/${id}`);
   },
   saveInvoices(body: IInvoice[]): Promise<ISaveInvoicesDataApiResponse> {
     return requests.post(`invoices/saveInvoices`, body);

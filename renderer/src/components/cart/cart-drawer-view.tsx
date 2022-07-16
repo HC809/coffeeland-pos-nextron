@@ -1,5 +1,4 @@
 import React from "react";
-import { useState } from "react";
 import Button from "@/components/ui/button";
 import Scrollbar from "@/components/ui/scrollbar";
 import CartItemList from "@/components/cart/cart-item-list";

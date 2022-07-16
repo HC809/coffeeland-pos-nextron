@@ -211,7 +211,7 @@ export default function SaleDetailTabs({ sale }: Props) {
         >
           {tab === "3" &&
             orderDetail.map((item) => (
-              <div className="text-dark text-dark-700 dark:text-light flex justify-between pb-2 text-base font-medium">
+              <div key={item.productId} className="text-dark text-dark-700 dark:text-light flex justify-between pb-2 text-base font-medium">
                 <span>{`${item.productName} X ${item.quantity}`}</span>
                 <span>L {formatNumber(item.total || 0)}</span>
               </div>

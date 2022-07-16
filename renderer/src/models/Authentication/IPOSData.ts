@@ -20,6 +20,11 @@ export interface IUpdatePOSData {
   products: IProduct[];
 }
 
+export interface IUpdateInvoiceRangePOSData {
+  invoiceRangeInUse: IInvoiceRange;
+  invoiceRangePending: IInvoiceRange | null;
+}
+
 export interface SaveInvoiceResponse {
   itSaved: boolean;
   invoiceNumber: number;

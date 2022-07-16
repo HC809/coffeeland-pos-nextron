@@ -1,6 +1,6 @@
 import Button from "@/components/ui/button";
 import { RegisterBgPattern } from "@/components/auth/register-bg-pattern";
-import { useAppDispatch } from "../../hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { useModalAction } from "../modal-views/context";
 import { ApiService } from "@/api/principalService";
 import { useEffect, useState } from "react";
@@ -9,11 +9,18 @@ import { setProducts } from "@/store/productsSlice";
 import { getAxiosErrorMessage } from "@/helpers/manageAxiosError";
 import { toast } from "react-hot-toast";
 import { AxiosError } from "axios";
+import { selectTaxInfo } from "../../store/taxInfoSlice";
+import {
+  setActiveInvoiceRange,
+  setPendingInvoiceRange,
+} from "@/store/taxInfoSlice";
 
 export default function UpdateProductsView() {
   const { closeModal } = useModalAction();
 
   const dispatch = useAppDispatch();
+
+  const { invoicePoint } = useAppSelector(selectTaxInfo);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -27,12 +34,13 @@ export default function UpdateProductsView() {
     setLoading(true);
     try {
       const { data, success, errorMessage } =
-        await ApiService.updatePOSProducts();
+        await ApiService.updateInvoiceRanges(invoicePoint.id);
 
       if (success) {
-        const { products, categories } = data;
-        await dispatch(setCategories(categories));
-        await dispatch(setProducts(products));
+        const { invoiceRangeInUse, invoiceRangePending } = data;
+        if (invoiceRangeInUse)
+          await dispatch(setActiveInvoiceRange(invoiceRangeInUse));
+        await dispatch(setPendingInvoiceRange(invoiceRangePending));
         closeModal();
         return toast.success(<b>Información actualizada correctamente!</b>, {
           duration: 1000,

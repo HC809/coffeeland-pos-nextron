@@ -65,14 +65,23 @@ export default function ProductCard({ product }: { product: IProduct }) {
       className="group bg-light dark:bg-dark-250 cursor-pointer rounded-md px-4 py-7 text-center"
     >
       <div className="relative mx-auto mb-2.5 h-[75px] w-[75px] md:h-20 md:w-20 lg:h-[90px] lg:w-[90px]">
-        <Image
-          alt={name}
-          layout="fill"
-          quality={100}
-          objectFit="cover"
-          src={image ? `data:image/jpeg;base64,${image}` : placeholder}
-          className="rounded-3xl"
-        />
+        {image ? (
+          <Image
+            alt={name}
+            layout="fill"
+            quality={100}
+            objectFit="cover"
+            src={`data:image/jpeg;base64,${image}`}
+            className="rounded-3xl"
+          />
+        ) : (
+          <img
+            width="100px"
+            height="100px"
+            className="ml-auto mr-auto"
+            src="/images/new.png"
+          />
+        )}
       </div>
       <h3 className="font-base  text-dark group-hover:text-brand dark:text-light mb-1 text-lg transition-colors">
         {name}

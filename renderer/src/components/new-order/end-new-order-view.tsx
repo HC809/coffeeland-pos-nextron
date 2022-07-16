@@ -24,6 +24,7 @@ import routes from "@/config/routes";
 import { useRouter } from "next/router";
 import { printInvoice, printTicket } from "@/services/PrintService";
 import { v4 as uuidv4 } from "uuid";
+import { selectShiftInfo } from "@/store/shiftInfoSlice";
 
 export interface IFormValues {
   cashAmount: number;
@@ -39,6 +40,7 @@ export default function EndNewOrderForm() {
 
   const { newOrderInfo, newOrderAmounts, newOrderDetail } =
     useAppSelector(selectNewOrder);
+  const { uuid } = useAppSelector(selectShiftInfo);
 
   const totalToPay = Number(formatNumber(newOrderAmounts.total));
 
@@ -52,9 +54,10 @@ export default function EndNewOrderForm() {
   const [loading, setLoadig] = useState<boolean>(false);
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [changeAmount, setChangeAmount] = useState<number>(0);
-  const [printKitchenTicket, setPrintKitchenTicket] = useState<boolean>(false);
+  const [printKitchenTicket, setPrintKitchenTicket] = useState<boolean>(true);
 
   useEffect(() => {
+    setPrintKitchenTicket(true);
     return () => {
       setLoadig(null as any);
       setTotalAmount(null as any);
@@ -149,6 +152,7 @@ export default function EndNewOrderForm() {
       const currentDate = new Date();
       const completeInvoice: ISale = {
         uuid: uuidv4(),
+        shiftUuid: uuid,
         orderInfo: {
           ...newOrderInfo,
           cashAmount: cashAmount,
@@ -170,7 +174,7 @@ export default function EndNewOrderForm() {
         currentDate,
         Number(getValues("cashAmount")),
         Number(getValues("cardAmount")),
-        Number(getValues("reference")),
+        changeAmount,
         false
       );
 
@@ -183,7 +187,7 @@ export default function EndNewOrderForm() {
         currentDate,
         Number(getValues("cashAmount")),
         Number(getValues("cardAmount")),
-        Number(getValues("reference")),
+        changeAmount,
         true
       );
 
@@ -277,7 +281,7 @@ export default function EndNewOrderForm() {
                 <label className="relative mr-5 inline-flex cursor-pointer items-center">
                   <input
                     type="checkbox"
-                    value=""
+                    value={"printKitchenTicket"}
                     onChange={() => setPrintKitchenTicket((val) => !val)}
                     id="green-toggle"
                     className="peer sr-only"

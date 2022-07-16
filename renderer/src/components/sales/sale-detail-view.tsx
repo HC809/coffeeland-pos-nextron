@@ -8,7 +8,7 @@ import {
   setSaleToView,
 } from "@/store/salesSlice";
 import { selectGeneralInfo } from "@/store/generalInfoSlice";
-import { printSale } from "@/services/PrintService";
+import { printSale, printTicket } from "@/services/PrintService";
 import { useEffect, useState } from "react";
 import SaleDetailTabs from "./sale-detail-tabs";
 import { useDispatch } from "react-redux";
@@ -19,12 +19,15 @@ export default function SaleDetail() {
   const dispatch = useDispatch();
 
   const sale = useAppSelector(selectSaleToView);
-  const { companyInfo, printerName } = useAppSelector(selectGeneralInfo);
+  const { companyInfo, printerName, orderTypes } =
+    useAppSelector(selectGeneralInfo);
 
   const { orderInfo } = sale || {};
 
   const [loadingOriginal, setLoadingOriginal] = useState<boolean>(false);
   const [loadingCopy, setLoadingCopy] = useState<boolean>(false);
+  const [loadingKitchenTicket, setLoadingKitchenTicket] =
+    useState<boolean>(false);
 
   useEffect(() => {
     return () => {
@@ -45,7 +48,7 @@ export default function SaleDetail() {
             </h1>
             {orderInfo?.cancelled && (
               <div>
-                <p className="text-red-900 text-lg">Factura Anulada</p>
+                <p className="text-lg text-red-900">Factura Anulada</p>
                 <p className="text-red-700">{`Razón: ${orderInfo?.cancelledReason}`}</p>
               </div>
             )}
@@ -83,10 +86,26 @@ export default function SaleDetail() {
             </Button>
             <Button
               type="button"
-              onClick={closeModal}
+              onClick={async () => {
+                setLoadingKitchenTicket(true);
+                await printTicket(
+                  printerName,
+                  sale!.orderInfo.orderNumber,
+                  sale!.orderInfo.date!,
+                  orderTypes.find(
+                    (c) => c.code === sale!.orderInfo.orderTypeCode
+                  )?.name || "",
+                  sale!.orderDetail.map((d) => ({
+                    productName: d.productName,
+                    quantity: d.quantity,
+                    comment: d.comment || "",
+                  }))
+                );
+                setLoadingKitchenTicket(false);
+              }}
               className="!mt-5 w-full text-sm tracking-[0.2px] lg:!mt-7"
-              // disabled={loading}
-              // isLoading={loading}
+              disabled={loadingKitchenTicket}
+              isLoading={loadingKitchenTicket}
             >
               Ticket Cocina
             </Button>
