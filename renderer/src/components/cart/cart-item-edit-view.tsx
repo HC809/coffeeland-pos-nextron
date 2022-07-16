@@ -105,14 +105,13 @@ export default function CartEditItemView() {
       })
     );
 
-    if (comment != "") {
-      dispatch(
-        setCommentToItem({
-          productId: newOrderEditItem?.productId!,
-          comment: comment || "",
-        })
-      );
-    }
+    dispatch(
+      setCommentToItem({
+        productId: newOrderEditItem?.productId!,
+        comment: comment || "",
+      })
+    );
+
     closeModal();
   };
 

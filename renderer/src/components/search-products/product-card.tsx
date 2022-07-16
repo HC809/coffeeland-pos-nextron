@@ -59,7 +59,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
         );
 
         toast.success(<b>Producto agregado al pedido!</b>, {
-          duration: 500,
+          duration: 400,
         });
       }}
       className="group bg-light dark:bg-dark-250 cursor-pointer rounded-md px-4 py-7 text-center"

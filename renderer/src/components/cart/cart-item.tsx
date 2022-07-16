@@ -102,7 +102,11 @@ export default function CartItem({
                 openModal("NEW_ORDER_EDIT_ITEM_VIEW");
               }}
             >
-              <AiFillEdit size={25} />
+              {item.comment ? (
+                <AiFillEdit size={25} color={"#DA0525"} />
+              ) : (
+                <AiFillEdit size={25} />
+              )}
             </button>
           </div>
         </div>

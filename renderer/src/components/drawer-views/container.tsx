@@ -9,7 +9,7 @@ const CartDrawerView = dynamic(
 
 export default function DrawersContainer() {
   return (
-    <div className="bg-light">
+    <div className="">
       <CartDrawerView />
     </div>
   );

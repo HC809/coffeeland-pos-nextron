@@ -57,7 +57,7 @@ export default function UpdateProductsView() {
             <h1 className="text-dark dark:text-light pb-5 text-lg font-medium tracking-[-0.3px] lg:text-xl">
               Actualizar Productos
             </h1>
-            <p> ¿Estás seguro de que actualizar la lista de produtos?</p>
+            <p> ¿Estás seguro de que actualizar la lista de productos?</p>
           </div>
           <>
             <Button

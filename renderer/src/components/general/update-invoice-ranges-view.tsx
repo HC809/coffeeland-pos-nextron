@@ -65,7 +65,10 @@ export default function UpdateProductsView() {
             <h1 className="text-dark dark:text-light pb-5 text-lg font-medium tracking-[-0.3px] lg:text-xl">
               Actualizar Rangos de Facturación
             </h1>
-            <p> ¿Estás seguro de que actualizar los rangos de facturación?</p>
+            <p>
+              {" "}
+              ¿Estás seguro que desea actualizar los rangos de facturación?
+            </p>
           </div>
           <>
             <Button

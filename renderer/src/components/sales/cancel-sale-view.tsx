@@ -66,7 +66,7 @@ export default function CancelSaleView() {
                 orderInfo?.invoiceNumber || 0
               )}`}
             </h1>
-            <p> ¿Estás seguro de anular esta factura?</p>
+            <p> ¿Estás seguro que desea anular esta factura?</p>
           </div>
 
           <SaleDetailTabs sale={sale!} />
