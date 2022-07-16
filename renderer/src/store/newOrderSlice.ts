@@ -211,7 +211,7 @@ export const selectNewOrderDetailForTocket = (state: RootState) =>
     return {
       productName: item.productName,
       quantity: item.quantity,
-      comment: ""
+      comment: item.comment || ""
     };
   });
 export const selectItemToEditImage = (state: RootState) => state.product.products.find((item) => item.id === state.newOrder.newOrderEditItem?.productId || 0)?.image;

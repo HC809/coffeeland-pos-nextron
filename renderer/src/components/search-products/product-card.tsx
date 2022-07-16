@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import Image from "@/components/ui/image";
-import placeholder from "@/assets/images/placeholders/product.svg";
+import { BsImage } from "react-icons/bs";
 import { fadeInBottomWithScaleX } from "@/lib/framer-motion/fade-in-bottom";
 import { IProduct } from "../../models/IProduct";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
@@ -75,12 +75,9 @@ export default function ProductCard({ product }: { product: IProduct }) {
             className="rounded-3xl"
           />
         ) : (
-          <img
-            width="100px"
-            height="100px"
-            className="ml-auto mr-auto"
-            src="/images/new.png"
-          />
+          <div className="pl-2">
+            <BsImage size={85} />
+          </div>
         )}
       </div>
       <h3 className="font-base  text-dark group-hover:text-brand dark:text-light mb-1 text-lg transition-colors">

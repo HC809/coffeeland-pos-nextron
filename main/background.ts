@@ -152,9 +152,15 @@ ipcMain.handle('print-invoice', async (event, arg) => {
     },
     {
       type: 'text',
-      value: `C.A.I.: ${newOrderInfo?.cai}`,
+      value: `CAI`,
       style: `text-align:center;`,
-      css: { 'font-weight': 'normal', 'font-size': '10PX', 'padding-top': '10px', 'font-family': 'Arial, Helvetica, sans-serif' },
+      css: { 'font-weight': 'normal', 'font-size': '12PX', 'padding-top': '10px', 'font-family': 'Arial, Helvetica, sans-serif' },
+    },
+    {
+      type: 'text',
+      value: `${newOrderInfo?.cai}`,
+      style: `text-align:center;`,
+      css: { 'font-weight': 'normal', 'font-size': '12PX', 'font-family': 'Arial, Helvetica, sans-serif' },
     },
     {
       type: 'text',
@@ -167,6 +173,12 @@ ipcMain.handle('print-invoice', async (event, arg) => {
       value: `N. Orden: ${newOrderInfo?.orderNumber}`,
       style: `text-align:center;`,
       css: { 'font-weight': '700', 'font-size': '14PX', 'font-family': 'Arial, Helvetica, sans-serif', 'padding-top': '5px' },
+    },
+    {
+      type: 'text',
+      value: `${newOrderInfo?.ticketNumber ? `Ticket Mesa: ${newOrderInfo?.ticketNumber}` : ''}`,
+      style: `text-align:center;`,
+      css: { 'font-weight': '700', 'font-size': '14PX', 'padding-top': `${newOrderInfo?.ticketNumber ? "5px" : "0px"}`, 'font-family': 'Arial, Helvetica, sans-serif' },
     },
     {
       type: 'text',
@@ -215,17 +227,17 @@ ipcMain.handle('print-invoice', async (event, arg) => {
       style: 'border: 1px solid #ddd',
       tableHeader: ['UDS', 'DESCRIPCION', 'PRECIO'],
       tableBody: newOrderDetail.map((prod) => {
-        return [{ type: 'text', value: prod.quantity, css: { 'font-weight': 'normal', 'font-family': 'Arial, Helvetica, sans-serif' } },
-        { type: 'text', value: prod.productName, css: { 'font-weight': 'normal', 'font-family': 'Arial, Helvetica, sans-serif' } },
-        { type: 'text', value: prod.total, css: { 'font-weight': '700', 'font-family': 'Arial, Helvetica, sans-serif' } }];
+        return [{ type: 'text', value: prod.quantity, style: `text-align:left;`, css: { 'font-weight': 'normal', 'font-family': 'Arial, Helvetica, sans-serif', 'margin-top': '0px', 'padding-top': '0px', 'margin-bottom': '0px', 'padding-bottom': '0px' } },
+        { type: 'text', value: prod.productName, style: `text-align:left;`, css: { 'font-weight': 'normal', 'font-family': 'Arial, Helvetica, sans-serif', 'margin-top': '0px', 'padding-top': '0px', 'margin-bottom': '0px', 'padding-bottom': '0px' } },
+        { type: 'text', value: prod.total, style: `text-align:left;`, css: { 'font-weight': '700', 'font-family': 'Arial, Helvetica, sans-serif', 'margin-top': '0px', 'padding-top': '0px', 'margin-bottom': '0px', 'padding-bottom': '0px' } }];
       }),
-      tableBodyStyle: 'border: 0.5px solid #ddd',
+      tableBodyStyle: 'margin-top: 0px',
     },
     {
       type: 'text',
       value: `Subtotal:  L ${newOrderAmounts.subtotal}`,
       style: `text-align:right;`,
-      css: { 'font-weight': 'normal', 'font-size': '12PX', 'font-family': 'Arial, Helvetica, sans-serif' },
+      css: { 'font-weight': 'normal', 'font-size': '12PX', 'padding-top': '10px', 'font-family': 'Arial, Helvetica, sans-serif' },
     },
     {
       type: 'text',

@@ -13,6 +13,7 @@ import {
 import { AiFillEdit } from "react-icons/ai";
 import { useModalAction } from "../modal-views/context";
 import { formatNumber } from "../../helpers/functions/general";
+import { BsImage } from "react-icons/bs";
 
 export default function CartItem({
   item,
@@ -57,12 +58,18 @@ export default function CartItem({
         />
       </div>
       <div className="border-light-300 bg-light-300 dark:bg-dark-500 xs:w-32 relative aspect-[5/3.7] w-28 flex-shrink-0 border dark:border-0">
-        <Image
-          alt={productName}
-          layout="fill"
-          src={image ? `data:image/jpeg;base64,${image}` : placeholder}
-          objectFit="contain"
-        />
+        {image ? (
+          <Image
+            alt={productName}
+            layout="fill"
+            src={image ? `data:image/jpeg;base64,${image}` : placeholder}
+            objectFit="contain"
+          />
+        ) : (
+          <div className="pl-5">
+            <BsImage size={85} />
+          </div>
+        )}
       </div>
       <div className="text-13px w-[calc(100%-50px)] font-medium ">
         <span className="mb-1 inline-block rounded-2xl text-xs font-semibold text-green-800">

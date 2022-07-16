@@ -27,6 +27,7 @@ export const SaleList = ({ sales }: Props) => {
     .sort((a, b) => b.orderInfo.invoiceNumber - a.orderInfo.invoiceNumber)
     .map((sale) => {
       return {
+        uuid: sale.uuid,
         order: sale.orderInfo.orderNumber,
         orderNumber: sale.orderInfo.orderNumber,
         invoiceNumber: sale.orderInfo.invoiceNumber,
@@ -93,7 +94,7 @@ export const SaleList = ({ sales }: Props) => {
         <button
           onClick={async () => {
             const saleToView =
-              sales.find((s) => s.orderInfo.orderNumber === row.orderNumber) ||
+              sales.find((s) => s.uuid === row.uuid) ||
               null;
             await dispatch(setSaleToView(saleToView));
             openModal("SALE_DETAIL_VIEW");
