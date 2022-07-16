@@ -23,7 +23,7 @@ import { cancelNewOrder } from "@/store/newOrderSlice";
 import routes from "@/config/routes";
 import { useRouter } from "next/router";
 import { printInvoice, printTicket } from "@/services/PrintService";
-import { Switch } from "@headlessui/react";
+import { v4 as uuidv4 } from "uuid";
 
 export interface IFormValues {
   cashAmount: number;
@@ -148,6 +148,7 @@ export default function EndNewOrderForm() {
       setLoadig(true);
       const currentDate = new Date();
       const completeInvoice: ISale = {
+        uuid: uuidv4(),
         orderInfo: {
           ...newOrderInfo,
           cashAmount: cashAmount,

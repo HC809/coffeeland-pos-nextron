@@ -44,6 +44,7 @@ export const SaleList = ({ sales }: Props) => {
         )?.name,
         totalAmount: `L ${formatNumber(sale.orderAmounts.total)}`,
         isSync: sale.orderInfo.isSync,
+        isCancelled: sale.orderInfo.cancelled,
       };
     });
 
@@ -102,6 +103,10 @@ export const SaleList = ({ sales }: Props) => {
           Ver Detalle
         </button>
       );
+    }
+
+    if (column.field === "invoice") {
+      return row.isCancelled ? <p className="line-through text-red-500">{display_value}</p> : display_value;
     }
 
     if (column.field === "order") {

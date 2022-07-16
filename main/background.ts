@@ -118,13 +118,13 @@ ipcMain.handle('print-invoice', async (event, arg) => {
       type: 'text',
       value: companyInfo.commercialName,
       style: `text-align:center;`,
-      css: { 'font-weight': '700', 'font-size': '20px' },
+      css: { 'font-weight': '900', 'font-size': '20px' },
     },
     {
       type: 'text',
       value: companyInfo.name,
       style: `text-align:center;`,
-      css: { 'font-weight': '700', 'font-size': '16' },
+      css: { 'font-weight': '900', 'font-size': '16' },
     },
     {
       type: 'text',

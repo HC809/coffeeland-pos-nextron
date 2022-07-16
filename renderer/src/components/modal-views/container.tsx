@@ -41,6 +41,7 @@ const SaleDetailView = dynamic(
     ssr: false,
   }
 );
+const CancelSalelView = dynamic(() => import("@/components/sales/cancel-sale-view"));
 const PrinterConfigView = dynamic(
   () => import("@/components/general/printer-config-view"),
   {
@@ -70,6 +71,8 @@ function renderModalContent(view: MODAL_VIEWS) {
       return <NewOrderEditItemView />;
     case "SALE_DETAIL_VIEW":
       return <SaleDetailView />;
+    case "CANCEL_SALE_VIEW":
+      return <CancelSalelView />;
     default:
       return null;
   }

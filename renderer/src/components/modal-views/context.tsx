@@ -12,6 +12,7 @@ export type MODAL_VIEWS =
   | "SYNC_INVOICES_VIEW"
   | "NEW_ORDER_EDIT_ITEM_VIEW"
   | "SALE_DETAIL_VIEW"
+  | "CANCEL_SALE_VIEW"
   | "PRODUCT_DETAILS";
 
 interface State {

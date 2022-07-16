@@ -3,14 +3,21 @@ import { RootState } from './store';
 import { ISale } from '@/models/ISale';
 import { SaveInvoiceResponse } from '@/models/Authentication/IPOSData';
 
+interface CancelSale {
+  uuid: string;
+  reason: string;
+}
+
 interface SaleState {
   sales: ISale[];
   saleToView: ISale | null;
+  saleToCancel: ISale | null;
 }
 
 const initialState: SaleState = {
   sales: [],
   saleToView: null,
+  saleToCancel: null,
 };
 
 const salesSlice = createSlice({
@@ -29,6 +36,18 @@ const salesSlice = createSlice({
     setSaleToView: (state, action: PayloadAction<ISale | null>) => {
       state.saleToView = action.payload;
     },
+    setSaleToCancel: (state, action: PayloadAction<ISale | null>) => {
+      state.saleToCancel = action.payload;
+    },
+    cancelSale: (state, action: PayloadAction<CancelSale>) => {
+      if (state.saleToCancel) {
+        const index = state.sales.findIndex((x) => x.uuid === action.payload.uuid);
+        if (index !== -1) {
+          state.sales[index].orderInfo.cancelled = true;
+          state.sales[index].orderInfo.cancelledReason = action.payload.reason;
+        }
+      }
+    },
     resetSales: (state, action: PayloadAction) => {
       state.sales = [];
     },
@@ -38,7 +57,8 @@ const salesSlice = createSlice({
 export const selectSales = (state: RootState) => state.sale;
 export const selectPendingSales = (state: RootState) => state.sale.sales.filter(sale => sale.orderInfo.isSync === false);
 export const selectSaleToView = (state: RootState) => state.sale.saleToView;
+export const selectSaleToCancel = (state: RootState) => state.sale.saleToCancel;
 
-export const { addSale, updateSyncInvoices, setSaleToView, resetSales } = salesSlice.actions;
+export const { addSale, updateSyncInvoices, setSaleToView, setSaleToCancel, cancelSale, resetSales } = salesSlice.actions;
 
 export default salesSlice.reducer;

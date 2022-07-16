@@ -68,7 +68,6 @@ export default function PrinterConfigView() {
         });
       }
     } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false);
     }
