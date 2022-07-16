@@ -27,6 +27,6 @@ export interface IUpdateInvoiceRangePOSData {
 
 export interface SaveInvoiceResponse {
   itSaved: boolean;
-  invoiceNumber: number;
+  uuid: string;
   cai: string;
 }

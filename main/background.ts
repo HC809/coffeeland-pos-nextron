@@ -105,7 +105,7 @@ ipcMain.handle('print-invoice', async (event, arg) => {
 
   const printerOptions = {
     preview: false, // preview in window or print
-    width: '270px', //  width of content body
+    width: '275px', //  width of content body
     margin: '0 0 0 0', // margin of content body
     copies: 1, // Number of copies to print
     printerName: printerName, // printerName: string
@@ -382,6 +382,7 @@ ipcMain.handle('print-invoice', async (event, arg) => {
 ipcMain.handle('print-kitchen-ticket', async (event, arg) => {
   const printerName = arg.printerName;
   const orderNumber = arg.orderNumber;
+  const ticket = arg.ticket;
   const invoiceDate = arg.invoiceDate;
   const orderType = arg.orderType;
   const detail = arg.detail;
@@ -389,7 +390,7 @@ ipcMain.handle('print-kitchen-ticket', async (event, arg) => {
 
   const printerOptions = {
     preview: false, // preview in window or print
-    width: '270px', //  width of content body
+    width: '275px', //  width of content body
     margin: '0 0 0 0', // margin of content body
     copies: 1, // Number of copies to print
     printerName: printerName, // printerName: string
@@ -408,13 +409,19 @@ ipcMain.handle('print-kitchen-ticket', async (event, arg) => {
       type: 'text',
       value: `${invoiceDate}`,
       style: `text-align:left;`,
-      css: { 'font-size': '12PX', 'padding-top': '14px', 'font-family': 'Arial, Helvetica, sans-serif' },
+      css: { 'font-weight': '700', 'font-size': '12PX', 'padding-top': '14px', 'font-family': 'Arial, Helvetica, sans-serif' },
     },
     {
       type: 'text',
       value: `${orderType}`,
-      style: `text-align:left;`,
-      css: { 'font-size': '12PX', 'padding-top': '14px', 'font-family': 'Arial, Helvetica, sans-serif' },
+      style: `text-align:center;`,
+      css: { 'font-weight': '700', 'font-size': '14PX', 'padding-top': '14px', 'font-family': 'Arial, Helvetica, sans-serif' },
+    },
+    {
+      type: 'text',
+      value: `${ticket ? `Ticket Mesa: ${ticket}` : ''}`,
+      style: `text-align:center;`,
+      css: { 'font-weight': '700', 'font-size': '14PX', 'padding-top': `${ticket ? "5px" : "0px"}`, 'font-family': 'Arial, Helvetica, sans-serif' },
     },
     {
       type: 'table',
@@ -422,9 +429,9 @@ ipcMain.handle('print-kitchen-ticket', async (event, arg) => {
       tableHeader: ['UDS', 'DESCRIPCION', 'COMENTARIO'],
       tableBody: detail.map((prod) => {
         return [
-          { type: 'text', value: prod.quantity, css: { 'font-weight': 'normal', 'font-family': 'Arial, Helvetica, sans-serif' } },
-          { type: 'text', value: prod.productName, css: { 'font-weight': 'normal', 'font-family': 'Arial, Helvetica, sans-serif' } },
-          { type: 'text', value: prod.comment, css: { 'font-weight': 'normal', 'font-family': 'Arial, Helvetica, sans-serif' } }
+          { type: 'text', value: prod.quantity, css: { 'font-weight': 'normal', 'font-family': 'Arial, Helvetica, sans-serif', 'margin-top': '0px', 'padding-top': '0px', 'margin-bottom': '0px', 'padding-bottom': '0px' } },
+          { type: 'text', value: prod.productName, css: { 'font-weight': 'normal', 'font-family': 'Arial, Helvetica, sans-serif', 'margin-top': '0px', 'padding-top': '0px', 'margin-bottom': '0px', 'padding-bottom': '0px' } },
+          { type: 'text', value: prod.comment ? `>> ${prod.comment}` : "", css: { 'font-weight': 'normal', 'font-family': 'Arial, Helvetica, sans-serif', 'margin-top': '0px', 'padding-top': '0px', 'margin-bottom': '0px', 'padding-bottom': '0px' } }
         ];
       }),
       tableBodyStyle: 'border: 0.5px solid #ddd',

@@ -42,7 +42,7 @@ export default function EndNewOrderForm() {
     useAppSelector(selectNewOrder);
   const { uuid } = useAppSelector(selectShiftInfo);
 
-  const totalToPay = Number(formatNumber(newOrderAmounts.total));
+  const totalToPay = newOrderAmounts.total;
 
   const newOrderDetailForInvoce = useAppSelector(
     selectNewOrderDetailForInvoice
@@ -143,74 +143,79 @@ export default function EndNewOrderForm() {
     cardAmount,
     reference,
   }: IFormValues) => {
+    console.log(totalAmount);
     if (totalAmount < totalToPay) {
       return toast.error("El monto a pagar debe ser mayor al total.", {
         duration: 2000,
       });
-    } else {
-      setLoadig(true);
-      const currentDate = new Date();
-      const completeInvoice: ISale = {
-        uuid: uuidv4(),
-        shiftUuid: uuid,
-        orderInfo: {
-          ...newOrderInfo,
-          cashAmount: cashAmount,
-          cardAmount: cardAmount,
-          changeAmount: changeAmount,
-          reference: reference || "",
-          date: currentDate,
-        },
-        orderAmounts: { ...newOrderAmounts },
-        orderDetail: [...newOrderDetail],
-      };
-
-      await printInvoice(
-        printerName,
-        newOrderInfo,
-        newOrderAmounts,
-        [...newOrderDetailForInvoce],
-        companyInfo,
-        currentDate,
-        Number(getValues("cashAmount")),
-        Number(getValues("cardAmount")),
-        changeAmount,
-        false
-      );
-
-      await printInvoice(
-        printerName,
-        newOrderInfo,
-        newOrderAmounts,
-        [...newOrderDetailForInvoce],
-        companyInfo,
-        currentDate,
-        Number(getValues("cashAmount")),
-        Number(getValues("cardAmount")),
-        changeAmount,
-        true
-      );
-
-      if (printKitchenTicket) {
-        await printTicket(
-          printerName,
-          newOrderInfo.orderNumber,
-          currentDate,
-          orderTypes.find((ot) => ot.code === newOrderInfo.orderTypeCode)
-            ?.name || "",
-          [...newOrderDetailForTicket]
-        );
-      }
-
-      setLoadig(false);
-
-      await dispatch(addSale(completeInvoice));
-      await dispatch(incrementCurrentNumberRange(newOrderInfo.invoiceRangeId));
-      await dispatch(cancelNewOrder());
-
-      closeModal();
-      router.push(routes.home);
     }
+
+    if (cardAmount > totalToPay) {
+      return toast.error(
+        "El monto a pagar en tarjeta no puede ser mayor al total.",
+        {
+          duration: 2000,
+        }
+      );
+    }
+
+    setLoadig(true);
+    const currentDate = new Date();
+    const completeInvoice: ISale = {
+      uuid: uuidv4(),
+      shiftUuid: uuid,
+      orderInfo: {
+        ...newOrderInfo,
+        cashAmount: cashAmount,
+        cardAmount: cardAmount,
+        changeAmount: changeAmount,
+        reference: reference || "",
+        date: currentDate,
+      },
+      orderAmounts: { ...newOrderAmounts },
+      orderDetail: [...newOrderDetail],
+    };
+    await printInvoice(
+      printerName,
+      newOrderInfo,
+      newOrderAmounts,
+      [...newOrderDetailForInvoce],
+      companyInfo,
+      currentDate,
+      Number(getValues("cashAmount")),
+      Number(getValues("cardAmount")),
+      changeAmount,
+      false
+    );
+    await printInvoice(
+      printerName,
+      newOrderInfo,
+      newOrderAmounts,
+      [...newOrderDetailForInvoce],
+      companyInfo,
+      currentDate,
+      Number(getValues("cashAmount")),
+      Number(getValues("cardAmount")),
+      changeAmount,
+      true
+    );
+    if (printKitchenTicket) {
+      await printTicket(
+        printerName,
+        newOrderInfo.orderNumber,
+        newOrderInfo.ticketNumber,
+        currentDate,
+        orderTypes.find((ot) => ot.code === newOrderInfo.orderTypeCode)?.name ||
+          "",
+        [...newOrderDetailForTicket]
+      );
+    }
+    setLoadig(false);
+    await dispatch(addSale(completeInvoice));
+    await dispatch(incrementCurrentNumberRange(newOrderInfo.invoiceRangeId));
+    await dispatch(cancelNewOrder());
+    closeModal();
+    router.push(routes.home);
   };
 
   useEffect(() => {

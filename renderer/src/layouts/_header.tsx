@@ -111,7 +111,7 @@ function AuthorizedMenu({ user }: { user: ILoggedUser }) {
               className="transition-fill-colors hover:bg-light-400 dark:hover:bg-dark-600 w-full px-5 py-2.5 text-left"
               onClick={async () => openModal("TAX_INFO_VIEW")}
             >
-              Información Fiacal
+              Información Fiscal
             </button>
           </Menu.Item>
           <Menu.Item>

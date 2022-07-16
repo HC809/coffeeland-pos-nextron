@@ -7,6 +7,7 @@ export const getInvoicesModel = (sales: ISale[], username: string): IInvoice[] =
     const invoices: IInvoice[] = sales.map((sale) => {
         return {
             id: 0,
+            uuid: sale.uuid,
             shiftUuid: sale.shiftUuid,
             orderTypeCode: sale.orderInfo.orderTypeCode,
             invoiceNumber: sale.orderInfo.invoiceNumber,
@@ -38,6 +39,8 @@ export const getInvoicesModel = (sales: ISale[], username: string): IInvoice[] =
             username: username,
             invoicePointId: sale.orderInfo.invoicePointId,
             invoiceRangeId: sale.orderInfo.invoiceRangeId,
+            isCancelled: sale.orderInfo.cancelled,
+            cancelledReason: sale.orderInfo.cancelledReason,
             detail: getInvoiceDetail(sale.orderDetail)
         }
     });

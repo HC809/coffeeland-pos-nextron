@@ -4,16 +4,10 @@ import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { useModalAction } from "../modal-views/context";
 import { ApiService } from "@/api/principalService";
 import { useEffect, useState } from "react";
-import { setCategories } from "@/store/categoriesSlice";
-import { setProducts } from "@/store/productsSlice";
 import { getAxiosErrorMessage } from "@/helpers/manageAxiosError";
 import { toast } from "react-hot-toast";
 import { AxiosError } from "axios";
-import {
-  selectSales,
-  selectPendingSales,
-  updateSyncInvoices,
-} from "../../store/salesSlice";
+import { selectPendingSales, updateSyncInvoices } from "../../store/salesSlice";
 import { getInvoicesModel } from "@/services/InvoiceService";
 import { selectAuth } from "../../store/authSlice";
 

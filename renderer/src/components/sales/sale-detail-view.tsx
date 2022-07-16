@@ -91,6 +91,7 @@ export default function SaleDetail() {
                 await printTicket(
                   printerName,
                   sale!.orderInfo.orderNumber,
+                  sale!.orderInfo.ticketNumber,
                   sale!.orderInfo.date!,
                   orderTypes.find(
                     (c) => c.code === sale!.orderInfo.orderTypeCode

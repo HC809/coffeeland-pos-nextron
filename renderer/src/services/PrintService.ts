@@ -135,10 +135,11 @@ export const printSale = async (
     await ipcRenderer.invoke("print-invoice", orderModel);
 };
 
-export const printTicket = async (printerName: string, orderNumber: string, date: Date, orderType: string, detail: IOrderKitchenSummary[]) => {
+export const printTicket = async (printerName: string, orderNumber: string, ticketNumber: number | null, date: Date, orderType: string, detail: IOrderKitchenSummary[]) => {
     const model = {
         printerName,
         orderNumber,
+        ticket: ticketNumber,
         orderType,
         invoiceDate: `FECHA: ${toShortDate(date)}  / HORA: ${hourFormat(
             date

@@ -29,7 +29,7 @@ const salesSlice = createSlice({
     },
     updateSyncInvoices: (state, action: PayloadAction<SaveInvoiceResponse[]>) => {
       action.payload.map((item) => {
-        const index = state.sales.findIndex((x) => x.orderInfo.invoiceNumber === item.invoiceNumber && x.orderInfo.cai === item.cai);
+        const index = state.sales.findIndex((x) => x.uuid === item.uuid && x.orderInfo.cai === item.cai);
         if (index !== -1) state.sales[index].orderInfo.isSync = true;
       });
     },

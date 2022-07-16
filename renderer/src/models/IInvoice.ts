@@ -1,12 +1,13 @@
 export interface IInvoice {
     id: number;
+    uuid: string;
     orderTypeCode: string;
     invoiceNumber: number;
     invoicePointNumber: number;
     documentTypeNumber: number;
     establishmentNumber: number;
     cai: string;
-    range: string;  
+    range: string;
     limitDate: Date;
     orderNumber: string;
     customerName: string;
@@ -28,6 +29,9 @@ export interface IInvoice {
     cardAmount: number;
     changeAmount: number;
     username: string;
+    isCancelled: boolean;
+    cancelledDate?: Date | null;
+    cancelledReason?: string;
     detail: IInvoiceDetail[];
 
     invoicePointId: number;
