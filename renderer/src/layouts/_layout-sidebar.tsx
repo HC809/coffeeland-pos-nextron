@@ -4,6 +4,11 @@ import { CloseIcon } from "@/components/icons/close-icon";
 import { useDrawer } from "@/components/drawer-views/context";
 import Scrollbar from "@/components/ui/scrollbar";
 import DrawersContainer from "@/components/drawer-views/container";
+import Button from "@/components/ui/button";
+import { useModalAction } from "@/components/modal-views/context";
+import { useAppSelector } from "@/hooks/reduxHooks";
+import { selectNewOrder } from "@/store/newOrderSlice";
+import usePrice from "@/lib/hooks/use-price";
 
 export function Sidebar({
   isCollapse,
@@ -12,6 +17,20 @@ export function Sidebar({
   isCollapse?: boolean;
   className?: string;
 }) {
+  const { openModal } = useModalAction();
+
+  const { newOrderAmounts, newOrderDetail } = useAppSelector(selectNewOrder);
+
+  const { total, subtotal } = newOrderAmounts;
+
+  const { price: totalAmount } = usePrice({
+    amount: total,
+  });
+
+  const { price: subtotalAmount } = usePrice({
+    amount: subtotal,
+  });
+
   return (
     <aside
       className={cn(
@@ -27,10 +46,30 @@ export function Sidebar({
 
       <footer
         className={cn(
-          "border-light-400 dark:border-dark-400 flex-col border-t pt-3 pb-4 text-center",
-          isCollapse ? "flex xl:hidden" : "hidden xl:flex"
+          "border-light-400 dark:border-dark-400 flex-col  pt-3 pb-4 text-center",
+          isCollapse ? "flex" : "flex"
         )}
-      ></footer>
+      >
+        <div className="border-light-300 dark:border-dark-500 border-t px-5 py-6 sm:px-7 sm:pb-8 sm:pt-7">
+          <div className="text-dark text-dark-800 dark:text-light flex justify-between pb-1 text-sm font-medium">
+            <span>Subtotal:</span>
+            <span>{subtotalAmount}</span>
+          </div>
+          <div className="text-dark dark:text-light flex justify-between text-sm font-medium">
+            <span>Total:</span>
+            <span>{totalAmount}</span>
+          </div>
+          <div className="mt-3 md:mt-5">
+            <Button
+              disabled={newOrderDetail.length === 0}
+              onClick={() => openModal("END_NEW_ORDER_VIEW")}
+              className="w-full text-sm md:h-[52px]"
+            >
+              Pagar
+            </Button>
+          </div>
+        </div>
+      </footer>
     </aside>
   );
 }

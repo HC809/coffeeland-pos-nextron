@@ -1,28 +1,12 @@
 import React from "react";
-import Button from "@/components/ui/button";
 import Scrollbar from "@/components/ui/scrollbar";
 import CartItemList from "@/components/cart/cart-item-list";
 import CartEmpty from "@/components/cart/cart-empty";
-import usePrice from "@/lib/hooks/use-price";
 import { useAppSelector } from "@/hooks/reduxHooks";
 import { selectNewOrder } from "@/store/newOrderSlice";
-import { useModalAction } from "../modal-views/context";
 
 function CartDrawerView() {
-  const { openModal } = useModalAction();
-
-  const { newOrderInfo, newOrderAmounts, newOrderDetail } =
-    useAppSelector(selectNewOrder);
-
-  const { total, subtotal } = newOrderAmounts;
-
-  const { price: totalAmount } = usePrice({
-    amount: total,
-  });
-
-  const { price: subtotalAmount } = usePrice({
-    amount: subtotal,
-  });
+  const { newOrderInfo, newOrderDetail } = useAppSelector(selectNewOrder);
 
   return (
     <>
@@ -34,26 +18,6 @@ function CartDrawerView() {
       <Scrollbar className="cart-scrollbar w-full flex-1 py-6 px-6 sm:px-7">
         {newOrderDetail.length > 0 ? <CartItemList /> : <CartEmpty />}
       </Scrollbar>
-
-      <div className="border-light-300 dark:border-dark-500 border-t px-5 py-6 sm:px-7 sm:pb-8 sm:pt-7">
-        <div className="text-dark text-dark-800 dark:text-light flex justify-between pb-1 text-sm font-medium">
-          <span>Subtotal:</span>
-          <span>{subtotalAmount}</span>
-        </div>
-        <div className="text-dark dark:text-light flex justify-between text-sm font-medium">
-          <span>Total:</span>
-          <span>{totalAmount}</span>
-        </div>
-        <div className="mt-3 md:mt-5">
-          <Button
-            disabled={newOrderDetail.length === 0}
-            onClick={() => openModal("END_NEW_ORDER_VIEW")}
-            className="w-full text-sm md:h-[52px]"
-          >
-            Pagar
-          </Button>
-        </div>
-      </div>
     </>
   );
 }
