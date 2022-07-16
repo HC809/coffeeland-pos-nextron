@@ -28,6 +28,9 @@ const CancelNewOrderView = dynamic(
 const UpdateProductsView = dynamic(
   () => import("@/components/general/update-products-view")
 );
+const UpdateInvoiceRangeView = dynamic(
+  () => import("@/components/general/update-invoice-ranges-view")
+);
 const TaxInfoView = dynamic(() => import("@/components/general/tax-info-view"));
 const SyncInvoicesView = dynamic(
   () => import("@/components/general/sync-invoices-view")
@@ -41,7 +44,9 @@ const SaleDetailView = dynamic(
     ssr: false,
   }
 );
-const CancelSalelView = dynamic(() => import("@/components/sales/cancel-sale-view"));
+const CancelSalelView = dynamic(
+  () => import("@/components/sales/cancel-sale-view")
+);
 const PrinterConfigView = dynamic(
   () => import("@/components/general/printer-config-view"),
   {
@@ -73,6 +78,8 @@ function renderModalContent(view: MODAL_VIEWS) {
       return <SaleDetailView />;
     case "CANCEL_SALE_VIEW":
       return <CancelSalelView />;
+    case "UPDATE_INVOICE_RANGES_VIEW":
+      return <UpdateInvoiceRangeView />;
     default:
       return null;
   }

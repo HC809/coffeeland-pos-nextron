@@ -203,7 +203,7 @@ ipcMain.handle('print-invoice', async (event, arg) => {
       style: 'border: 1px solid #ddd',
       tableHeader: ['UDS', 'DESCRIPCION', 'PRECIO'],
       tableBody: newOrderDetail.map((prod) => {
-        return [prod.quantity, prod.productName, prod.total];
+        return [{ type: 'text', value: prod.quantity, css: { 'font-weight': '900' } }, prod.productName, prod.total];
       }),
       tableBodyStyle: 'border: 0.5px solid #ddd',
     },
