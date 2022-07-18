@@ -85,7 +85,7 @@ export default function CartItem({
             </p>
             <p className="flex items-center gap-1 pt-3">
               <span className="bg-light-300 dark:bg-dark-500 rounded-2xl p-1.5 font-semibold uppercase leading-none">
-                {formatNumber(product?.total || 0 / (product?.quantity || 0))}
+                {formatNumber(product?.sellingPrice || 0)}
               </span>
               <span className="text-light-base dark:text-dark-base">
                 X {product?.quantity || 0}

@@ -105,9 +105,8 @@ export default function OpenCashFlowForm() {
                   </div>
                   <div>
                     <p className="font-bold">
-                      Para controlar el flujo de efectivo, cuenta el dinero en
-                      tu cajón de efectivo y abre un turno de caja con el total
-                      de efectivo disponible.
+                      Para controlar el flujo de efectivo, cuenta el dinero de
+                      la caja e ingrese el total de efectivo disponible.
                     </p>
                   </div>
                 </div>
@@ -115,7 +114,7 @@ export default function OpenCashFlowForm() {
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="pt-5">
                   <Input
-                    label="Efecito disponible en caja"
+                    label="Efectivo disponible en caja"
                     inputClassName="bg-light dark:bg-dark-300"
                     type="number"
                     {...register("cashFlowAmount")}

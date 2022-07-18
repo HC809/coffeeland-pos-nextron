@@ -53,6 +53,7 @@ export interface IOrderDetail {
   sellingPrice: number;
   priceBeforeTax: number;
   quantity: number;
+  quantityToDiscount: number;
   discountPercentage: number;
   discount: number;
   taxAmount: number;

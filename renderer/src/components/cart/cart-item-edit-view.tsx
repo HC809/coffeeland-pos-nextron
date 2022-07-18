@@ -20,20 +20,13 @@ import Textarea from "../ui/forms/textarea";
 import { AiOutlinePercentage } from "react-icons/ai";
 import { CgComment } from "react-icons/cg";
 import { formatNumber } from "@/helpers/functions/general";
+import { BsImage } from "react-icons/bs";
 
 export interface IFormValues {
   discountPercentage?: number;
+  quantityToDiscount?: number;
   comment?: string;
 }
-
-const validationSchema: yup.SchemaOf<IFormValues> = yup.object().shape({
-  discountPercentage: yup
-    .number()
-    .transform((curr, orig) => (orig === "" ? 0 : curr))
-    .min(0, "El porcentaje de descuento no puede ser menor a 0.")
-    .notRequired(),
-  comment: yup.string().transform((curr, orig) => (orig === "" ? "" : curr)),
-});
 
 export default function CartEditItemView() {
   const { closeModal } = useModalAction();
@@ -58,29 +51,71 @@ export default function CartEditItemView() {
     };
   }, []);
 
-  const setDiscount = (discountPercentage: number) => {
-    const prodSubtotal = newOrderEditItem?.subtotal || 0;
-    const prodSellingPrince = newOrderEditItem?.sellingPrice || 0;
-    const prodPriceBeforeTax = newOrderEditItem?.priceBeforeTax || 0;
-    const prodTaxPercentage = newOrderEditItem?.taxPercentage || 0;
-    const prodQuantity = newOrderEditItem?.quantity || 0;
+  const setDiscount = (discountPercentage: number, quantity: number) => {
+    if (
+      discountPercentage !== 0 &&
+      quantity !== 0 &&
+      quantity <= newOrderEditItem?.quantity!
+    ) {
+      const prodSubtotal = newOrderEditItem?.subtotal || 0;
 
-    const discount = prodSubtotal * (discountPercentage / 100);
-    const tax =
-      discountPercentage !== 0
-        ? (prodSubtotal - discount) * (prodTaxPercentage / 100)
-        : (prodSellingPrince - prodPriceBeforeTax) * prodQuantity;
-    setTotalDisount(discount);
-    setTotalTax(tax);
-    setTotal(
-      discountPercentage !== 0
-        ? prodSubtotal - discount + tax
-        : prodQuantity * prodSellingPrince
-    );
+      const prodSellingPrince = newOrderEditItem?.sellingPrice || 0;
+      const prodPriceBeforeTax = newOrderEditItem?.priceBeforeTax || 0;
+      const prodTaxPercentage = newOrderEditItem?.taxPercentage || 0;
+
+      const discount =
+        (discountPercentage / 100) * (prodPriceBeforeTax * quantity);
+      console.log(discount);
+
+      const tax =
+        discountPercentage !== 0
+          ? (prodSubtotal - discount) * (prodTaxPercentage / 100)
+          : (prodSellingPrince - prodPriceBeforeTax) * quantity;
+
+      setTotalDisount(discount);
+      setTotalTax(tax);
+      setTotal(
+        discountPercentage !== 0
+          ? prodSubtotal - discount + tax
+          : quantity * prodSellingPrince
+      );
+    }
   };
+
+  const validationSchema: yup.SchemaOf<IFormValues> = yup.object().shape({
+    discountPercentage: yup
+      .number()
+      .transform((curr, orig) => (orig === "" ? 0 : curr))
+      .min(0, "El porcentaje de descuento no puede ser menor a 0.")
+      .notRequired(),
+    quantityToDiscount: yup
+      .number()
+      .transform((curr, orig) => (orig === "" ? 0 : curr))
+      .max(
+        newOrderEditItem?.quantity || 1,
+        "La cantidad no puede ser mayor a la cantidad del producto."
+      )
+      .when("discountPercentage", {
+        is: (discountPercentage: number) => discountPercentage > 0,
+        then: yup
+          .number()
+          .min(1, "La cantidad no puede ser 0.")
+          .max(
+            newOrderEditItem?.quantity!,
+            "La cantidad no puede ser mayor a la cantidad del producto."
+          )
+          .required("La cantidad de productos es requqerida."),
+      })
+      .notRequired(),
+    comment: yup.string().transform((curr, orig) => (orig === "" ? "" : curr)),
+  });
 
   const initialValues: IFormValues = {
     discountPercentage: newOrderEditItem?.discountPercentage || 0,
+    quantityToDiscount:
+      newOrderEditItem && newOrderEditItem?.quantityToDiscount > 1
+        ? newOrderEditItem.quantityToDiscount
+        : 1,
     comment: newOrderEditItem?.comment || "",
   };
 
@@ -94,11 +129,16 @@ export default function CartEditItemView() {
     defaultValues: initialValues,
   });
 
-  const onSubmit = async ({ discountPercentage, comment }: IFormValues) => {
+  const onSubmit = async ({
+    discountPercentage,
+    quantityToDiscount,
+    comment,
+  }: IFormValues) => {
     await dispatch(
       applyDiscountToItem({
         productId: newOrderEditItem?.productId!,
         discountPercentage: discountPercentage || 0,
+        quantityToDiscount: quantityToDiscount || 0,
         discount: totalDiscount,
         taxAmount: totalTax,
         total: total,
@@ -129,16 +169,22 @@ export default function CartEditItemView() {
             <>
               <div className="grid h-full grid-cols-2 gap-2 pt-10 pr-12">
                 <div className="relative mx-auto mb-2.5 h-[75px]  md:h-20  lg:h-[90px] lg:w-[90px]">
-                  <Image
-                    alt={newOrderEditItem?.productName}
-                    layout="fill"
-                    quality={100}
-                    objectFit="cover"
-                    src={
-                      image ? `data:image/jpeg;base64,${image}` : placeholder
-                    }
-                    className="rounded-3xl"
-                  />
+                  {image ? (
+                    <Image
+                      alt={newOrderEditItem?.productName}
+                      layout="fill"
+                      quality={100}
+                      objectFit="cover"
+                      src={
+                        image ? `data:image/jpeg;base64,${image}` : placeholder
+                      }
+                      className="rounded-3xl"
+                    />
+                  ) : (
+                    <div className="pl-2">
+                      <BsImage size={85} />
+                    </div>
+                  )}
                 </div>
                 <div>
                   <div className="text-dark">
@@ -182,11 +228,37 @@ export default function CartEditItemView() {
                     type="number"
                     inputClassName="bg-light dark:bg-dark-300"
                     {...register("discountPercentage")}
-                    onChange={(e) => setDiscount(Number(e.target.value))}
+                    onChange={(e) =>
+                      setDiscount(
+                        Number(e.target.value),
+                        Number(getValues("quantityToDiscount"))
+                      )
+                    }
                     error={errors.discountPercentage?.message}
                   />
                 </div>
               </div>
+
+              {newOrderEditItem && newOrderEditItem?.quantity > 1 && (
+                <div className="grid h-full grid-cols-8 pt-2">
+                  <div className="pt-5"></div>
+                  <div className="col-span-6">
+                    <Input
+                      label="Cantidad de Productos a Aplicar Descuento"
+                      type="number"
+                      inputClassName="bg-light dark:bg-dark-300"
+                      {...register("quantityToDiscount")}
+                      onChange={(e) =>
+                        setDiscount(
+                          Number(getValues("discountPercentage")),
+                          Number(e.target.value)
+                        )
+                      }
+                      error={errors.quantityToDiscount?.message}
+                    />
+                  </div>
+                </div>
+              )}
 
               <div className="grid h-full grid-cols-8 pt-5">
                 <div className="pt-5">

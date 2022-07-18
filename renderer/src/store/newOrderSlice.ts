@@ -27,6 +27,7 @@ interface NewOrderStartTaxInfo {
 interface NewOrderApplyDiscountItem {
   productId: number;
   discountPercentage: number;
+  quantityToDiscount: number;
   discount: number;
   taxAmount: number;
   total: number;
@@ -176,6 +177,7 @@ const newOrderSlice = createSlice({
       if (index !== -1) state.newOrderDetail[index] = {
         ...state.newOrderDetail[index],
         discountPercentage: action.payload.discountPercentage,
+        quantityToDiscount: action.payload.quantityToDiscount,
         discount: action.payload.discount,
         taxAmount: action.payload.taxAmount,
         total: action.payload.total,

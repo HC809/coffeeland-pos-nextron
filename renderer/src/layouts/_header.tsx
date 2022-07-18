@@ -40,12 +40,7 @@ function AuthorizedMenu({ user }: { user: ILoggedUser }) {
         }
       );
     } else {
-      await dispatch(cancelNewOrder());
-      await dispatch(setCloseShift());
-      await dispatch(removeTaxInfo());
-      await dispatch(resetSales());
-      await dispatch(logout());
-      removeAuthUser();
+      openModal("END_SHIFT_VIEW");
     }
   };
 

@@ -19,6 +19,7 @@ export type State = {
   initCashFlow: number;
   endCashFlow: number;
   totalSale: number;
+  totalExpectedCash: number;
 };
 
 const initialState: State = {
@@ -31,6 +32,7 @@ const initialState: State = {
   initCashFlow: 0,
   endCashFlow: 0,
   totalSale: 0,
+  totalExpectedCash: 0,
 };
 
 export const shiftInfoSlice = createSlice({

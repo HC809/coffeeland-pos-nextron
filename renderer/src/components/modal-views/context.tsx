@@ -14,7 +14,8 @@ export type MODAL_VIEWS =
   | "NEW_ORDER_EDIT_ITEM_VIEW"
   | "SALE_DETAIL_VIEW"
   | "CANCEL_SALE_VIEW"
-  | "PRODUCT_DETAILS";
+  | "PRODUCT_DETAILS"
+  | "END_SHIFT_VIEW";
 
 interface State {
   view: MODAL_VIEWS | undefined;

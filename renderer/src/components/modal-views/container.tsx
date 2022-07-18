@@ -53,6 +53,9 @@ const PrinterConfigView = dynamic(
     ssr: false,
   }
 );
+const EndShiftView = dynamic(
+  () => import("@/components/general/end-shift-view")
+);
 
 function renderModalContent(view: MODAL_VIEWS) {
   switch (view) {
@@ -80,6 +83,8 @@ function renderModalContent(view: MODAL_VIEWS) {
       return <CancelSalelView />;
     case "UPDATE_INVOICE_RANGES_VIEW":
       return <UpdateInvoiceRangeView />;
+    case "END_SHIFT_VIEW":
+      return <EndShiftView />;
     default:
       return null;
   }
