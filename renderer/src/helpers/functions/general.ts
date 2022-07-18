@@ -15,6 +15,11 @@ export const hourFormat = (fecha: Date) => {
 export const formatNumber = (number: number) =>
   '' + number.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 
+export function round(num: number) {
+  var m = Number((Math.abs(num) * 100).toPrecision(15));
+  return Math.round(m) / 100 * Math.sign(num);
+}
+
 export function formatLeadingZeros(number: number, many: number) {
   return ('0'.repeat(many) + number).slice(-many);
 }

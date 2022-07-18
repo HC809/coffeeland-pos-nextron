@@ -31,10 +31,6 @@ const validationSchema: yup.SchemaOf<IFormValues> = yup.object().shape({
   rtn: yup
     .string()
     .transform((curr, orig) => (orig === "" ? null : curr))
-    .matches(
-      /^([0-9]){4}[-]([0-9]){4}[-]([0-9]){6}$/,
-      "Formato de RTN no válido."
-    )
     .nullable(true)
     .notRequired(),
 });

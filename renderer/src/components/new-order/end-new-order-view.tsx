@@ -12,7 +12,7 @@ import {
 } from "@/store/newOrderSlice";
 import { useAppSelector } from "@/hooks/reduxHooks";
 import { useModalAction } from "../modal-views/context";
-import { formatNumber } from "@/helpers/functions/general";
+import { formatNumber, round } from "@/helpers/functions/general";
 import { useState, useEffect } from "react";
 import { selectGeneralInfo } from "@/store/generalInfoSlice";
 import toast from "react-hot-toast";
@@ -42,7 +42,7 @@ export default function EndNewOrderForm() {
     useAppSelector(selectNewOrder);
   const { uuid } = useAppSelector(selectShiftInfo);
 
-  const totalToPay = newOrderAmounts.total;
+  const totalToPay = round(newOrderAmounts.total);
 
   const newOrderDetailForInvoce = useAppSelector(
     selectNewOrderDetailForInvoice
@@ -111,7 +111,7 @@ export default function EndNewOrderForm() {
       } else {
         const difference = Number(total) - Number(totalToPay);
         setTotalAmount(total);
-        setChangeAmount(difference);
+        setChangeAmount(round(difference));
       }
     } else {
       setTotalAmount(total);
@@ -231,6 +231,15 @@ export default function EndNewOrderForm() {
             <h1 className="text-dark dark:text-light text-lg font-medium tracking-[-0.3px] lg:text-xl">
               {`Total: L ${formatNumber(totalToPay)}`}
             </h1>
+            <h2 className="text-dark-700 text-base font-medium tracking-[-0.3px] lg:text-xl">
+              {`Subtotal: L ${formatNumber(newOrderAmounts.subtotal)}`}
+            </h2>
+            <h2 className="text-dark-700 text-base font-medium tracking-[-0.3px] lg:text-xl">
+              {`Descuento: L ${formatNumber(newOrderAmounts.totalDiscount)}`}
+            </h2>
+            <h2 className="text-dark-700 text-base font-medium tracking-[-0.3px] lg:text-xl">
+              {`Impuesto: L ${formatNumber(newOrderAmounts.totalTax)}`}
+            </h2>
           </div>
           <form onSubmit={(e) => e.preventDefault()} className="space-y-2">
             <div>
@@ -240,7 +249,7 @@ export default function EndNewOrderForm() {
                   src="/images/money.png"
                   width={50}
                 />
-                <div className="col-span-6">
+                <div className="col-span-6 pt-5">
                   <Input
                     label="Efectivo"
                     inputClassName="bg-light dark:bg-dark-300"
@@ -271,7 +280,7 @@ export default function EndNewOrderForm() {
                 />
               </div>
 
-              <div className="grid h-full grid-cols-8">
+              <div className="grid h-full grid-cols-8 pt-3">
                 <div className="col-span-2 pt-5"></div>
                 <Input
                   label="Referencia"
