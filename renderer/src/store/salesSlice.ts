@@ -58,10 +58,10 @@ export const selectSales = (state: RootState) => state.sale;
 export const selectPendingSales = (state: RootState) => state.sale.sales.filter(sale => sale.orderInfo.isSync === false);
 export const selectSaleToView = (state: RootState) => state.sale.saleToView;
 export const selectSaleToCancel = (state: RootState) => state.sale.saleToCancel;
-export const selectTotalCard = (state: RootState) => state.sale.sales.reduce((acc, cur) => acc + cur.orderInfo.cardAmount, 0);
-export const selectTotalCash = (state: RootState) => state.sale.sales.reduce((acc, cur) => acc + cur.orderInfo.cashAmount, 0);
+export const selectTotalCard = (state: RootState) => state.sale.sales.reduce((acc, cur) => acc + Number(cur.orderInfo.cardAmount), 0);
+export const selectTotalCash = (state: RootState) => state.sale.sales.reduce((acc, cur) => acc + Number(cur.orderInfo.cashAmount), 0);
 export const /* A selector that returns the total change amount of all sales. */
-selectTotalChange = (state: RootState) => state.sale.sales.reduce((acc, cur) => acc + cur.orderInfo.changeAmount, 0);
+  selectTotalChange = (state: RootState) => state.sale.sales.reduce((acc, cur) => acc + Number(cur.orderInfo.changeAmount), 0);
 
 
 export const { addSale, updateSyncInvoices, setSaleToView, setSaleToCancel, cancelSale, resetSales } = salesSlice.actions;

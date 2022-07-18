@@ -5,6 +5,7 @@ import { IPOSData, IUpdateInvoiceRangePOSData, IUpdatePOSData, SaveInvoiceRespon
 import { IAuthResponse, ILoginUser } from '@/models/Authentication/Authentication.models';
 import axiosApiInstance from './axiosInstance.api';
 import { IInvoice } from '@/models/IInvoice';
+import { ShiftState } from '@/components/general/end-shift-view';
 
 const responseBody = (response: AxiosResponse) => response.data;
 
@@ -60,6 +61,9 @@ const ApiService = {
   },
   saveInvoices(body: IInvoice[]): Promise<ISaveInvoicesDataApiResponse> {
     return requests.post(`invoices/saveInvoices`, body);
+  },
+  saveShift(body: ShiftState): Promise<IApiResponse> {
+    return requests.post(`shifts/create`, body);
   },
 };
 

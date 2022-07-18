@@ -21,6 +21,22 @@ import { logout } from "@/store/authSlice";
 import { removeAuthUser } from "@/services/AuthenticationService";
 import { selectShiftInfo } from "../../store/shiftInfoSlice";
 import { formatNumber } from "@/helpers/functions/general";
+import { ApiService } from "@/api/principalService";
+import { getAxiosErrorMessage } from "@/helpers/manageAxiosError";
+import { AxiosError } from "axios";
+
+export interface ShiftState {
+  uuid: string;
+  username: string;
+  name: string;
+  isOpen: boolean;
+  openDate: Date | null;
+  closeDate: Date | null;
+  initCashFlow: number;
+  endCashFlow: number;
+  totalSales: number;
+  totalExpectedCash: number;
+}
 
 export interface IFormValues {
   endCashFlow: number;
@@ -31,6 +47,7 @@ export default function PrinterConfigView() {
 
   const dispatch = useAppDispatch();
 
+  const shift = useAppSelector(selectShiftInfo);
   const { initCashFlow } = useAppSelector(selectShiftInfo);
   const totalCard = useAppSelector(selectTotalCard);
   const totalCash = useAppSelector(selectTotalCash);
@@ -66,13 +83,36 @@ export default function PrinterConfigView() {
   });
 
   const onSubmit = async ({ endCashFlow }: IFormValues) => {
-    await dispatch(cancelNewOrder());
-    await dispatch(setCloseShift());
-    await dispatch(removeTaxInfo());
-    await dispatch(resetSales());
-    await dispatch(logout());
-    removeAuthUser();
-    closeModal();
+    setLoading(true);
+    try {
+      const shiftInfo: ShiftState = {
+        ...shift,
+        endCashFlow: Number(endCashFlow),
+        totalSales: Number(totalCard) + Number(totalCash) - Number(totalChange),
+        totalExpectedCash: expectedTotalCash,
+        closeDate: new Date(),
+      };
+
+      const { success, errorMessage } = await ApiService.saveShift(shiftInfo);
+
+      if (success) {
+        await dispatch(cancelNewOrder());
+        await dispatch(setCloseShift());
+        await dispatch(removeTaxInfo());
+        await dispatch(resetSales());
+        await dispatch(logout());
+        removeAuthUser();
+        closeModal();
+      } else {
+        return toast.error(<b>{errorMessage}</b>, { duration: 4000 });
+      }
+    } catch (error) {
+      const errorMessage = getAxiosErrorMessage(error as AxiosError);
+      console.log(errorMessage);
+      toast.error(`Error: ${errorMessage}.`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -140,6 +180,8 @@ export default function PrinterConfigView() {
               <Button
                 type="submit"
                 className="!mt-5 w-full text-sm tracking-[0.2px] lg:!mt-7"
+                disabled={loading}
+                isLoading={loading}
               >
                 Finalizar Turno
               </Button>
