@@ -7,7 +7,6 @@ interface NewOrderType {
   orderTypeCode: string;
   customerName: string;
   rtn: string;
-  ticketNumber: number;
 }
 
 interface NewOrderStartTaxInfo {
@@ -114,7 +113,6 @@ const newOrderSlice = createSlice({
       state.newOrderInfo.orderTypeCode = action.payload.orderTypeCode;
       state.newOrderInfo.customerName = action.payload.customerName;
       state.newOrderInfo.rtn = action.payload.rtn;
-      state.newOrderInfo.ticketNumber = action.payload.ticketNumber;
 
       state.newOrderInfo.started = true;
     },

@@ -112,7 +112,7 @@ export default function SaleDetail() {
             </Button>
           </div>
 
-          {!orderInfo?.cancelled && (
+          {!orderInfo?.cancelled && !orderInfo?.isSync && (
             <>
               <Button
                 type="button"

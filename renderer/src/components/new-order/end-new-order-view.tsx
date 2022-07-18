@@ -22,14 +22,16 @@ import { incrementCurrentNumberRange } from "@/store/taxInfoSlice";
 import { cancelNewOrder } from "@/store/newOrderSlice";
 import routes from "@/config/routes";
 import { useRouter } from "next/router";
-import { printInvoice, printTicket } from "@/services/PrintService";
+import { SiAirtable } from "react-icons/si";
 import { v4 as uuidv4 } from "uuid";
 import { selectShiftInfo } from "@/store/shiftInfoSlice";
+import { printInvoice, printTicket } from "@/services/PrintService";
 
 export interface IFormValues {
   cashAmount: number;
   cardAmount: number;
   reference?: string;
+  ticketNumber?: number | null | undefined;
 }
 
 export default function EndNewOrderForm() {
@@ -82,12 +84,18 @@ export default function EndNewOrderForm() {
       is: (cardAmount: number) => cardAmount > 0,
       then: yup.string().required("El número de referencia es requerido."),
     }),
+    ticketNumber: yup
+      .number()
+      .transform((curr, orig) => (orig === "" ? 0 : curr))
+      .min(0, "El número de ticket no puede ser menor a 0.")
+      .notRequired(),
   });
 
   const initialValues: IFormValues = {
     cashAmount: 0,
     cardAmount: 0,
     reference: "",
+    ticketNumber: newOrderInfo.started ? newOrderInfo.ticketNumber || 0 : 0,
   };
 
   const {
@@ -170,46 +178,49 @@ export default function EndNewOrderForm() {
         cardAmount: cardAmount,
         changeAmount: changeAmount,
         reference: reference || "",
+        ticketNumber: getValues("ticketNumber") || 0,
         date: currentDate,
       },
       orderAmounts: { ...newOrderAmounts },
       orderDetail: [...newOrderDetail],
     };
-    await printInvoice(
-      printerName,
-      newOrderInfo,
-      newOrderAmounts,
-      [...newOrderDetailForInvoce],
-      companyInfo,
-      currentDate,
-      Number(getValues("cashAmount")),
-      Number(getValues("cardAmount")),
-      changeAmount,
-      false
-    );
-    await printInvoice(
-      printerName,
-      newOrderInfo,
-      newOrderAmounts,
-      [...newOrderDetailForInvoce],
-      companyInfo,
-      currentDate,
-      Number(getValues("cashAmount")),
-      Number(getValues("cardAmount")),
-      changeAmount,
-      true
-    );
-    if (printKitchenTicket) {
-      await printTicket(
-        printerName,
-        newOrderInfo.orderNumber,
-        newOrderInfo.ticketNumber,
-        currentDate,
-        orderTypes.find((ot) => ot.code === newOrderInfo.orderTypeCode)?.name ||
-          "",
-        [...newOrderDetailForTicket]
-      );
-    }
+    // await printInvoice(
+    //   printerName,
+    //   newOrderInfo,
+    //   newOrderAmounts,
+    //   [...newOrderDetailForInvoce],
+    //   companyInfo,
+    //   currentDate,
+    //   Number(getValues("cashAmount")),
+    //   Number(getValues("cardAmount")),
+    //   changeAmount,
+    //   Number(getValues("ticketNumber")),
+    //   false
+    // );
+    // await printInvoice(
+    //   printerName,
+    //   newOrderInfo,
+    //   newOrderAmounts,
+    //   [...newOrderDetailForInvoce],
+    //   companyInfo,
+    //   currentDate,
+    //   Number(getValues("cashAmount")),
+    //   Number(getValues("cardAmount")),
+    //   changeAmount,
+    //   Number(getValues("ticketNumber")),
+    //   true
+    // );
+    // if (printKitchenTicket) {
+    //   await printTicket(
+    //     printerName,
+    //     newOrderInfo.orderNumber,
+    //     newOrderInfo.ticketNumber,
+    //     currentDate,
+    //     orderTypes.find((ot) => ot.code === newOrderInfo.orderTypeCode)?.name ||
+    //       "",
+    //     [...newOrderDetailForTicket]
+    //   );
+    // }
     setLoadig(false);
     await dispatch(addSale(completeInvoice));
     await dispatch(incrementCurrentNumberRange(newOrderInfo.invoiceRangeId));
@@ -228,9 +239,6 @@ export default function EndNewOrderForm() {
       <div className="relative z-10 flex items-center">
         <div className="w-full shrink-0 text-left md:w-[380px]">
           <div className="pb-2 text-center ">
-            <h1 className="text-dark dark:text-light text-lg font-medium tracking-[-0.3px] lg:text-xl">
-              {`Total: L ${formatNumber(totalToPay)}`}
-            </h1>
             <h2 className="text-dark-700 text-base font-medium tracking-[-0.3px] lg:text-xl">
               {`Subtotal: L ${formatNumber(newOrderAmounts.subtotal)}`}
             </h2>
@@ -240,6 +248,9 @@ export default function EndNewOrderForm() {
             <h2 className="text-dark-700 text-base font-medium tracking-[-0.3px] lg:text-xl">
               {`Impuesto: L ${formatNumber(newOrderAmounts.totalTax)}`}
             </h2>
+            <h1 className="text-dark dark:text-light text-lg font-medium tracking-[-0.3px] lg:text-xl">
+              {`Total: L ${formatNumber(totalToPay)}`}
+            </h1>
           </div>
           <form onSubmit={(e) => e.preventDefault()} className="space-y-2">
             <div>
@@ -287,6 +298,20 @@ export default function EndNewOrderForm() {
                   inputClassName="bg-light dark:bg-dark-300"
                   {...register("reference")}
                   error={errors.reference?.message}
+                  className="col-span-6"
+                />
+              </div>
+
+              <div className="grid h-full grid-cols-8 pt-3">
+                <div className="col-span-2 pt-5">
+                  <SiAirtable size={50} color="#0D9965" />
+                </div>
+                <Input
+                  label="Mesa"
+                  type="number"
+                  inputClassName="bg-light dark:bg-dark-300"
+                  {...register("ticketNumber")}
+                  error={errors.ticketNumber?.message}
                   className="col-span-6"
                 />
               </div>

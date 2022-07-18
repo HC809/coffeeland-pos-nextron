@@ -36,7 +36,8 @@ export default function PrinterConfigView() {
   const totalCash = useAppSelector(selectTotalCash);
   const totalChange = useAppSelector(selectTotalChange);
 
-  const expectedTotalCash = initCashFlow + totalCash - totalChange;
+  const expectedTotalCash =
+    Number(initCashFlow) + Number(totalCash) - Number(totalChange);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -88,23 +89,23 @@ export default function PrinterConfigView() {
           <div>
             <div className="text-dark text-dark-700 dark:text-light flex justify-between pb-2 text-base font-medium">
               <span>Total Tarjeta:</span>
-              <span>L {formatNumber(totalCard)}</span>
+              <span>L {formatNumber(Number(totalCard))}</span>
             </div>
             <div className="text-dark text-dark-700 dark:text-light flex justify-between pb-2 text-base font-medium">
               <span>Efectivo Inicio:</span>
-              <span>L {formatNumber(initCashFlow)}</span>
+              <span>L {formatNumber(Number(initCashFlow))}</span>
             </div>
             <div className="text-dark text-dark-700 dark:text-light flex justify-between pb-2 text-base font-medium">
               <span>Efectivo Ingresado:</span>
-              <span>L {formatNumber(totalCash)}</span>
+              <span>L {formatNumber(Number(totalCash))}</span>
             </div>
             <div className="text-dark text-dark-700 dark:text-light flex justify-between pb-2 text-base font-medium">
               <span>Efectivo Salida:</span>
-              <span>L {formatNumber(totalChange)}</span>
+              <span>L {formatNumber(Number(totalChange))}</span>
             </div>
             <div className="text-dark text-dark-700 dark:text-light flex justify-between pb-2 text-base font-medium">
               <span>Efectivo Esperado:</span>
-              <span>L {formatNumber(expectedTotalCash)}</span>
+              <span>L {formatNumber(Number(expectedTotalCash))}</span>
             </div>
           </div>
 

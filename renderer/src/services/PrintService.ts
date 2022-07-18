@@ -15,6 +15,7 @@ export const printInvoice = async (
     cashAmount: number,
     cardAmount: number,
     changeAmount: number,
+    ticketNumber: number,
     copy: boolean,) => {
 
     const detail = productDetails.map((item) => {
@@ -65,6 +66,7 @@ export const printInvoice = async (
         },
         lettersAmount: NumeroALetras(newOrderAmounts.total),
         newOrderProductDetail: detail,
+        ticketNumber: ticketNumber,
         copy: copy ? "Copia" : "",
     };
 
@@ -135,7 +137,7 @@ export const printSale = async (
     await ipcRenderer.invoke("print-invoice", orderModel);
 };
 
-export const printTicket = async (printerName: string, orderNumber: string, ticketNumber: number | null, date: Date, orderType: string, detail: IOrderKitchenSummary[]) => {
+export const printTicket = async (printerName: string, orderNumber: string, ticketNumber: number | null, date: Date, orderType: string, detail: IOrderKitchenSummary[],) => {
     const model = {
         printerName,
         orderNumber,

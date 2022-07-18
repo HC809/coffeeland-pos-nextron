@@ -14,17 +14,11 @@ import Image from "@/components/ui/image";
 import placeholder from "@/assets/images/placeholders/product.svg";
 
 export interface IFormValues {
-  ticketNumber?: number | null | undefined;
   customerName?: string | null | undefined;
   rtn: string | null | undefined;
 }
 
 const validationSchema: yup.SchemaOf<IFormValues> = yup.object().shape({
-  ticketNumber: yup
-    .number()
-    .transform((curr, orig) => (orig === "" ? 0 : curr))
-    .min(0, "El número de ticket no puede ser menor a 0.")
-    .notRequired(),
   customerName: yup
     .string()
     .transform((curr, orig) => (orig === "" ? "Consumidor Final" : curr)),
@@ -42,8 +36,6 @@ export default function StartNewOrderForm() {
   const { newOrderInfo } = useAppSelector(selectNewOrder);
   const { orderTypes } = useAppSelector(selectGeneralInfo);
 
-  console.log(orderTypes);
-
   const [orderTypeCode, setOrderTypeCode] = useState<string>(
     newOrderInfo.orderTypeCode
   );
@@ -55,7 +47,6 @@ export default function StartNewOrderForm() {
   }, []);
 
   const initialValues: IFormValues = {
-    ticketNumber: newOrderInfo.started ? newOrderInfo.ticketNumber || 0 : 0,
     customerName: newOrderInfo.started
       ? newOrderInfo.customerName
       : "Consumidor Final",
@@ -71,13 +62,12 @@ export default function StartNewOrderForm() {
     defaultValues: initialValues,
   });
 
-  const onSubmit = async ({ customerName, rtn, ticketNumber }: IFormValues) => {
+  const onSubmit = async ({ customerName, rtn }: IFormValues) => {
     await dispatch(
       setNewOrderType({
         customerName: customerName || "Consumidor Final",
         orderTypeCode: orderTypeCode!,
         rtn: rtn || "",
-        ticketNumber: ticketNumber || 0,
       })
     );
 
@@ -140,13 +130,6 @@ export default function StartNewOrderForm() {
 
               <br></br>
 
-              <Input
-                label="Ticket"
-                type="number"
-                inputClassName="bg-light dark:bg-dark-300"
-                {...register("ticketNumber")}
-                error={errors.ticketNumber?.message}
-              />
               <Input
                 label="Cliente"
                 inputClassName="bg-light dark:bg-dark-300"

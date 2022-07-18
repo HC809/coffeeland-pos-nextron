@@ -7,8 +7,11 @@ import React from "react";
 import toast from "react-hot-toast";
 import Button from "../ui/button";
 import { FcPlus } from "react-icons/fc";
+import { useModalAction } from "../modal-views/context";
 
 export const NewOrderStartButton = () => {
+  const { openModal } = useModalAction();
+
   const dispatch = useAppDispatch();
 
   const { printerName } = useAppSelector(selectGeneralInfo);
@@ -83,6 +86,7 @@ export const NewOrderStartButton = () => {
           activeStartNumber,
           activeEndNumber
         );
+        openModal("NEW_ORDER_VIEW");
       }
     } else {
       if (pendingInvoiceRange) {
@@ -112,6 +116,7 @@ export const NewOrderStartButton = () => {
               pendingStartNumber,
               pendingEndNumber
             );
+            openModal("NEW_ORDER_VIEW");
           }
         } else {
           return toast.error(
